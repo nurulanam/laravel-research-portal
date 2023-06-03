@@ -14,7 +14,7 @@ use App\Http\Controllers\backend\dashboardController;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('welcomeTest');
 });
 
 //Route::get('/dashboard', function () {

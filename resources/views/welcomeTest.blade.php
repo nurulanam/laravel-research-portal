@@ -1,0 +1,35 @@
+@extends('blankMaster')
+@section('title', 'Welcome')
+@section('mainContent')
+    <!-- Outer Row -->
+    <div class="row min-vh-100 justify-content-center align-items-center">
+
+        <div class="col-xl-10 col-lg-12 col-md-9">
+
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block bg-login-image"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <img src="{{ asset('backend/img/logo.png') }}" alt="">
+                                    <h1 class="h4 text-gray-900 my-4">Welcome Back!</h1>
+                                    <p>Third Estate Research is a simple and affordable qualitative market research option for business of all sizes and budgets.</p>
+                                </div>
+                                <hr class="my-4">
+                                @guest
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{{ route('login') }}" class="btn btn-primary mx-2">Login</a>
+                                        <a href="{{ route('register') }}" class="btn btn-primary mx-2">Register</a>
+                                    </div>
+                                @endguest
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+@endsection
