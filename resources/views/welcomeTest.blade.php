@@ -21,10 +21,15 @@
                                 <hr class="my-4">
                                 @guest
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('login') }}" class="btn btn-primary mx-2">Login</a>
-                                        <a href="{{ route('register') }}" class="btn btn-primary mx-2">Register</a>
+                                        <a href="{{ route('login') }}" class="btn btn-primary btn-custom mx-2">Login</a>
+                                        <a href="{{ route('register') }}" class="btn btn-primary btn-custom mx-2">Register</a>
                                     </div>
                                 @endguest
+                                @auth
+                                    <div class="d-flex justify-content-center">
+                                        <a href="{{ route('dashboard.index') }}" class="btn btn-primary btn-custom mx-2">Dashboard</a>
+                                    </div>
+                                @endauth
                             </div>
                         </div>
                     </div>

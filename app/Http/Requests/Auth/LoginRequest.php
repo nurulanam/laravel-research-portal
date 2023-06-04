@@ -28,8 +28,12 @@ class LoginRequest extends FormRequest
      */
     public function rules()
     {
+//        return [
+//            'email' => ['required', 'string', 'email'],
+//            'password' => ['required', 'string'],
+//        ];
         return [
-            'email' => ['required', 'string', 'email'],
+            'email' => ['required', 'string', 'email', 'exists:users'],
             'password' => ['required', 'string'],
         ];
     }
@@ -48,8 +52,15 @@ class LoginRequest extends FormRequest
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
+//            throw ValidationException::withMessages([
+//                'email' => trans('auth.failed'),
+//            ]);
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'email.required' => 'The email is required.',
+                'email.email' => 'The email needs to have a valid format.',
+                'email.string' => 'The email needs to have a valid format.',
+                'email.exists' => 'The email is not registered in the system.',
+                'password' => 'Please recheck your passowrd',
             ]);
         }
 
