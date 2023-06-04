@@ -14,14 +14,10 @@ use App\Http\Controllers\backend\dashboardController;
 */
 
 Route::get('/', function () {
-    return view('welcomeTest');
+    return view('welcome');
 });
 
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth'])->name('dashboard');
-
 Route::prefix('/dashboard')->middleware(['auth'])->group(function (){
-    Route::get('/', [dashboardController::class, 'index'])->middleware('role:researcher')->name('dashboard.index');
+    Route::get('/', [dashboardController::class, 'index'])->middleware('role:researcher|participant')->name('dashboard.index');
 });
 require __DIR__.'/auth.php';

@@ -1,5 +1,5 @@
 @extends('blankMaster')
-@section('title', 'login')
+@section('title', 'Register')
 @section('mainContent')
     <!-- Outer Row -->
     <div class="row min-vh-100 justify-content-center align-items-center">
