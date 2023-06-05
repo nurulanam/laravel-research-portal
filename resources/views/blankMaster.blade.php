@@ -3,7 +3,7 @@
 <head>
     @include('backend.includes.meta')
 
-    <title> Third Estate Research- @yield('title')</title>
+    <title> {{ config('app.name') }} - @yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('backend/img/favicon.png') }}">
 
     <!-- Custom fonts for this template-->

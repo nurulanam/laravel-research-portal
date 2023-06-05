@@ -17,7 +17,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::prefix('/dashboard')->middleware(['auth'])->group(function (){
-    Route::get('/', [dashboardController::class, 'index'])->middleware('role:researcher|participant')->name('dashboard.index');
+//Route::get('/verify-test', function (){
+//    return view('auth.verify-email');
+//});
+
+Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
+    Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
 });
 require __DIR__.'/auth.php';
