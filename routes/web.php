@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\dashboardController;
+use App\Http\Controllers\backend\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,11 +18,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-//Route::get('/verify-test', function (){
-//    return view('auth.verify-email');
-//});
-
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 });
 require __DIR__.'/auth.php';
