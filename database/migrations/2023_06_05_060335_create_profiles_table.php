@@ -25,9 +25,10 @@ class CreateProfilesTable extends Migration
             $table->string('ethnicity')->comment('american-indian-or-alaska-native, asian, white-caucasian, pacific-islander, african-american, hispanic, multiracial, other');
             $table->string('education_level')->comment('less-than-a-high-school-diploma,  high-school-diploma-or-equivalent, some-college-no-degree, associate-degree, bachelors-degree, masters-degree, professional-degree, doctorate ');
             $table->string('employment_status')->comment('self-employed, homemaker, employed-part-time,employed-full-time, not-employed-looking-for-work, not-employed-not-looking-for-work, retired, unable-to-work ');
-            $table->string('household_income');
-            $table->string('marital_status');
-            $table->string('children_in_living');
+            $table->string('household_income')->comment('less-than-twenty-thousand, twenty-thousand-to-thirty-four-thousand-nine-hundred-ninety-nine, thirty-five-thousand-to-forty-nine-thousand-nine-hundred-ninety-nine, fifty-thousand-toseventy-four thousand nine hundred ninety-nine
+, seventy-five-thousand-to-ninety-nine-thousand-nine-hundred-ninety-nine, one-hundred-thousand-plus');
+            $table->string('marital_status')->comment('single, married, divorced, widowed, living-with-significant-other');
+            $table->string('children_in_living')->comment('0, 1, 2, 3, 4, 5-plus');
             $table->timestamps();
         });
     }
