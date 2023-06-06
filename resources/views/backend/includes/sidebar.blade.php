@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-dark-blue sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center px-2" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center px-2" href="{{ route('dashboard.index') }}">
         <img src="{{ asset('backend/img/logo-third-estate-research.png') }}" class="w-75" alt="logo">
     </a>
 
@@ -10,7 +10,7 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="{{ route('dashboard.index') }}">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>

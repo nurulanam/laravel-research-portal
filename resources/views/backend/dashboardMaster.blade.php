@@ -62,6 +62,7 @@
 <!--All scripts  -->
 @include('backend.includes.scripts')
 <!--End of All scripts  -->
+@yield('extraJs')
 
 </body>
 

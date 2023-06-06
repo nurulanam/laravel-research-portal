@@ -9,12 +9,27 @@
     <!-- Topbar Navbar -->
     <ul class="navbar-nav ml-auto">
         <!-- Nav Item - User Information -->
+        @if(Auth::user()->hasRole('researcher'))
+        <li class="nav-item">
+            <a class="nav-link" href="#">
+                <button class="btn btn-primary btn-custom"><span class="mx-2"><i class="fas fa-plus"></i></span>New Project</button>
+            </a>
+        </li>
+        @endif
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-gray-600 small">{{ Auth::user()->name }}</span>
-                <img class="img-profile rounded-circle"
-                     src="{{asset('backend')}}/img/undraw_profile.svg">
+                <div class="d-flex justify-content-start">
+                    <div class="user-info">
+                        <span class="mr-2 d-none d-lg-block text-gray-600 font-weight-bold small">{{ Auth::user()->name }}</span>
+                        @foreach(Auth::user()->roles->pluck('name') as $role)
+                            <span class="mr-2 d-none d-lg-block text-gray-600 small">{{ $role  }}</span>
+                        @endforeach
+                    </div>
+                    <img class="img-profile rounded-circle"
+                         src="{{asset('backend')}}/img/undraw_profile.svg">
+                </div>
+
             </a>
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
@@ -41,7 +56,5 @@
                 </form>
             </div>
         </li>
-
     </ul>
-
 </nav>
