@@ -21,6 +21,7 @@ class CreateProfilesTable extends Migration
             $table->date('date_of_birth')->nullable()->comment('must be 18+');
             $table->string('phone')->nullable();
             $table->string('country')->default('us');
+            $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->integer('zip_code')->nullable();
             $table->string('job_title')->nullable()->comment('owner-or-operator, hairstylist-owner-or-operator, co-owner-or-operator, small-business-owner-or-operator, owner-or-operator-or-employee, owner-or-operator-and-web-designer, owner-or-operator-or-photographer, owner-or-operator-or-manager, hairstylist-or-makeup-artist-owner-or-operator, mechanic-or-small-business-owner-or-operator');
