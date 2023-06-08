@@ -88,7 +88,7 @@
                                     </div>
                                     <div class="col-12 col-md-8">
                                         <select name="state" class="form-control" id="state">
-                                            <option>Select Your State</option>
+                                            <option value="">Select Your State</option>
 
                                             @foreach($us_states as $key => $states)
                                                 <option value="{{ $key }}">{{ $key }}</option>
@@ -106,7 +106,7 @@
                                     <div class="col-12 col-md-8">
                                         @foreach($us_states as $key => $cities)
                                             <select name="city" class="form-control city" data-state="{{$key}}">
-                                                <option>Select Your City</option>
+                                                <option value="">Select Your City</option>
                                                 @foreach($cities as $city)
                                                     <option value="{{ $city }}">{{ $city }}</option>
                                                 @endforeach
