@@ -20,6 +20,6 @@ Route::get('/', function () {
 
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
-    Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
+    Route::resource('/profile', ProfileController::class);
 });
 require __DIR__.'/auth.php';

@@ -2,12 +2,14 @@
 <html lang="en">
 <head>
     @include('backend.includes.meta')
+    @yield('extraMeta')
 
     <title> {{ config('app.name') }} - @yield('title')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('backend/img/favicon.png') }}">
 
     <!-- Custom fonts for this template-->
     @include('backend.includes.fonts')
+    @yield('extraCss')
 
     <!-- Custom styles for this template-->
     @include('backend.includes.css')

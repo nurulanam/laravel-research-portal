@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\backend\Profile;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class ProfileController extends Controller
 {
@@ -59,6 +60,156 @@ class ProfileController extends Controller
         'Wisconsin' => ['Abbotsford', 'Adams', 'Algoma', 'Alma', 'Altoona', 'Amery', 'Antigo', 'Appleton', 'Arcadia', 'Ashland', 'Augusta', 'Baraboo', 'Barron', 'Bayfield', 'Beaver Dam', 'Beloit', 'Berlin', 'Black River Falls', 'Blair', 'Bloomer', 'Boscobel', 'Brillion', 'Brodhead', 'Brookfield', 'Buffalo City', 'Burlington', 'Cedarburg', 'Chetek', 'Chilton', 'Chippewa Falls', 'Clintonville', 'Colby', 'Columbus', 'Cornell', 'Crandon', 'Cuba City', 'Cudahy', 'Cumberland', 'Darlington', 'Delafield', 'Delavan', 'De Pere', 'Dodgeville', 'Durand', 'Eagle River', 'Eau Claire', 'Edgerton', 'Elkhorn', 'Elroy', 'Evansville', 'Fennimore', 'Fitchburg', 'Fond du Lac', 'Fort Atkinson', 'Fountain City', 'Fox Lake', 'Franklin', 'Galesville', 'Gillett', 'Glendale', 'Glenwood City', 'Green Bay', 'Greenfield', 'Green Lake', 'Greenwood', 'Hartford', 'Hayward', 'Hillsboro', 'Horicon', 'Hudson', 'Hurley', 'Independence', 'Janesville', 'Jefferson', 'Juneau', 'Kaukauna', 'Kenosha', 'Kewaunee', 'Kiel', 'La Crosse', 'Ladysmith', 'Lake Geneva', 'Lake Mills', 'Lancaster', 'Lodi', 'Loyal', 'Madison', 'Manawa', 'Manitowoc', 'Marinette', 'Marion', 'Markesan', 'Marshfield', 'Mauston', 'Mayville', 'Medford', 'Mellen', 'Menasha', 'Menomonie', 'Mequon', 'Merrill', 'Middleton', 'Milton', 'Milwaukee', 'Mineral Point', 'Mondovi', 'Monona', 'Monroe', 'Montello', 'Montreal', 'Mosinee', 'Muskego', 'Neenah', 'Neillsville', 'Nekoosa', 'New Berlin', 'New Holstein', 'New Lisbon', 'New London', 'New Richmond', 'Niagara', 'Oak Creek', 'Oconomowoc', 'Oconto', 'Oconto Falls', 'Omro', 'Onalaska', 'Oshkosh', 'Osseo', 'Owen', 'Park Falls', 'Peshtigo', 'Pewaukee', 'Phillips', 'Pittsville', 'Platteville', 'Plymouth', 'Portage', 'Port Washington', 'Prairie du Chien', 'Prescott', 'Princeton', 'Racine', 'Reedsburg', 'Rhinelander', 'Rice Lake', 'Richland Center', 'Ripon', 'River Falls', 'Schofield', 'Seymour', 'Shawano', 'Sheboygan', 'Sheboygan Falls', 'Shell Lake', 'Shullsburg', 'South Milwaukee', 'Sparta', 'Spooner', 'Stanley', 'St. Croix Falls', 'Stevens Point', 'St. Francis', 'Stoughton', 'Sturgeon Bay', 'Sun Prairie', 'Superior', 'Thorp', 'Tomah', 'Tomahawk', 'Two Rivers', 'Verona', 'Viroqua', 'Washburn', 'Waterloo', 'Watertown', 'Waukesha', 'Waupaca', 'Waupun', 'Wausau', 'Wautoma', 'Wauwatosa', 'West Allis', 'West Bend', 'Westby', 'Weyauwega', 'Whitehall', 'Whitewater', 'Wisconsin Dells', 'Wisconsin Rapids'],
         'Wyoming' => ['Buffalo', 'Casper', 'Cheyenne', 'Cody', 'Douglas', 'Evanston', 'Gillette', 'Green River', 'Kemmerer', 'Lander', 'Laramie', 'Newcastle', 'Powell', 'Rawlins', 'Riverton', 'Rock Springs', 'Sheridan', 'Torrington', 'Worland']
     ];
+    public $industries = [
+        "Accounting",
+        "Airlines/Aviation",
+        "Alternative Dispute Resolution",
+        "Alternative Medicine",
+        "Animation",
+        "Apparel & Fashion",
+        "Architecture & Planning",
+        "Arts & Crafts",
+        "Automotive",
+        "Aviation & Aerospace",
+        "Banking",
+        "Biotechnology",
+        "Broadcast Media",
+        "Building Materials",
+        "Business Supplies & Equipment",
+        "Capital Markets",
+        "Chemicals",
+        "Civic & Social Organization",
+        "Civil Engineering",
+        "Commercial Real Estate",
+        "Computer & Network Security",
+        "Computer Games",
+        "Computer Hardware",
+        "Computer Networking",
+        "Computer Software",
+        "Construction",
+        "Consumer Electronics",
+        "Consumer Goods",
+        "Consumer Services",
+        "Cosmetics",
+        "Dairy",
+        "Defense & Space",
+        "Design",
+        "Education Management",
+        "E-learning",
+        "Electrical & Electronic Manufacturing",
+        "Entertainment",
+        "Environmental Services",
+        "Events Services",
+        "Executive Office",
+        "Facilities Services",
+        "Farming",
+        "Financial Services",
+        "Fine Art",
+        "Fishery",
+        "Food & Beverages",
+        "Food Production",
+        "Fundraising",
+        "Furniture",
+        "Gambling & Casinos",
+        "Glass, Ceramics & Concrete",
+        "Government Administration",
+        "Government Relations",
+        "Graphic Design",
+        "Health, Wellness & Fitness",
+        "Higher Education",
+        "Hospital & Health Care",
+        "Hospitality",
+        "Human Resources",
+        "Import & Export",
+        "Individual & Family Services",
+        "Industrial Automation",
+        "Information Services",
+        "Information Technology & Services",
+        "Insurance",
+        "International Affairs",
+        "International Trade & Development",
+        "Internet",
+        "Investment Banking/Venture",
+        "Investment Management",
+        "Judiciary",
+        "Law Enforcement",
+        "Law Practice",
+        "Legal Services",
+        "Legislative Office",
+        "Leisure & Travel",
+        "Libraries",
+        "Logistics & Supply Chain",
+        "Luxury Goods & Jewelry",
+        "Machinery",
+        "Management Consulting",
+        "Maritime",
+        "Marketing & Advertising",
+        "Market Research",
+        "Mechanical or Industrial Engineering",
+        "Media Production",
+        "Medical Device",
+        "Medical Practice",
+        "Mental Health Care",
+        "Military",
+        "Mining & Metals",
+        "Motion Pictures & Film",
+        "Museums & Institutions",
+        "Music",
+        "Nanotechnology",
+        "Newspapers",
+        "Nonprofit Organization Management",
+        "Oil & Energy",
+        "Online Publishing",
+        "Outsourcing/Offshoring",
+        "Package/Freight Delivery",
+        "Packaging & Containers",
+        "Paper & Forest Products",
+        "Performing Arts",
+        "Pharmaceuticals",
+        "Philanthropy",
+        "Photography",
+        "Plastics",
+        "Political Organization",
+        "Primary/Secondary",
+        "Printing",
+        "Professional Training",
+        "Program Development",
+        "Public Policy",
+        "Public Relations",
+        "Public Safety",
+        "Publishing",
+        "Railroad Manufacture",
+        "Ranching",
+        "Real Estate",
+        "Recreational",
+        "Facilities & Services",
+        "Religious Institutions",
+        "Renewables & Environment",
+        "Research",
+        "Restaurants",
+        "Retail",
+        "Security & Investigations",
+        "Semiconductors",
+        "Shipbuilding",
+        "Sporting Goods",
+        "Sports",
+        "Staffing & Recruiting",
+        "Supermarkets",
+        "Telecommunications",
+        "Textiles",
+        "Think Tanks",
+        "Tobacco",
+        "Translation & Localization",
+        "Transportation/Trucking/Railroad",
+        "Utilities",
+        "Venture Capital",
+        "Veterinary",
+        "Warehousing",
+        "Wholesale",
+        "Wine & Spirits",
+        "Wireless",
+        "Writing & Editing"
+    ];
     /**
      * Display a listing of the resource.
      *
@@ -67,7 +218,8 @@ class ProfileController extends Controller
     public function index()
     {
         $us_states = $this->us_states;
-        return view('backend.pages.profile', compact('us_states'));
+        $industries = $this->industries;
+        return view('backend.pages.profile', compact('us_states', 'industries'));
     }
 
     /**
@@ -88,7 +240,7 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd($request);
     }
 
     /**

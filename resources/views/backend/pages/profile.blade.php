@@ -1,5 +1,11 @@
 @extends('backend.dashboardMaster')
+@section('extraMeta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('title', 'profile')
+@section('extraCss')
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+@endsection
 @section('mainContent')
     <div class="row">
         <div class="col-12 col-md-6">
@@ -27,6 +33,26 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">First Name</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <input type="text" name="first_name" class="form-control" value="{{ Auth::user()->first_name }}" disabled="disabled" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">Last Name</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <input type="text" name="last_name" class="form-control" value="{{ Auth::user()->last_name }}" disabled="disabled" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
                                     <label class="col-form-label text-dark">Phone</label>
                                 </div>
                                 <div class="col-12 col-md-8">
@@ -40,7 +66,7 @@
                                     <label class="col-form-label text-dark">E-mail</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <p class="form-control m-0">{{ Auth::user()->email }}</p>
+                                    <input class="form-control m-0" value="{{ Auth::user()->email }}" disabled="disabled" readonly>
                                 </div>
                             </div>
                         </div>
@@ -51,7 +77,7 @@
                                         <label class="col-form-label text-dark">Country</label>
                                     </div>
                                     <div class="col-12 col-md-8">
-                                        <p class="form-control m-0">US</p>
+                                        <input class="form-control" value="US" disabled="disabled" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -111,7 +137,8 @@
                     <h5 class="m-0 p-0 text-dark">Personal Details</h5>
                 </div>
                 <div class="card-body">
-                    <form action="">
+                    <form action="{{ route('profile.store') }}" method="POST">
+                        @csrf
                         @if(Auth::user()->hasRole('participant'))
                             <div class="form-group">
                                 <div class="row">
@@ -120,7 +147,7 @@
                                     </div>
                                     <div class="col-12 col-md-8">
                                         <select name="gender" class="form-control ">
-                                            <option selected> Select Your Gender </option>
+                                            <option value=""> Select Your Gender </option>
                                             <option value="male">Male</option>
                                             <option value="female">Female</option>
                                             <option value="non-binary">Non Binary</option>
@@ -146,7 +173,7 @@
                                     </div>
                                     <div class="col-12 col-md-8">
                                         <select name="ethnicity" id="" class="form-control">
-                                            <option selected> Select Your Ethnicity </option>
+                                            <option value=""> Select Your Ethnicity </option>
                                             <option value="american-indian-or-alaska-native">American Indian / Alaskan Native</option>
                                             <option value="asian">Asian</option>
                                             <option value="white-caucasian">White/Caucasian</option>
@@ -176,8 +203,8 @@
                                     <label class="col-form-label text-dark">Company Size</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <select name="city" class="form-control" id="">
-                                        <option>Select Your Company Size</option>
+                                    <select name="company_size" class="form-control">
+                                        <option value="">Select Your Company Size</option>
                                         <option value="self-employed">Self Employed</option>
                                         <option value="1to10">1 - 10</option>
                                         <option value="11to50">11 - 50</option>
@@ -197,19 +224,7 @@
                                     <label class="col-form-label text-dark">Job Title</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <select name="city" class="form-control" id="">
-                                        <option>Select Your Job Title</option>
-                                        <option value="owner-or-operator">Owner/Operator</option>
-                                        <option value="hairstylist-owner-or-operator">Hairstylist Owner/Operator</option>
-                                        <option value="co-owner-or-operator">Co-owner/Operator</option>
-                                        <option value="small-business-owner-or-operator">Small Business Owner/Operator</option>
-                                        <option value="owner-or-operator-or-employee">Owner/Operator/Employee</option>
-                                        <option value="owner-or-operator-and-web-designer">Owner/Operator And Web Designer</option>
-                                        <option value="owner-or-operator-or-photographer">Owner/Operator/Photographer</option>
-                                        <option value="owner-or-operator-or-manager">Owner/Operator/Manager</option>
-                                        <option value="hairstylist-or-makeup-artist-owner-or-operator">Hairstylist/Makeup Artist Owner/Operator</option>
-                                        <option value="mechanic-or-small-business-owner-or-operator">Mechanic / Small Business Owner/Operator</option>
-                                    </select>
+                                    <input type="text" name="job_title" class="form-control" placeholder="Enter Your Job Title">
                                 </div>
                             </div>
                         </div>
@@ -219,9 +234,30 @@
                                     <label class="col-form-label text-dark">Industry</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <select name="city" class="form-control" id="">
-                                        <option>Select Your Industry</option>
+                                    @if(Auth::user()->hasRole('participant'))
+                                    <select data-placeholder="Type To Search.." name="industries[]" class="chosen-select form-control" multiple tabindex="4">
+                                        @foreach($industries as $industry)
+                                            <option value="{{ $industry }}">{{ $industry }}</option>
+                                        @endforeach
                                     </select>
+                                    @endif
+                                    @if(Auth::user()->hasRole('researcher'))
+                                        <select name="industries" class="form-control" >
+                                            <option>Select Your Industry</option>
+                                            @foreach($industries as $industry)
+                                                <option value="{{ $industry }}">{{ $industry }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <button class="btn btn-primary">Save Changes</button>
                                 </div>
                             </div>
                         </div>
@@ -249,6 +285,7 @@
             });
         });
     </script>
+
     <script>
         $('#state').on('change', function (){
             var state = $(this).val();
@@ -261,8 +298,19 @@
                     $(this).removeClass('d-block').attr('disabled', true);
                 }
             });
-        })
+        });
     </script>
+
+{{--    chosen js multi select --}}
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js" integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script>
+        $('.chosen-select').chosen({max_selected_options: 5}).change( function(obj, result) {
+        console.debug("changed: %o", arguments);
+        // console.log("selected: " + result.selected);
+        });
+    </script>
+
 @endsection
 
 

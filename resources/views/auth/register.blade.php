@@ -20,10 +20,18 @@
                                     <form action="{{ route('register') }}" method="POST" class="user">
                                         @csrf
                                         <div class="form-group">
-                                            <input type="text" name="name" class="form-control form-control-user"
-                                                   id="name" aria-describedby="name"
-                                                   placeholder="Enter Your Full Name">
-                                            @error('name')
+                                            <input type="text" name="first_name" class="form-control form-control-user"
+                                                   id="first_name" aria-describedby="first_name"
+                                                   placeholder="Enter Your First Name">
+                                            @error('first_name')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" name="last_name" class="form-control form-control-user"
+                                                   id="last_name" aria-describedby="last_name"
+                                                   placeholder="Enter Your Last Name">
+                                            @error('last_name')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>

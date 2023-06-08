@@ -21,7 +21,7 @@
                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 <div class="d-flex justify-content-start">
                     <div class="user-info">
-                        <span class="mr-2 d-none d-lg-block text-gray-600 font-weight-bold small">{{ Auth::user()->name }}</span>
+                        <span class="mr-2 d-none d-lg-block text-gray-600 font-weight-bold small">{{ Auth::user()->first_name.' '.Auth::user()->last_name }}</span>
                         @foreach(Auth::user()->roles->pluck('name') as $role)
                             <span class="mr-2 d-none d-lg-block text-gray-600 small">{{ $role  }}</span>
                         @endforeach
