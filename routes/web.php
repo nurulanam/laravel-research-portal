@@ -21,5 +21,6 @@ Route::get('/', function () {
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
     Route::resource('/profile', ProfileController::class);
+    Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
 });
 require __DIR__.'/auth.php';

@@ -10,11 +10,10 @@
 
     <!-- Nav Item - Dashboard -->
     <li class="nav-item active">
-        <a class="nav-link" href="{{ route('dashboard.index') }}">
+        <a class="nav-link" href="{{ route('dashboard.index') }}    ">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
     </li>
-
     <!-- Divider -->
     <hr class="sidebar-divider">
 

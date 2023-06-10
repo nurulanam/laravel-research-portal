@@ -10,12 +10,21 @@
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="d-flex justify-content-start align-items-center">
-                <img src="{{ asset('backend') }}/img/undraw_profile.svg" id="preview_profile" alt="profile-picture" height="80px" width="80px">
+                @if($profileInfo->user_avatar == null)
+                    <img src="{{ asset('backend') }}/img/undraw_profile.svg" id="preview_profile" alt="profile-picture" height="80px" width="80px">
+                @elseif($profileInfo->user_avatar !== null)
+                    <img src="{{ asset('backend/img/profile/'.$profileInfo->user_avatar) }}" id="preview_profile" alt="profile-picture" height="80px" width="80px">
+                @endif
+
                 <div class="ml-3 font">
-                    <h4 class="font-weight-bold mb-0">{{ Auth::user()->name }}</h4>
-                    <form action="" method="POST" class="user mt-1" enctype="multipart/form-data" >
-                        <label for="profile-pic" class="btn p-0  m-0 text-primary">Change Picture</label>
-                        <input id="profile-pic" style="display: none;" type="file">
+                    <h4 class="font-weight-bold mb-0">Hey {{ Auth::user()->first_name}} !</h4>
+                    <form action="{{ route('profile.avatar') }}" method="POST" class="user mt-1" enctype="multipart/form-data" >
+                        @csrf
+                        <label for="user_avatar" class="btn p-0  m-0 text-primary">Change Picture</label>
+                        <input name="user_avatar" id="user_avatar" style="display: none;" type="file">
+                        @error('user_avatar')
+                        <p class="text-danger font-13 py-2">{{ $message }}</p>
+                        @enderror
                         <button class="btn btn-primary btn-sm btn-user px-4 mx-4 btn-profile-save">Save Changes</button>
                     </form>
                 </div>
@@ -25,8 +34,8 @@
     <div class="row my-4 ">
         <div class="col-12 col-lg-6 d-flex align-items-stretch">
             <div class="card w-100">
-                <div class="card-header">
-                    <h5 class="m-0 p-0 text-dark">Contact Details</h5>
+                <div class="card-header bg-dark-blue">
+                    <h5 class="m-0 p-0 text-light">Contact Details</h5>
                 </div>
                 <div class="card-body">
                     <form action="">
@@ -133,8 +142,8 @@
         </div>
         <div class="col-12 col-lg-6 d-flex align-items-stretch ">
             <div class="card w-100">
-                <div class="card-header">
-                    <h5 class="m-0 p-0 text-dark">Personal Details</h5>
+                <div class="card-header bg-dark-blue">
+                    <h5 class="m-0 p-0 text-light">Personal Details</h5>
                 </div>
                 <div class="card-body">
                     <form action="{{ route('profile.store') }}" method="POST">
@@ -271,7 +280,7 @@
 @section('extraJs')
     <script>
         $(document).ready(() => {
-            $('#profile-pic').change(function() {
+            $('#user_avatar').change(function() {
                 const file = this.files[0];
                 if (file) {
                     let reader = new FileReader();

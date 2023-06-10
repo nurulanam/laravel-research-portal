@@ -15,7 +15,7 @@ class CreateProfilesTable extends Migration
     {
         Schema::create('profiles', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->unique();
             $table->string('user_avatar')->nullable();
             $table->string('gender')->nullable()->comment('male, female, non-binary, prefer-not-to-say');
             $table->date('date_of_birth')->nullable()->comment('must be 18+');

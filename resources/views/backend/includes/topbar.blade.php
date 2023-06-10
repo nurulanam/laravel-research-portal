@@ -26,8 +26,12 @@
                             <span class="mr-2 d-none d-lg-block text-gray-600 small">{{ $role  }}</span>
                         @endforeach
                     </div>
-                    <img class="img-profile rounded-circle"
-                         src="{{asset('backend')}}/img/undraw_profile.svg">
+                    @if($profileInfo->user_avatar == null)
+                        <img src="{{ asset('backend') }}/img/undraw_profile.svg" class="img-profile rounded-circle" alt="profile-picture" height="80px" width="80px">
+                    @elseif($profileInfo->user_avatar !== null)
+                        <img src="{{ asset('backend/img/profile/'.$profileInfo->user_avatar) }}" class="img-profile rounded-circle" alt="profile-picture" height="80px" width="80px">
+                    @endif
+{{--                    <img class="img-profile rounded-circle" src="{{asset('backend')}}/img/undraw_profile.svg">--}}
                 </div>
 
             </a>

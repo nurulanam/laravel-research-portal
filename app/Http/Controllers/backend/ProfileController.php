@@ -5,7 +5,9 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\backend\Profile;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Auth;
+use File;
+use Intervention\Image\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -219,7 +221,9 @@ class ProfileController extends Controller
     {
         $us_states = $this->us_states;
         $industries = $this->industries;
-        return view('backend.pages.profile', compact('us_states', 'industries'));
+        $profileInfo = Profile::find(Auth::id());
+
+        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo'));
     }
 
     /**
@@ -240,9 +244,55 @@ class ProfileController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
-    }
 
+    }
+    public function userAvatar(Request $request){
+        $request->validate([
+            'user_avatar' => 'required|mimes:jpg,jpeg,png|max:2048',
+        ]);
+        if ($request->hasFile('user_avatar')) {
+            $file = $request->user_avatar;
+            $ext = $file->getClientOriginalExtension();
+            $fileName = hexdec(uniqid()).'.'.$ext;
+            $img_host_path = public_path('backend/img/profile/');
+
+            //check user exist or not
+            $user_id = Auth::id();
+            $find_profile = Profile::where('user_id', '=' , $user_id)->first();
+//            dd($find_profile);
+            if ($find_profile !== null){
+                $existing_profile_avatar = $img_host_path .$find_profile->user_avatar;
+//                $existing_profile_avatar = $img_host_path.'/'.$find_profile->user_avatar;
+                if (File::exists($existing_profile_avatar)){
+                    File::delete($existing_profile_avatar);
+                }
+
+                $avatar = Image::make($file);
+                $avatar->resize(400,400, function ($image){
+                    $image->aspectRatio();
+                })->save($img_host_path.$fileName);
+
+                $find_profile->user_avatar = $fileName;
+                $find_profile->update();
+                return redirect()->back()->with('success', 'Profile Picture Updated');
+
+            }elseif($find_profile == null) {
+                $profile = new Profile();
+                $profile->user_id = $user_id;
+                $profile->user_avatar = $fileName;
+                $profile->save();
+
+                $avatar = Image::make($file);
+                $avatar->resize(400,400, function ($image){
+                    $image->aspectRatio();
+                })->save($img_host_path.$fileName);
+
+                return redirect()->back()->with('success', 'Profile Picture Saved');
+            }
+        }
+
+
+    }
     /**
      * Display the specified resource.
      *
@@ -285,7 +335,13 @@ class ProfileController extends Controller
      */
     public function destroy(Profile $profile)
     {
-        //
+
     }
+
+
+
+
+
+//    extra helper functions
 
 }
