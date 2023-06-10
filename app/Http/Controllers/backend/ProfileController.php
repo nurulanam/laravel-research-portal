@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\Industry;
 use App\Models\backend\Profile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -221,11 +222,16 @@ class ProfileController extends Controller
     {
         $us_states = $this->us_states;
         $industries = $this->industries;
-        $profileInfo = Profile::find(Auth::id());
+        $user_id = Auth::id();
+        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
 
         return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo'));
     }
-
+    public function showAvatar(){
+        $user_id = Auth::id();
+        $avatar = Profile::where('user_id', '=' , $user_id)->first();
+        return $avatar;
+    }
     /**
      * Show the form for creating a new resource.
      *
@@ -259,10 +265,8 @@ class ProfileController extends Controller
             //check user exist or not
             $user_id = Auth::id();
             $find_profile = Profile::where('user_id', '=' , $user_id)->first();
-//            dd($find_profile);
             if ($find_profile !== null){
                 $existing_profile_avatar = $img_host_path .$find_profile->user_avatar;
-//                $existing_profile_avatar = $img_host_path.'/'.$find_profile->user_avatar;
                 if (File::exists($existing_profile_avatar)){
                     File::delete($existing_profile_avatar);
                 }
@@ -291,6 +295,58 @@ class ProfileController extends Controller
             }
         }
 
+
+    }
+    public function contactDetails(Request $request){
+
+    }
+    public function personalDetails(Request $request){
+        $user_id = Auth::id();
+        $find_profile = Profile::where('user_id', '=' , $user_id)->first();
+        if ($find_profile !== null){
+            if ($find_profile->status == 'active' || $find_profile->status == null) {
+                if (Auth::user()->hasRole('participant')){
+                    $request->validate([
+                        'gender' => 'required|string',
+                        'date_of_birth' => 'required|date|before:18 years ago',
+                        'ethnicity' => 'required|string',
+                        'company_name' => 'required|string',
+                        'company_size' => 'required|string',
+                        'job_title' => 'required|string',
+                        'industry.*' => 'required|string',
+                    ],
+                        [
+                            'before' => 'You must be at least 18 years old',
+                        ]);
+                    $find_profile->gender = $request->gender;
+                    $find_profile->date_of_birth = $request->date_of_birth;
+                    $find_profile->ethnicity = $request->ethnicity;
+                    $find_profile->company_name = $request->company_name;
+                    $find_profile->company_size = $request->company_size;
+                    $find_profile->job_title = $request->job_title;
+                    foreach ($request->industry as $industry_name){
+                        $industry = new Industry();
+                        $industry->user_id = $user_id;
+                        $industry->industry = $industry_name;
+                        $industry->save();
+                    }
+                    $find_profile->save();
+                    return redirect()->back()->with('success', 'Personal Informaion Saved');
+                }elseif(Auth::user()->hasRole('researcher')){
+                    $request->validate([
+                        'company_name' => 'required|string',
+                        'company_size' => 'required|string',
+                        'job_title' => 'required|string',
+                        'industry' => 'required|string',
+                    ]);
+                }
+
+            }
+
+
+        }elseif ($find_profile == null){
+
+        }
 
     }
     /**

@@ -22,5 +22,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
     Route::resource('/profile', ProfileController::class);
     Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
+    Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
+    Route::post('/profile-personal-details', [ProfileController::class, 'personalDetails'])->name('profile.personal.details');
 });
 require __DIR__.'/auth.php';

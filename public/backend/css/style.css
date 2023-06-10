@@ -26,3 +26,15 @@
 .city{
     display: none;
 }
+.img-80{
+    width: 80px !important;
+    height: 80px !important;
+    object-fit: contain;
+    background-color: #092D5F;
+}
+.img-32{
+    width: 32px !important;
+    height: 32px !important;
+    object-fit: contain;
+    background-color: #092D5F;
+}

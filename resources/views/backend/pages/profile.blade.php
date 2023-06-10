@@ -10,10 +10,14 @@
     <div class="row">
         <div class="col-12 col-md-6">
             <div class="d-flex justify-content-start align-items-center">
-                @if($profileInfo->user_avatar == null)
-                    <img src="{{ asset('backend') }}/img/undraw_profile.svg" id="preview_profile" alt="profile-picture" height="80px" width="80px">
-                @elseif($profileInfo->user_avatar !== null)
-                    <img src="{{ asset('backend/img/profile/'.$profileInfo->user_avatar) }}" id="preview_profile" alt="profile-picture" height="80px" width="80px">
+                @if(!empty($profileInfo))
+                    @if($profileInfo->user_avatar == null)
+                        <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile" alt="profile-picture">
+                    @elseif($profileInfo->user_avatar !== null)
+                        <img src="{{ asset('backend/img/profile/'.$profileInfo->user_avatar) }}" class="img-80" id="preview_profile" alt="profile-picture">
+                    @endif
+                @elseif(empty($profileInfo))
+                    <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile" alt="profile-picture">
                 @endif
 
                 <div class="ml-3 font">
@@ -146,7 +150,7 @@
                     <h5 class="m-0 p-0 text-light">Personal Details</h5>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('profile.store') }}" method="POST">
+                    <form action="{{ route('profile.personal.details') }}" method="POST">
                         @csrf
                         @if(Auth::user()->hasRole('participant'))
                             <div class="form-group">
@@ -157,11 +161,14 @@
                                     <div class="col-12 col-md-8">
                                         <select name="gender" class="form-control ">
                                             <option value=""> Select Your Gender </option>
-                                            <option value="male">Male</option>
-                                            <option value="female">Female</option>
-                                            <option value="non-binary">Non Binary</option>
-                                            <option value="prefer-not-to-say">Prefer Not To Say</option>
+                                            <option value="male" @if(old('gender') == 'male') selected @endif>Male</option>
+                                            <option value="female" @if(old('gender') == 'female') selected @endif>Female</option>
+                                            <option value="non-binary" @if(old('gender') == 'non-binary') selected @endif>Non Binary</option>
+                                            <option value="prefer-not-to-say" @if(old('gender') == 'prefer-not-to-say') selected @endif>Prefer Not To Say</option>
                                         </select>
+                                        @error('gender')
+                                        <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -171,7 +178,10 @@
                                         <label class="col-form-label text-dark">Date Of Birth</label>
                                     </div>
                                     <div class="col-12 col-md-8">
-                                        <input type="date" name="date_of_birth" id="" class="form-control">
+                                        <input type="date" name="date_of_birth" id="" value="{{ old('date_of_birth') }}" class="form-control">
+                                        @error('date_of_birth')
+                                        <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -183,15 +193,18 @@
                                     <div class="col-12 col-md-8">
                                         <select name="ethnicity" id="" class="form-control">
                                             <option value=""> Select Your Ethnicity </option>
-                                            <option value="american-indian-or-alaska-native">American Indian / Alaskan Native</option>
-                                            <option value="asian">Asian</option>
-                                            <option value="white-caucasian">White/Caucasian</option>
-                                            <option value="pacific-islander">Pacific Islander</option>
-                                            <option value="african-american">African American</option>
-                                            <option value="hispanic">Hispanic</option>
-                                            <option value="multiracial">Multiracial</option>
-                                            <option value="other">Other</option>
+                                            <option value="american-indian-or-alaska-native" @if(old('ethnicity') == 'american-indian-or-alaska-native') selected @endif>American Indian / Alaskan Native</option>
+                                            <option value="asian" @if(old('ethnicity') == 'asian') selected @endif>Asian</option>
+                                            <option value="white-caucasian" @if(old('ethnicity') == 'white-caucasian') selected @endif>White/Caucasian</option>
+                                            <option value="pacific-islander" @if(old('ethnicity') == 'pacific-islander') selected @endif>Pacific Islander</option>
+                                            <option value="african-american" @if(old('ethnicity') == 'african-american') selected @endif>African American</option>
+                                            <option value="hispanic" @if(old('ethnicity') == 'hispanic') selected @endif>Hispanic</option>
+                                            <option value="multiracial" @if(old('ethnicity') == 'multiracial') selected @endif>Multiracial</option>
+                                            <option value="other" @if(old('ethnicity') == 'other') selected @endif>Other</option>
                                         </select>
+                                        @error('ethnicity')
+                                        <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +215,10 @@
                                     <label class="col-form-label text-dark">Company Name</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <input type="text" name="company_name" id="" class="form-control" placeholder="Your Company Name">
+                                    <input type="text" name="company_name" value="{{ old('company_name') }}" class="form-control" placeholder="Your Company Name">
+                                    @error('company_name')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -214,16 +230,19 @@
                                 <div class="col-12 col-md-8">
                                     <select name="company_size" class="form-control">
                                         <option value="">Select Your Company Size</option>
-                                        <option value="self-employed">Self Employed</option>
-                                        <option value="1to10">1 - 10</option>
-                                        <option value="11to50">11 - 50</option>
-                                        <option value="51to200">51 - 200</option>
-                                        <option value="201to500">201 - 500</option>
-                                        <option value="501to1000">501 - 1,000</option>
-                                        <option value="1001to5000">1,001 - 5,000</option>
-                                        <option value="5001to10000">5,001 - 10,000</option>
-                                        <option value="10000plus">10,000+</option>
+                                        <option value="self-employed" @if(old('company_size') == 'self-employed') selected @endif>Self Employed</option>
+                                        <option value="1to10" @if(old('company_size') == '1to10') selected @endif>1 - 10</option>
+                                        <option value="11to50" @if(old('company_size') == '11to50') selected @endif>11 - 50</option>
+                                        <option value="51to200" @if(old('company_size') == '51to200') selected @endif>51 - 200</option>
+                                        <option value="201to500" @if(old('company_size') == '201to500') selected @endif>201 - 500</option>
+                                        <option value="501to1000" @if(old('company_size') == '501to1000') selected @endif>501 - 1,000</option>
+                                        <option value="1001to5000" @if(old('company_size') == '1001to5000') selected @endif>1,001 - 5,000</option>
+                                        <option value="5001to10000" @if(old('company_size') == '5001to10000') selected @endif>5,001 - 10,000</option>
+                                        <option value="10000plus" @if(old('company_size') == '10000plus') selected @endif>10,000+</option>
                                     </select>
+                                    @error('company_size')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -233,7 +252,10 @@
                                     <label class="col-form-label text-dark">Job Title</label>
                                 </div>
                                 <div class="col-12 col-md-8">
-                                    <input type="text" name="job_title" class="form-control" placeholder="Enter Your Job Title">
+                                    <input type="text" name="job_title" value="{{ old('job_title') }}" class="form-control" placeholder="Enter Your Job Title">
+                                    @error('job_title')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
                                 </div>
                             </div>
                         </div>
@@ -244,14 +266,14 @@
                                 </div>
                                 <div class="col-12 col-md-8">
                                     @if(Auth::user()->hasRole('participant'))
-                                    <select data-placeholder="Type To Search.." name="industries[]" class="chosen-select form-control" multiple tabindex="4">
+                                    <select data-placeholder="Type To Search.." name="industry[]" class="chosen-select form-control" multiple tabindex="4">
                                         @foreach($industries as $industry)
                                             <option value="{{ $industry }}">{{ $industry }}</option>
                                         @endforeach
                                     </select>
                                     @endif
                                     @if(Auth::user()->hasRole('researcher'))
-                                        <select name="industries" class="form-control" >
+                                        <select name="industry" class="form-control" >
                                             <option>Select Your Industry</option>
                                             @foreach($industries as $industry)
                                                 <option value="{{ $industry }}">{{ $industry }}</option>
