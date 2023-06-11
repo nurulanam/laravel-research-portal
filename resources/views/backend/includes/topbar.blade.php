@@ -38,7 +38,7 @@
                             <img src="{{ asset('backend/img/profile/'.$avatar->user_avatar) }}" class="img-profile rounded-circle img-32" alt="profile-picture">
                         @endif
                     @elseif(empty($avatar))
-                        <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}/" class="img-profile rounded-circle img-32" alt="profile-picture">
+                        <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-profile rounded-circle img-32" alt="profile-picture">
                     @endif
                 </div>
 

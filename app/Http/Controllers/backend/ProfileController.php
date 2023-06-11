@@ -300,6 +300,81 @@ class ProfileController extends Controller
     public function contactDetails(Request $request){
 
     }
+    public function demographics(Request $request)
+    {
+        $user_id = Auth::id();
+        $find_profile = Profile::where('user_id', '=', $user_id)->first();
+        if ($find_profile !== null) {
+            if (Auth::user()->hasRole('participant')) {
+                $request->validate([
+                    'gender' => 'required|string',
+                    'date_of_birth' => 'required|date|before:18 years ago',
+                    'ethnicity' => 'required|string',
+                    'education_level' => 'required|string',
+                    'household_income' => 'required|string',
+                    'marital_status' => 'required|string',
+                    'children_in_living' => 'required|string',
+                ],
+                    [
+                        'before' => 'You must be at least 18 years old',
+                    ]);
+                if ($find_profile->status == 'active') {
+                    if ($find_profile->gender !== null && $find_profile->date_of_birth !== null && $find_profile->ethnicity !== null && $find_profile->education_level !== null && $find_profile->household_income !== null && $find_profile->marital_status !== null && $find_profile->children_in_living !== null){
+                        $find_profile->gender = $request->gender;
+                        $find_profile->date_of_birth = $request->date_of_birth;
+                        $find_profile->ethnicity = $request->ethnicity;
+                        $find_profile->education_level = $request->education_level;
+                        $find_profile->household_income = $request->household_income;
+                        $find_profile->marital_status = $request->marital_status;
+                        $find_profile->children_in_living = $request->children_in_living;
+                        $find_profile->status = 'status';
+                        $find_profile->update();
+                        return redirect()->back()->with('success', 'Your Demographics Updated');
+                    }else{
+                        $profile = new Profile();
+                        $profile->user_id = $user_id;
+                        $profile->gender = $request->gender;
+                        $profile->date_of_birth = $request->date_of_birth;
+                        $profile->ethnicity = $request->ethnicity;
+                        $profile->education_level = $request->education_level;
+                        $profile->household_income = $request->household_income;
+                        $profile->marital_status = $request->marital_status;
+                        $profile->children_in_living = $request->children_in_living;
+                        $profile->status = 'deactivate';
+                        $profile->save();
+                        return redirect()->back()->with('success', 'Your Demographics Saved');
+                    }
+                }elseif($find_profile->status == 'deactivate'){
+                    return redirect()->back()->with('error', 'You Can\'t Change Demographics Please Contact With Our Support Team');
+                }
+            }
+        }elseif($find_profile == null){
+            $request->validate([
+                'gender' => 'required|string',
+                'date_of_birth' => 'required|date|before:18 years ago',
+                'ethnicity' => 'required|string',
+                'education_level' => 'required|string',
+                'household_income' => 'required|string',
+                'marital_status' => 'required|string',
+                'children_in_living' => 'required|string',
+            ],
+                [
+                    'before' => 'You must be at least 18 years old',
+                ]);
+            $profile = new Profile();
+            $profile->user_id = $user_id;
+            $profile->gender = $request->gender;
+            $profile->date_of_birth = $request->date_of_birth;
+            $profile->ethnicity = $request->ethnicity;
+            $profile->education_level = $request->education_level;
+            $profile->household_income = $request->household_income;
+            $profile->marital_status = $request->marital_status;
+            $profile->children_in_living = $request->children_in_living;
+            $profile->status = 'deactivate';
+            $profile->save();
+            return redirect()->back()->with('success', 'Your Demographics Saved');
+        }
+    }
     public function personalDetails(Request $request){
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();

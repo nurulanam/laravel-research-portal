@@ -82,6 +82,11 @@
         toastr.options.progressBar = true;
         toastr.info("{{session('info')}}");
     @endif
+    @if(count($errors) > 0)
+        toastr.options.closeButton = true;
+        toastr.options.progressBar = true;
+        toastr.error("Error Please Recheck !");
+    @endif
 </script>
 
 </body>

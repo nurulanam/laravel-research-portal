@@ -24,7 +24,7 @@ class CreateProfilesTable extends Migration
             $table->string('state')->nullable();
             $table->string('city')->nullable();
             $table->integer('zip_code')->nullable();
-            $table->string('job_title')->nullable()->comment('owner-or-operator, hairstylist-owner-or-operator, co-owner-or-operator, small-business-owner-or-operator, owner-or-operator-or-employee, owner-or-operator-and-web-designer, owner-or-operator-or-photographer, owner-or-operator-or-manager, hairstylist-or-makeup-artist-owner-or-operator, mechanic-or-small-business-owner-or-operator');
+            $table->string('job_title')->nullable();
             $table->string('company_name')->nullable();
             $table->string('company_size')->nullable()->comment('self-employed, 1to10, 11to50, 51to200, 201to500, 501to1000, 1001to5000, 5001to10000, 10000plus');
             $table->string('ethnicity')->nullable()->comment('american-indian-or-alaska-native, asian, white-caucasian, pacific-islander, african-american, hispanic, multiracial, other');

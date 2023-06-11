@@ -4,6 +4,9 @@
 .font-13{
     font-size: 13px;
 }
+.font-18{
+    font-size: 18px;
+}
 .radio-label{
     padding: 2px;
 }
@@ -37,4 +40,26 @@
     height: 32px !important;
     object-fit: contain;
     background-color: #092D5F;
+}
+.chosen-container.chosen-container-multi{
+    width: 100% !important;
+}
+.chosen-choices{
+    height: calc(1.5em + .75rem + 2px) !important;
+    padding: .375rem .75rem !important;
+    line-height: 1.5 !important;
+    color: #6e707e !important;
+    background-color: #fff !important;
+    background-clip: padding-box !important;
+    border: 1px solid #d1d3e2 !important;
+    border-radius: .35rem !important;
+    transition: border-color .15s ease-in-out,box-shadow .15s ease-in-out !important;
+}
+.search-choice{
+    color: #fff !important;
+    background: #4e73df !important;
+    border-color: #4e73df !important;
+}
+.search-choice .search-choice-close{
+    filter: brightness(1.75) !important;
 }
