@@ -327,7 +327,7 @@ class ProfileController extends Controller
                         $find_profile->household_income = $request->household_income;
                         $find_profile->marital_status = $request->marital_status;
                         $find_profile->children_in_living = $request->children_in_living;
-                        $find_profile->status = 'status';
+                        $find_profile->status = 'deactivate';
                         $find_profile->update();
                         return redirect()->back()->with('success', 'Your Demographics Updated');
                     }else{
