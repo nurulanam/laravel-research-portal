@@ -180,9 +180,9 @@
                                                         data-state="{{ $key }}">
                                                         <option value="">Select Your City</option>
                                                         @foreach ($cities as $city)
-                                                            <option value="{{ $city }}">{{ $city }} @if (!empty($profileInfo) && $profileInfo->city == $city) selected
-                                                                @elseif(empty($profileInfo)) @if (old('city') == $city) selected @endif
-                                                                @endif></option>
+                                                            <option value="{{ $city }}" @if (!empty($profileInfo) && $profileInfo->city == $city) selected
+                                                                    @elseif(empty($profileInfo)) @if (old('city') == $city) selected @endif
+                                                                @endif>{{ $city }}</option>
                                                         @endforeach
 
                                                     </select>
@@ -798,6 +798,17 @@
     </script>
 
     <script>
+        $(document).ready(function () {
+            var stateVal =  $('#state').val();
+            $('.city').each(function(index) {
+                var dataState = $(this).data('state');
+                if (dataState == stateVal) {
+                    $(this).addClass('d-block').attr('disabled', false, 'selected');
+                } else {
+                    $(this).removeClass('d-block').attr('disabled', true);
+                }
+            });
+        });
         $('#state').on('change', function() {
             var state = $(this).val();
 

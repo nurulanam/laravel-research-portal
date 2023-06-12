@@ -381,31 +381,16 @@ class ProfileController extends Controller
                         'before' => 'You must be at least 18 years old',
                     ]);
                 if ($find_profile->status == 'active') {
-                    if ($find_profile->gender !== null && $find_profile->date_of_birth !== null && $find_profile->ethnicity !== null && $find_profile->education_level !== null && $find_profile->household_income !== null && $find_profile->marital_status !== null && $find_profile->children_in_living !== null){
-                        $find_profile->gender = $request->gender;
-                        $find_profile->date_of_birth = $request->date_of_birth;
-                        $find_profile->ethnicity = $request->ethnicity;
-                        $find_profile->education_level = $request->education_level;
-                        $find_profile->household_income = $request->household_income;
-                        $find_profile->marital_status = $request->marital_status;
-                        $find_profile->children_in_living = $request->children_in_living;
-                        $find_profile->status = 'deactivate';
-                        $find_profile->update();
-                        return redirect()->back()->with('success', 'Your Demographics Updated');
-                    }else{
-                        $profile = new Profile();
-                        $profile->user_id = $user_id;
-                        $profile->gender = $request->gender;
-                        $profile->date_of_birth = $request->date_of_birth;
-                        $profile->ethnicity = $request->ethnicity;
-                        $profile->education_level = $request->education_level;
-                        $profile->household_income = $request->household_income;
-                        $profile->marital_status = $request->marital_status;
-                        $profile->children_in_living = $request->children_in_living;
-                        $profile->status = 'deactivate';
-                        $profile->save();
-                        return redirect()->back()->with('success', 'Your Demographics Saved');
-                    }
+                    $find_profile->gender = $request->gender;
+                    $find_profile->date_of_birth = $request->date_of_birth;
+                    $find_profile->ethnicity = $request->ethnicity;
+                    $find_profile->education_level = $request->education_level;
+                    $find_profile->household_income = $request->household_income;
+                    $find_profile->marital_status = $request->marital_status;
+                    $find_profile->children_in_living = $request->children_in_living;
+                    $find_profile->status = 'deactivate';
+                    $find_profile->update();
+                    return redirect()->back()->with('success', 'Your Demographics Updated');
                 }elseif($find_profile->status == 'deactivate'){
                     return redirect()->back()->with('error', 'You Can\'t Change Demographics Please Contact With Our Support Team');
                 }
