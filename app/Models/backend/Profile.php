@@ -14,6 +14,7 @@ class Profile extends Model
         'gender',
         'date_of_birth',
         'phone',
+        'paypal_email',
         'country',
         'city',
         'zip_code',

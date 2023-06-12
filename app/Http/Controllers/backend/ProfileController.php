@@ -224,8 +224,12 @@ class ProfileController extends Controller
         $industries = $this->industries;
         $user_id = Auth::id();
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
-
-        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo'));
+        if (Auth::user()->hasRole('participant')) {
+            $profileIndustry = Industry::where('user_id', '=', $user_id)->get();
+        }elseif (Auth::user()->hasRole('researcher')) {
+            $profileIndustry = Industry::where('user_id', '=', $user_id)->first();
+        }
+        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
     }
     public function showAvatar(){
         $user_id = Auth::id();
@@ -298,7 +302,65 @@ class ProfileController extends Controller
 
     }
     public function contactDetails(Request $request){
+        $user_id = Auth::id();
+        $find_profile = Profile::where('user_id', '=' , $user_id)->first();
+        if (Auth::user()->hasRole('participant')){
+            if ($request->phone !== null){
+                $request->validate([
+                    'phone' => 'numeric|digits:10',
+                    'paypal_email' => 'required|email',
+                    'state' => 'required|string',
+                    'city' => 'required|string',
+                    'zip_code' => 'required|integer',
+                ]);
+            }else{
+                $request->validate([
+                    'paypal_email' => 'required|email',
+                    'state' => 'required|string',
+                    'city' => 'required|string',
+                    'zip_code' => 'required|integer',
+                ]);
+            }
+            if ($find_profile !== null){
+                if ($request->phone !== null){
+                    $find_profile->phone = $request->phone;
+                }
+                $find_profile->paypal_email = $request->paypal_email;
+                $find_profile->state = $request->state;
+                $find_profile->city = $request->city;
+                $find_profile->zip_code = $request->zip_code;
+                $find_profile->update();
+                return redirect()->back()->with('success', 'Contact Information Updated');
 
+            }elseif ($find_profile == null){
+                $profile = new Profile();
+                $profile->user_id = $user_id;
+                if ($request->phone !== null){
+                    $profile->phone = $request->phone;
+                }
+                $profile->paypal_email = $request->paypal_email;
+                $profile->state = $request->state;
+                $profile->city = $request->city;
+                $profile->zip_code = $request->zip_code;
+                $profile->save();
+                return redirect()->back()->with('success', 'Contact Information Saved');
+            }
+        }elseif(Auth::user()->hasRole('researcher')){
+            $request->validate([
+                'phone' => 'required|numeric|digits:10',
+            ]);
+            if ($find_profile !== null){
+                $find_profile->phone = $request->phone;
+                $find_profile->update();
+                return redirect()->back()->with('success', 'Contact Information Updated');
+            }elseif ($find_profile == null){
+                $profile = new Profile();
+                $profile->user_id = $user_id;
+                $profile->phone = $request->phone;
+                $profile->save();
+                return redirect()->back()->with('success', 'Contact Information Saved');
+            }
+        }
     }
     public function demographics(Request $request)
     {
@@ -375,54 +437,86 @@ class ProfileController extends Controller
             return redirect()->back()->with('success', 'Your Demographics Saved');
         }
     }
-    public function personalDetails(Request $request){
+    public function employment(Request $request){
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();
+        if (Auth::user()->hasRole('participant')){
+            $request->validate([
+                'employment_status' => 'required|string',
+                'company_name' => 'required|string',
+                'company_size' => 'required|string',
+                'job_title' => 'required|string',
+                'industry' => 'required|array|max:5',
+                'industry.*' => 'required|string',
+            ]);
+        }elseif(Auth::user()->hasRole('researcher')){
+            $request->validate([
+                'company_name' => 'required|string',
+                'company_size' => 'required|string',
+                'job_title' => 'required|string',
+                'industry' => 'required|string',
+            ]);
+        }
         if ($find_profile !== null){
-            if ($find_profile->status == 'active' || $find_profile->status == null) {
-                if (Auth::user()->hasRole('participant')){
-                    $request->validate([
-                        'gender' => 'required|string',
-                        'date_of_birth' => 'required|date|before:18 years ago',
-                        'ethnicity' => 'required|string',
-                        'company_name' => 'required|string',
-                        'company_size' => 'required|string',
-                        'job_title' => 'required|string',
-                        'industry.*' => 'required|string',
-                    ],
-                        [
-                            'before' => 'You must be at least 18 years old',
-                        ]);
-                    $find_profile->gender = $request->gender;
-                    $find_profile->date_of_birth = $request->date_of_birth;
-                    $find_profile->ethnicity = $request->ethnicity;
-                    $find_profile->company_name = $request->company_name;
-                    $find_profile->company_size = $request->company_size;
-                    $find_profile->job_title = $request->job_title;
-                    foreach ($request->industry as $industry_name){
-                        $industry = new Industry();
-                        $industry->user_id = $user_id;
-                        $industry->industry = $industry_name;
-                        $industry->save();
-                    }
-                    $find_profile->save();
-                    return redirect()->back()->with('success', 'Personal Informaion Saved');
-                }elseif(Auth::user()->hasRole('researcher')){
-                    $request->validate([
-                        'company_name' => 'required|string',
-                        'company_size' => 'required|string',
-                        'job_title' => 'required|string',
-                        'industry' => 'required|string',
-                    ]);
+            $find_profile->company_name = $request->company_name;
+            $find_profile->company_size = $request->company_size;
+            $find_profile->job_title = $request->job_title;
+            if (Auth::user()->hasRole('participant')){
+                $find_profile->employment_status = $request->employment_status;
+
+                $find_industry = Industry::where('user_id', '=', $user_id)->get();
+                foreach ($find_industry as $delete_intustry){
+                    $delete_intustry->delete();
                 }
+                foreach ($request->industry as $industry_name){
+                    $industry = new Industry();
+                    $industry->user_id = $user_id;
+                    $industry->industry = $industry_name;
+                    $industry->save();
+                }
+            }elseif(Auth::user()->hasRole('researcher')){
+                $find_industry = Industry::where('user_id', '=', $user_id)->first();
+                if ($find_industry !== null){
+                    $find_industry->delete();
 
+                    $industry = new Industry();
+                    $industry->user_id = $user_id;
+                    $industry->industry = $request->industry;
+                    $industry->save();
+                }elseif($find_industry == null){
+                    $industry = new Industry();
+                    $industry->user_id = $user_id;
+                    $industry->industry = $request->industry;
+                    $industry->save();
+                }
             }
-
+            $find_profile->update();
+            return redirect()->back()->with('success', 'Employment Information Updated');
 
         }elseif ($find_profile == null){
+            $profile = new Profile();
+            $profile->user_id = $user_id;
+            $profile->company_name = $request->company_name;
+            $profile->company_size = $request->company_size;
+            $profile->job_title = $request->job_title;
+            if (Auth::user()->hasRole('participant')){
+                $find_profile->employment_status = $request->employment_status;
 
+                foreach ($request->industry as $industry_name){
+                    $industry = new Industry();
+                    $industry->user_id = $user_id;
+                    $industry->industry = $industry_name;
+                    $industry->save();
+                }
+            }elseif(Auth::user()->hasRole('researcher')){
+                $industry = new Industry();
+                $industry->user_id = $user_id;
+                $industry->industry = $request->industry;
+                $industry->save();
+            }
+            $profile->save();
+            return redirect()->back()->with('success', 'Employment Information Saved');
         }
-
     }
     /**
      * Display the specified resource.

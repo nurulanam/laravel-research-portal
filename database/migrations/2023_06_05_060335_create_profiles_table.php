@@ -20,6 +20,7 @@ class CreateProfilesTable extends Migration
             $table->string('gender')->nullable()->comment('male, female, non-binary, prefer-not-to-say');
             $table->date('date_of_birth')->nullable()->comment('must be 18+');
             $table->string('phone')->nullable();
+            $table->string('paypal_email')->nullable();
             $table->string('country')->default('us');
             $table->string('state')->nullable();
             $table->string('city')->nullable();

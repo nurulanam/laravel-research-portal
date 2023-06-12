@@ -53,6 +53,7 @@
             <div class="modal fade" id="contactDetails" tabindex="-1" role="dialog" aria-labelledby="contactDetailsLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Contact Details</h5>
@@ -60,8 +61,10 @@
                                 <span aria-hidden="true">&times;</span>
                             </button>
                         </div>
-                        <div class="modal-body">
-                            <form action="">
+                        <form action="{{ route('profile.contact.details') }}" method="POST">
+                            @csrf
+                            <div class="modal-body">
+
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
@@ -70,6 +73,9 @@
                                         <div class="col-12 col-md-8">
                                             <input type="text" name="first_name" class="form-control"
                                                 value="{{ Auth::user()->first_name }}" disabled="disabled" readonly>
+                                            @error('first_name')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -81,17 +87,9 @@
                                         <div class="col-12 col-md-8">
                                             <input type="text" name="last_name" class="form-control"
                                                 value="{{ Auth::user()->last_name }}" disabled="disabled" readonly>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="row">
-                                        <div class="col-12 col-md-4">
-                                            <label class="col-form-label text-dark">Phone</label>
-                                        </div>
-                                        <div class="col-12 col-md-8">
-                                            <input type="text" name="phone" class="form-control"
-                                                placeholder="Your Phone Number">
+                                            @error('last_name')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -103,10 +101,42 @@
                                         <div class="col-12 col-md-8">
                                             <input class="form-control m-0" value="{{ Auth::user()->email }}"
                                                 disabled="disabled" readonly>
+                                            @error('email')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12 col-md-4">
+                                            <label class="col-form-label text-dark">Phone</label>
+                                        </div>
+                                        <div class="col-12 col-md-8">
+                                            <input type="number" name="phone" class="form-control"
+                                                   placeholder="Your Phone Number" @if (!empty($profileInfo)) value="{{ $profileInfo->phone }}"
+                                                   @elseif(empty($profileInfo)) value="{{ old('phone') }}" @endif>
+                                            @error('phone')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
                                 @if (Auth::user()->hasRole('participant'))
+                                    <div class="form-group">
+                                        <div class="row">
+                                            <div class="col-12 col-md-4">
+                                                <label class="col-form-label text-dark">Paypal E-mail</label>
+                                            </div>
+                                            <div class="col-12 col-md-8">
+                                                <input name="paypal_email" class="form-control m-0" placeholder="Your Paypal E-mail" @if (!empty($profileInfo)) value="{{ $profileInfo->paypal_email }}"
+                                                       @elseif(empty($profileInfo)) value="{{ old('paypal_email') }}" @endif>
+                                                @error('paypal_email')
+                                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                                @enderror
+                                            </div>
+                                        </div>
+                                    </div>
                                     <div class="form-group">
                                         <div class="row">
                                             <div class="col-12 col-md-4">
@@ -127,10 +157,15 @@
                                                     <option value="">Select Your State</option>
 
                                                     @foreach ($us_states as $key => $states)
-                                                        <option value="{{ $key }}">{{ $key }}</option>
+                                                        <option value="{{ $key }}" @if (!empty($profileInfo) && $profileInfo->state == $key) selected
+                                                                @elseif(empty($profileInfo)) @if (old('state') == $key) selected @endif
+                                                            @endif>{{ $key }}</option>
                                                     @endforeach
 
                                                 </select>
+                                                @error('state')
+                                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -145,12 +180,16 @@
                                                         data-state="{{ $key }}">
                                                         <option value="">Select Your City</option>
                                                         @foreach ($cities as $city)
-                                                            <option value="{{ $city }}">{{ $city }}
-                                                            </option>
+                                                            <option value="{{ $city }}">{{ $city }} @if (!empty($profileInfo) && $profileInfo->city == $city) selected
+                                                                @elseif(empty($profileInfo)) @if (old('city') == $city) selected @endif
+                                                                @endif></option>
                                                         @endforeach
 
                                                     </select>
                                                 @endforeach
+                                                    @error('city')
+                                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                                    @enderror
                                             </div>
                                         </div>
                                     </div>
@@ -160,18 +199,22 @@
                                                 <label class="col-form-label text-dark">Zip Code</label>
                                             </div>
                                             <div class="col-12 col-md-8">
-                                                <input type="text" name="zip_code" class="form-control"
-                                                    placeholder="Your Zip Code">
+                                                <input type="number" name="zip_code" class="form-control"
+                                                    placeholder="Your Zip Code" @if (!empty($profileInfo)) value="{{ $profileInfo->zip_code }}"
+                                                       @elseif(empty($profileInfo)) value="{{ old('zip_code') }}" @endif>
+                                                @error('zip_code')
+                                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                                @enderror
                                             </div>
                                         </div>
                                     </div>
                                 @endif
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button type="button" class="btn btn-primary">Save changes</button>
-                        </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -211,11 +254,13 @@
                                 @if (!empty($profileInfo))
                                     @if ($profileInfo->status == 'deactivate')
                                         <p>Need to make changes? Contact us at <a
-                                                href="mailto:support@third-state-research.com">support@thirdstateresearch.com</a>
+                                                href="mailto:support@thirdstateresearch.com">support@thirdstateresearch.com</a>
                                         </p>
                                     @elseif($profileInfo->status == 'active')
+                                        <p>Please fill out the form correctly. Once you fill it out, you can't change it.</p>
                                     @endif
                                 @elseif(empty($profileInfo))
+                                    <p>Please fill out the form correctly. Once you fill it out, you can't change it.</p>
                                 @endif
 
                                 <div class="form-group">
@@ -259,7 +304,7 @@
                                         <div class="col-12 col-md-8">
                                             <input type="date" name="date_of_birth" class="form-control"
                                                 @if (!empty($profileInfo)) @if ($profileInfo->status == 'deactivate') value="{{ $profileInfo->date_of_birth }}" disabled="disabled" @elseif($profileInfo->status == 'active') value="{{ $profileInfo->date_of_birth }}" @endif
-                                            @elseif(empty($profileInfo)) value="{{ old(date_of_birth) }}"
+                                            @elseif(empty($profileInfo)) value="{{ old('date_of_birth') }}"
                                                 @endif>
                                             @error('date_of_birth')
                                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
@@ -546,45 +591,45 @@
                                                 <label class="col-form-label text-dark">Employment Status</label>
                                             </div>
                                             <div class="col-12 col-md-8">
-                                                <select name="employment_status" class="form-control" >
+                                                <select name="employment_status" class="form-control">
                                                     <option value="">Select Your Employment Status</option>
                                                     <option value="self-employed"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'self-employed') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'self-employed') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'self-employed') selected @endif
                                                         @endif>Self Employed
                                                     </option>
                                                     <option value="homemaker"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'homemaker') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'homemaker') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'homemaker') selected @endif
                                                         @endif>Homemaker
                                                     </option>
                                                     <option value="employed-part-time"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'employed-part-time') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'employed-part-time') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'employed-part-time') selected @endif
                                                         @endif>Employed part
                                                         time</option>
                                                     <option value="employed-full-time"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'employed-full-time') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'employed-full-time') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'employed-full-time') selected @endif
                                                         @endif>Employed full
                                                         time</option>
                                                     <option value="not-employed-looking-for-work"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'not-employed-looking-for-work') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'not-employed-looking-for-work') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'not-employed-looking-for-work') selected @endif
                                                         @endif>Not employed -
                                                         looking for work</option>
                                                     <option value="not-employed-not-looking-for-work"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'not-employed-not-looking-for-work') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'not-employed-not-looking-for-work') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'not-employed-not-looking-for-work') selected @endif
                                                         @endif>Not employed -
                                                         not looking for work</option>
                                                     <option value="retired"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'retired') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'retired') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'retired') selected @endif
                                                         @endif>Retired
                                                     </option>
                                                     <option value="unable-to-work"
-                                                            @if (!empty($profileInfo) && $profileInfo->employment_status == 'unable-to-work') selected
+                                                        @if (!empty($profileInfo) && $profileInfo->employment_status == 'unable-to-work') selected
                                                             @elseif(empty($profileInfo)) @if (old('employment_status') == 'unable-to-work') selected @endif
                                                         @endif>Unable to work
                                                     </option>
@@ -602,9 +647,10 @@
                                             <label class="col-form-label text-dark">Company Name</label>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <input type="text" name="company_name"
-                                                class="form-control" placeholder="Your Company Name" @if (!empty($profileInfo)) value="{{ $profileInfo->company_name }}"
-                                                   @elseif(empty($profileInfo)) value="{{ old($profileInfo->company_name) }}" @endif>
+                                            <input type="text" name="company_name" class="form-control"
+                                                placeholder="Your Company Name"
+                                                @if (!empty($profileInfo)) value="{{ $profileInfo->company_name }}"
+                                                   @elseif(empty($profileInfo)) value="{{ old('company_name') }}" @endif>
                                             @error('company_name')
                                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
@@ -620,43 +666,43 @@
                                             <select name="company_size" class="form-control">
                                                 <option value="">Select Your Company Size</option>
                                                 <option value="self-employed"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == 'self-employed') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == 'self-employed') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == 'self-employed') selected @endif
                                                     @endif>Self Employed
                                                 </option>
                                                 <option value="1to10"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '1to10') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '1to10') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '1to10') selected @endif
                                                     @endif>1 - 10</option>
                                                 <option value="11to50"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '11to50') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '11to50') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '11to50') selected @endif
                                                     @endif>11 - 50</option>
                                                 <option value="51to200"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '51to200') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '51to200') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '51to200') selected @endif
                                                     @endif>51 - 200</option>
                                                 <option value="201to500"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '201to500') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '201to500') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '201to500') selected @endif
                                                     @endif>201 - 500</option>
                                                 <option value="501to1000"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '501to1000') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '501to1000') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '501to1000') selected @endif
                                                     @endif>501 - 1,000
                                                 </option>
                                                 <option value="1001to5000"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '1001to5000') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '1001to5000') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '1001to5000') selected @endif
                                                     @endif>1,001 - 5,000
                                                 </option>
                                                 <option value="5001to10000"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '5001to10000') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '5001to10000') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '5001to10000') selected @endif
                                                     @endif>5,001 - 10,000
                                                 </option>
                                                 <option value="10000plus"
-                                                        @if (!empty($profileInfo) && $profileInfo->company_size == '10000plus') selected
+                                                    @if (!empty($profileInfo) && $profileInfo->company_size == '10000plus') selected
                                                         @elseif(empty($profileInfo)) @if (old('company_size') == '10000plus') selected @endif
                                                     @endif>10,000+</option>
                                             </select>
@@ -672,8 +718,10 @@
                                             <label class="col-form-label text-dark">Job Title</label>
                                         </div>
                                         <div class="col-12 col-md-8">
-                                            <input type="text" name="job_title" class="form-control" placeholder="Enter Your Job Title" @if (!empty($profileInfo)) value="{{ $profileInfo->job_title }}"
-                                                   @elseif(empty($profileInfo)) value="{{ old($profileInfo->job_title) }}" @endif>
+                                            <input type="text" name="job_title" class="form-control"
+                                                placeholder="Enter Your Job Title"
+                                                @if (!empty($profileInfo)) value="{{ $profileInfo->job_title }}"
+                                                   @elseif(empty($profileInfo)) value="{{ old('job_title') }}" @endif>
                                             @error('job_title')
                                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
@@ -689,21 +737,32 @@
                                             @if (Auth::user()->hasRole('participant'))
                                                 <select data-placeholder="Type To Search.." name="industry[]"
                                                     class="chosen-select form-control" multiple tabindex="4">
+
                                                     @foreach ($industries as $industry)
-                                                        <option value="{{ $industry }}">{{ $industry }}</option>
-                                                    @endforeach
-                                                </select>
+                                                        <option value="{{ $industry }}"
+                                                            @if (!empty($profileIndustry)) @foreach ($profileIndustry as $hasIndustry)
+                                                                     @if ($hasIndustry->industry == $industry) selected @endif
+                                                            @endforeach
+                                                        @elseif(empty($profileIndustry))
+                                                            @if (old('industry') == $industry) selected @endif
+                                                    @endif>{{ $industry }}</option>
+                                            @endforeach
+                                            </select>
                                             @endif
                                             @if (Auth::user()->hasRole('researcher'))
                                                 <select name="industry" class="form-control">
-                                                    <option>Select Your Industry</option>
+                                                    <option value="">Select Your Industry</option>
                                                     @foreach ($industries as $industry)
-                                                        <option value="{{ $industry }}" @if (!empty($profileInfo) && $profileInfo->industry == $industry) selected
-                                                                @elseif(empty($profileInfo)) @if (old('industry') ==  $industry) selected @endif
-                                                            @endif>{{ $industry }}</option>
+                                                        <option value="{{ $industry }}"
+                                                            @if (!empty($profileIndustry) && $profileIndustry->industry == $industry) selected
+                                                                @elseif(empty($profileInfo)) @if (old('industry') == $industry) selected @endif
+                                                            @endif >{{ $industry }}</option>
                                                     @endforeach
                                                 </select>
                                             @endif
+                                            @error('industry')
+                                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
                                 </div>
@@ -713,7 +772,6 @@
                                 </div>
                             </div>
                         </form>
-
                     </div>
                 </div>
             </div>
