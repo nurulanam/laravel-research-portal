@@ -231,7 +231,7 @@ class ProfileController extends Controller
         }
         return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
     }
-    public function showAvatar(){
+    public static function showAvatar(){
         $user_id = Auth::id();
         $avatar = Profile::where('user_id', '=' , $user_id)->first();
         return $avatar;

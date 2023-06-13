@@ -15,7 +15,7 @@
                             <div class="p-5">
                                 <div class="text-center">
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
-                                    <h1 class="h4 text-gray-900 my-4">Forgot your password</h1>
+                                    <h1 class="h4 text-gray-900 my-4">Forgot your password?</h1>
                                     <p>No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.</p>
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
                                     <form method="POST" action="{{ route('password.email') }}" class="user">

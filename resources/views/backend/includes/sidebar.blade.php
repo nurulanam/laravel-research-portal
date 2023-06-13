@@ -46,7 +46,8 @@
             </a>
         </li>
     @endif
-
+    <!-- Divider -->
+    <hr class="sidebar-divider">
     <!-- Heading -->
     <div class="sidebar-heading">
         Settings
@@ -72,7 +73,7 @@
              data-parent="#accordionSidebar">
             <div class="bg-white py-2 collapse-inner rounded">
                 <a class="collapse-item" href="{{ route('profile.index') }}">Edit Profile</a>
-                <a class="collapse-item" href="#">Change Password</a>
+                <a class="collapse-item" href="{{ route('change-password.index') }}">Change Password</a>
                 <a class="collapse-item" href="#">Notification</a>
             </div>
         </div>

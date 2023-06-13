@@ -1,7 +1,4 @@
 @extends('backend.dashboardMaster')
-@section('extraMeta')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
 @section('title', 'profile')
 @section('extraCss')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
@@ -96,7 +93,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <label class="col-form-label text-dark">E-mail @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="E-mail Is Verified"><i class="fas fa-check-circle text-success"></i></span> @endif </label>
+                                            <label class="col-form-label text-dark">E-mail @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="Verified"><i class="fas fa-check-circle text-success"></i></span> @endif </label>
                                         </div>
                                         <div class="col-12 col-md-8">
                                             <input class="form-control m-0" value="{{ Auth::user()->email }}"
