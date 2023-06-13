@@ -1,48 +1,67 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('blankMaster')
+@section('title', 'login')
+@section('mainContent')
+    <!-- Outer Row -->
+    <div class="row min-vh-100 justify-content-center align-items-center">
 
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
+        <div class="col-xl-10 col-lg-12 col-md-9">
 
-        <form method="POST" action="{{ route('password.update') }}">
-            @csrf
-
-            <!-- Password Reset Token -->
-            <input type="hidden" name="token" value="{{ $request->route('token') }}">
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email', $request->email)" required autofocus />
+            <div class="card o-hidden border-0 shadow-lg my-5">
+                <div class="card-body p-0">
+                    <!-- Nested Row within Card Body -->
+                    <div class="row">
+                        <div class="col-lg-6 d-none d-lg-block" style="background: url({{ asset("backend/img/form-side.jpg") }}); background-position: center; background-size: cover;"></div>
+                        <div class="col-lg-6">
+                            <div class="p-5">
+                                <div class="text-center">
+                                    <img src="{{ asset('backend/img/logo.png') }}" alt="">
+                                    <h1 class="h4 text-gray-900 my-4">Reset Password</h1>
+                                    <x-auth-session-status class="mb-4" :status="session('status')" />
+                                    <form method="POST" action="{{ route('password.update') }}" class="user">
+                                        @csrf
+                                        <div class="form-group">
+                                            <input type="hidden" name="token" value="{{ $request->route('token') }}">
+                                            @error('email')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="email" name="email" class="form-control form-control-user"
+                                                   id="email" value="{{ old('email', $request->email) }}" aria-describedby="emailHelp"
+                                                   placeholder="Enter Email Address..." required autofocus>
+                                            @error('email')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password" class="form-control form-control-user"
+                                                   id="password" placeholder="Password" required>
+                                            @error('password')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" name="password_confirmation" class="form-control form-control-user"
+                                                   id="password_confirmation" aria-describedby="password_confirmation"
+                                                   placeholder="Confirm Password" required>
+                                            @error('password_confirmation')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                        <button class="btn btn-primary btn-user btn-block">
+                                            Reset Password
+                                        </button>
+                                    </form>
+                                    <div class="d-flex justify-content-between pt-4 small">
+                                        <p>Don't have an account?</p>
+                                        <a href="{{ route('register') }}">Register Here</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required />
-            </div>
-
-            <!-- Confirm Password -->
-            <div class="mt-4">
-                <x-label for="password_confirmation" :value="__('Confirm Password')" />
-
-                <x-input id="password_confirmation" class="block mt-1 w-full"
-                                    type="password"
-                                    name="password_confirmation" required />
-            </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Reset Password') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+        </div>
+@endsection

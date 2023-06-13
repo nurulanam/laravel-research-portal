@@ -37,21 +37,45 @@
             <span>Messages</span>
         </a>
     </li>
+    @if(Auth::user()->hasRole('researcher'))
+        <!-- Nav Item - Billing Menu -->
+        <li class="nav-item">
+            <a class="nav-link" href="#" >
+                <i class="fas fa-fw fa-credit-card"></i>
+                <span>Billing</span>
+            </a>
+        </li>
+    @endif
 
-    <!-- Nav Item - Billing Menu -->
-    <li class="nav-item">
-        <a class="nav-link" href="#" >
-            <i class="fas fa-fw fa-credit-card"></i>
-            <span>Billing</span>
-        </a>
-    </li>
+    <!-- Heading -->
+    <div class="sidebar-heading">
+        Settings
+    </div>
 
+    @if(Auth::user()->hasRole('researcher'))
     <!-- Nav Item - Manage Organization Menu -->
     <li class="nav-item">
         <a class="nav-link" href="#" >
             <i class="fas fa-fw fa-cogs"></i>
             <span>Manage Organization</span>
         </a>
+    </li>
+    @endif
+    <!-- Nav Item - My Account -->
+    <li class="nav-item">
+        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMyAccount"
+           aria-expanded="true" aria-controls="collapseMyAccount">
+            <i class="fas fa-fw fa-user-cog"></i>
+            <span>My Account</span>
+        </a>
+        <div id="collapseMyAccount" class="collapse" aria-labelledby="headingMyAccount"
+             data-parent="#accordionSidebar">
+            <div class="bg-white py-2 collapse-inner rounded">
+                <a class="collapse-item" href="{{ route('profile.index') }}">Edit Profile</a>
+                <a class="collapse-item" href="#">Change Password</a>
+                <a class="collapse-item" href="#">Notification</a>
+            </div>
+        </div>
     </li>
 
 

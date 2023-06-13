@@ -96,7 +96,7 @@
                                 <div class="form-group">
                                     <div class="row">
                                         <div class="col-12 col-md-4">
-                                            <label class="col-form-label text-dark">E-mail</label>
+                                            <label class="col-form-label text-dark">E-mail @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="E-mail Is Verified"><i class="fas fa-check-circle text-success"></i></span> @endif </label>
                                         </div>
                                         <div class="col-12 col-md-8">
                                             <input class="form-control m-0" value="{{ Auth::user()->email }}"
@@ -804,6 +804,9 @@
 @section('extraJs')
     <script>
         $(document).ready(() => {
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip()
+            });
             $('#user_avatar').change(function() {
                 const file = this.files[0];
                 if (file) {

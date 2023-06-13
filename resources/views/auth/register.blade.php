@@ -75,7 +75,7 @@
                                             Register
                                         </button>
                                     </form>
-                                    <div class="d-flex justify-content-between pt-4">
+                                    <div class="d-flex justify-content-between pt-4 small">
                                         <p>Already have an account?</p>
                                         <a href="{{ route('login') }}">Login</a>
                                     </div>

@@ -34,18 +34,21 @@
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group text-left">
+                                        <div class="form-group d-block d-lg-flex justify-content-between align-items-center">
                                             <div class="custom-control custom-checkbox small">
                                                 <input type="checkbox" name="remember" class="custom-control-input" id="remember_me">
                                                 <label class="custom-control-label" for="remember_me">Remember
                                                     Me</label>
                                             </div>
+                                            @if (Route::has('password.request'))
+                                                <a href="{{ route('password.request') }}" class="text-primary small">Forgot Your Password?</a>
+                                            @endif
                                         </div>
                                         <button class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
                                     </form>
-                                    <div class="d-flex justify-content-between pt-4">
+                                    <div class="d-flex justify-content-between pt-4 small">
                                         <p>Don't have an account?</p>
                                         <a href="{{ route('register') }}">Register Here</a>
                                     </div>
