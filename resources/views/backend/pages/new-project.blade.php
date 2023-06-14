@@ -25,7 +25,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-dark-blue">
-                    <h5 class="text-light mb-0">Project Title</h5>
+                    <h5 class="text-light mb-0"id="main_title">Project Title</h5>
                 </div>
                 <div class="card-body">
                     <div class="nav nav-fill my-2">
@@ -42,7 +42,7 @@
                                         <lable class="label" title="required">Internal Project Name <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="internal_name" class="form-control" placeholder="Internal Project Name" required>
+                                        <input type="text" name="internal_name" id="internal_name" class="form-control" placeholder="Internal Project Name" required>
                                     </div>
                                 </div>
                             </div>
@@ -123,7 +123,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <lable class="label">Time Required</lable>
+                                        <lable class="label">Time Required (<span class="text-danger">Minutes</span>)</lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <input type="number" name="required_time" class="form-control" placeholder="Time Required in Minute(s)">
@@ -133,12 +133,12 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <lable class="label">Incentive</lable>
+                                        <lable class="label">Incentive (<span class="text-danger">Min: $5 - Max: $1000</span>)</lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="d-flex">
-                                            <input type="number" name="required_time" class="form-control w-25 mr-lg-3" placeholder="Total Incentive">
-                                            <input type="range" name="" min="5" max="1000" step="5" class="form-control-range" value="5">
+                                            <input type="number" name="required_time" id="required_time" min="5" max="1000" value="5" class="form-control w-25 mr-lg-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
+                                            <input type="range" name="" id="required_time_range" min="5" max="1000" step="5" value="5" class="form-control-range">
                                         </div>
 
                                     </div>
@@ -146,10 +146,20 @@
                             </div>
                         </div>
                         <div class="form-section">
-                            <label for="">E-mail:</label>
-                            <input type="email" class="form-control mb-3" name="email" required>
-                            <label for="">Phone:</label>
-                            <input type="tel" class="form-control mb-3" name="phone"  required>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <lable class="label">Target number of participants <span class="text-danger">*</span></lable>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <div class="d-flex">
+                                            <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-25 mr-lg-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
+                                            <input type="range" name="" id="target_participant_range" min="1" max="50" step="1" value="1" class="form-control-range">
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="form-section">
                             <label for="">Address:</label>
@@ -160,8 +170,8 @@
                             <textarea name="address" class="form-control mb-3" cols="30" rows="5" required></textarea>
                         </div>
                         <div class="form-navigation mt-3">
-                            <button type="button" class="previous btn btn-primary float-left">&lt; Previous</button>
-                            <button type="button" class="next btn btn-primary float-right">Next &gt;</button>
+                            <button type="button" class="previous btn btn-primary float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
+                            <button type="button" class="next btn btn-primary float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
                             <button type="submit" class="btn btn-success float-right">Submit</button>
                         </div>
                     </form>
@@ -173,7 +183,25 @@
 @section('extraJs')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js" integrity="sha512-eyHL1atYNycXNXZMDndxrDhNAegH2BDWt1TmkXJPoGf1WLlNYt08CSjkqF5lnCRmdm3IrkHid8s2jOUY4NIZVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
+        $('#required_time_range').on('input', function (){
+            let range = $(this).val();
+            $('#required_time').val(range);
+        });
+        $('#target_participant_range').on('input', function (){
+            let range = $(this).val();
+            $('#target_participant').val(range);
+        });
+        $('#internal_name').on('keyup', function (){
+            let name = $(this).val();
+            if (name !== ""){
+                $('#main_title').html(name);
+            }else {
+                $('#main_title').html('Project Title');
+            }
 
+
+
+        });
         $(function(){
             var $sections=$('.form-section');
 
