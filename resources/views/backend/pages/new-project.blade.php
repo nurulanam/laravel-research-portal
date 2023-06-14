@@ -12,7 +12,8 @@
         .parsley-errors-list{
             color:red;
             font-size: 13px;
-            padding: 10px;
+            padding: 5px 10px;
+            margin: 0 !important;
         }
         .my-30{
             margin: 30px 0;
@@ -73,15 +74,13 @@
                                         <lable class="label" title="required">Target Audience <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <div class="">
-                                                <input type="radio" name="audience" required>
-                                                <span class="mx-2">Industry Professionals (B2B)</span>
-                                            </div>
-                                            <div class="d-flex ml-lg-4">
-                                                <input type="radio" name="audience">
-                                                <span class="mx-2">General Population (B2C)</span>
-                                            </div>
+                                        <div class="">
+                                            <input type="radio" name="audience">
+                                            <span class="mx-2">Industry Professionals (B2B)</span>
+                                        </div>
+                                        <div class="">
+                                            <input type="radio" name="audience" required>
+                                            <span class="mx-2">General Population (B2C)</span>
                                         </div>
                                     </div>
                                 </div>
@@ -92,16 +91,56 @@
                                         <lable class="label">Type of Research</lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <div class="d-flex justify-content-start align-items-center">
-                                            <div class="d-flex">
-                                                <input type="radio" name="audience">
-                                                <span class="mx-2">Industry Professionals (B2B)</span>
-                                            </div>
-                                            <div class="d-flex ml-lg-4">
-                                                <input type="radio" name="audience">
-                                                <span class="mx-2">General Population (B2C)</span>
-                                            </div>
+                                        <div class="">
+                                            <input type="radio" name="research_type">
+                                            <span class="mx-2">Remote</span>
                                         </div>
+                                        <div class="">
+                                            <input type="radio" name="research_type">
+                                            <span class="mx-2">In-Person</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <hr class="my-30">
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <lable class="label">Research Methodology</lable>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <select name="research_method" class="form-control">
+                                            <option value="">Select Research Method</option>
+                                            <option value="One-on-One">One-on-One</option>
+                                            <option value="Focus Group">Focus Group</option>
+                                            <option value="Unmoderated-Study">Unmoderated Study</option>
+                                            <option value="Survey">Survey</option>
+                                            <option value="Diary-Study">Diary Study</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <lable class="label">Time Required</lable>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <input type="number" name="required_time" class="form-control" placeholder="Time Required in Minute(s)">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="row">
+                                    <div class="col-lg-3">
+                                        <lable class="label">Incentive</lable>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <div class="d-flex">
+                                            <input type="number" name="required_time" class="form-control w-25 mr-lg-3" placeholder="Total Incentive">
+                                            <input type="range" name="" min="5" max="1000" step="5" class="form-control-range" value="5">
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>
