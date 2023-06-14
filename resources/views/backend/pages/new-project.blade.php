@@ -136,8 +136,8 @@
                                         <lable class="label">Incentive (<span class="text-danger">Min: $5 - Max: $1000</span>)</lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <div class="d-flex">
-                                            <input type="number" name="required_time" id="required_time" min="5" max="1000" value="5" class="form-control w-25 mr-lg-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
+                                        <div class="d-md-flex">
+                                            <input type="number" name="required_time" id="required_time" min="5" max="1000" value="5" class="form-control w-md-25 mr-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
                                             <input type="range" name="" id="required_time_range" min="5" max="1000" step="5" value="5" class="form-control-range">
                                         </div>
 
@@ -152,8 +152,8 @@
                                         <lable class="label">Target number of participants <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <div class="d-flex">
-                                            <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-25 mr-lg-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
+                                        <div class="d-md-flex">
+                                            <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-md-25 mr-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
                                             <input type="range" name="" id="target_participant_range" min="1" max="50" step="1" value="1" class="form-control-range">
                                         </div>
 
