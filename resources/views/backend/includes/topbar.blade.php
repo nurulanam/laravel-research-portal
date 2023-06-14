@@ -15,7 +15,7 @@
         <!-- Nav Item - User Information -->
         @if(Auth::user()->hasRole('researcher'))
         <li class="nav-item">
-            <a class="nav-link" href="#">
+            <a class="nav-link" href="{{ route('project.create') }}">
                 <button class="btn btn-primary btn-custom"><span class="mx-2"><i class="fas fa-plus"></i></span>New Project</button>
             </a>
         </li>

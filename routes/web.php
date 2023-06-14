@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\dashboardController;
 use App\Http\Controllers\backend\ProfileController;
 use App\Http\Controllers\backend\ChangePasswordController;
+use App\Http\Controllers\backend\ProjectController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -26,6 +27,13 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
     Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
+
+    Route::middleware('role:researcher')->group(function (){
+        // Project
+        Route::resource('/project', ProjectController::class);
+    });
+
+
     // Reset Password
     Route::resource('/change-password', ChangePasswordController::class);
 });
