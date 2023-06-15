@@ -4,7 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-
+use App\Http\Controllers\backend\ProfileController;
 class ProjectController extends Controller
 {
     /**
@@ -24,7 +24,10 @@ class ProjectController extends Controller
      */
     public function create()
     {
-        return view('backend.pages.new-project');
+        $industries = ProfileController::$industries;
+        $us_states = ProfileController::$us_states;
+
+        return view('backend.pages.new-project', compact('industries', 'us_states'));
     }
 
     /**
