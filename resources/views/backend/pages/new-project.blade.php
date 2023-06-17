@@ -444,8 +444,8 @@
                                             <span class="mx-2"><label class="form-check-label" for="55plus">55+</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="checkbox" name="age_range" value="all-ages" id="all-ages" @if(old('age_range') == 'all-ages') checked @endif>
-                                            <span class="mx-2"><label class="form-check-label" for="all-ages">All Ages</label></span>
+                                            <input type="checkbox" name="age_range" value="all-ages" id="allAges" @if(old('age_range') == 'all-ages') checked @endif>
+                                            <span class="mx-2"><label class="form-check-label" for="allAges">All Ages</label></span>
                                         </div>
                                     </div>
                                 </div>
@@ -453,8 +453,44 @@
                         </div>
 
                         <div class="form-section">
-                            <label for="">Address:</label>
-                            <textarea name="address" class="form-control mb-3" cols="30" rows="5" required></textarea>
+                            <div id="questionsField">
+                                <div class="form-group border p-3 bg-gradient-light rounded" data-qid="q1">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5>Q1</h5>
+                                        </div>
+                                        <div class="col-6 text-right">
+                                            <button class="btn"><i class="fas fa-trash-alt"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="question-title mb-3">
+                                        <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>
+                                    </div>
+                                    <div class="question-body">
+                                       <div class="d-flex align-items-center">
+                                           <select name="question_type" class="form-control question_type" id="questionType">
+                                               <option label="Radio (Singe Select)" value="radio" id="questionTypeRadio">Radio (Singe Select)</option>
+                                               <option label="Checkbox (Multi select)" value="checkbox" id="questionTypeCheckbox">Checkbox (Multi select)</option>
+                                               <option label="Multi-line text box" value="text-area" id="questionTypeTextarea">Multi-line text box</option>
+                                               <option label="Single-line text box" value="input-text" id="questionTypeTextbox">Single-line text box</option>
+                                               <option label="Number box" value="input-number" id="questionTypeNumber">Number box</option>
+                                               <option label="Slider (number selector)" value="input-slider" id="questionTypeSlider">Slider (number selector)</option>
+                                           </select>
+                                           <div class="d-flex mx-2">
+                                               <input type="checkbox" name="req" id="requiredCheck" class="mx-2">
+                                               <label class="mb-0" for="requiredCheck">Required</label>
+                                           </div>
+                                       </div>
+                                        <div id="answer">
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-center">
+                                <button class="btn btn-success" id="addQuestion">Add Question</button>
+                            </div>
                         </div>
                         <div class="form-section">
                             <label for="">Address:</label>
@@ -576,6 +612,182 @@
                     $(this).removeClass('d-block').attr('disabled', true);
                 }
             });
+        });
+    </script>
+    <script>
+        $(document).ready(function (){
+            let questionType = $('#questionType').val();
+            if(questionType == 'radio'){
+                questionTypeRadio();
+            }else if(questionType == 'checkbox'){
+                questionTypeCheckbox();
+            }else if(questionType == 'text-area'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-text'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-number'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-slider'){
+                questionTypeSlide();
+            }
+        });
+        $('#questionType').on('change', function (){
+
+            let questionType = $(this).val();
+            if(questionType == 'radio'){
+                questionTypeRadio();
+            }else if(questionType == 'checkbox'){
+                questionTypeCheckbox();
+            }else if(questionType == 'text-area'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-text'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-number'){
+                $('#answer').html('');
+                $('#requiredCheck').attr('checked', true);
+            }else if(questionType == 'input-slider'){
+                questionTypeSlide();
+            }
+        });
+        function questionTypeRadio(){
+            let show = '<div class="radio-answer pt-2">\
+                <div class="row align-items-center py-2">\
+                <div class="col-1">\
+                <p class="serial_nom m-0">1</p>\
+        </div>\
+            <div class="col-7">\
+                <input type="text" class="form-control" placeholder="Answer" required>\
+            </div>\
+            <div class="col-3">\
+                <select name="qualify-or-not" class="form-control" id="">\
+                    <option value="qualify" selected>Qualify</option>\
+                    <option value="disqualify">Disqualify</option>\
+                </select>\
+            </div>\
+            <div class="col-1 text-right">\
+                <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
+            </div>\
+        </div>\
+            <div class="row align-items-center py-2">\
+                <div class="col-1">\
+                    <p class="serial_nom m-0">2</p>\
+                </div>\
+                <div class="col-7">\
+                    <input type="text" class="form-control" placeholder="Answer" required>\
+                </div>\
+                <div class="col-3">\
+                    <select name="qualify-or-not" class="form-control" id="">\
+                        <option value="qualify" selected>Qualify</option>\
+                        <option value="disqualify">Disqualify</option>\
+                    </select>\
+                </div>\
+                <div class="col-1 text-right">\
+                    <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
+                </div>\
+            </div>\
+            <button class="btn btn-primary" id="addAnswer"><i class="fas fa-plus mr-2"></i> Answer</button>\
+        </div>';
+            $('#answer').html(show);
+        }
+        function questionTypeCheckbox(){
+            let show ='<div class="checkbox-answer pt-2">\
+                <div class="row align-items-center py-2">\
+                <div class="col-1">\
+                <p class="serial_nom m-0">1</p>\
+        </div>\
+            <div class="col-7">\
+                <input type="text" class="form-control" placeholder="Answer" required>\
+            </div>\
+            <div class="col-3">\
+                <select name="qualify-or-not" class="form-control" id="">\
+                    <option value="may-select" selected>May Select</option>\
+                    <option value="must-select">Must Select</option>\
+                    <option value="disqualify">Disqualify</option>\
+                </select>\
+            </div>\
+            <div class="col-1 text-right">\
+                <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
+            </div>\
+        </div>\
+            <div class="row align-items-center py-2">\
+                <div class="col-1">\
+                    <p class="serial_nom m-0">2</p>\
+                </div>\
+                <div class="col-7">\
+                    <input type="text" class="form-control" placeholder="Answer" required>\
+                </div>\
+                <div class="col-3">\
+                    <select name="qualify-or-not" class="form-control" id="">\
+                        <option value="may-select" selected>May Select</option>\
+                        <option value="must-select">Must Select</option>\
+                        <option value="disqualify">Disqualify</option>\
+                    </select>\
+                </div>\
+                <div class="col-1 text-right">\
+                    <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
+                </div>\
+            </div>\
+            <button class="btn btn-primary" id="addAnswer"><i class="fas fa-plus mr-2"></i> Answer</button>\
+        </div>';
+            $('#answer').html(show);
+        }
+        function questionTypeSlide(){
+            let show  = '<div class="text-area-answer pt-2">\
+                <div class="row align-items-center py-2">\
+                <div class="col-4">\
+                <label for="" class="col-form-label">Min Value</label>\
+            <input type="number" name="min-value" class="form-control" required>\
+            </div>\
+            <div class="col-4">\
+                <label for="" class="col-form-label">Max Value</label>\
+                <input type="number" name="max-value" class="form-control" required>\
+            </div>\
+            <div class="col-4">\
+                <label for="" class="col-form-label">Step</label>\
+                <input type="number" name="steps" class="form-control">\
+            </div>\
+        </div>\
+        </div>';
+            $('#answer').html(show);
+        }
+
+
+        $('#addQuestion').on('click', function (){
+            let q = '<div class="form-group border p-3 bg-gradient-light rounded" data-qid="q2">\
+                <div class="row">\
+                <div class="col-6">\
+                <h5>Q1</h5>\
+        </div>\
+            <div class="col-6 text-right">\
+                <button type="button" class="btn remove-this" data-remove="q2"><i class="fas fa-trash-alt"></i></button>\
+            </div>\
+        </div>\
+            <div class="question_title mb-3">\
+                <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>\
+            </div>\
+            <div class="question_body">\
+                <div class="d-flex align-items-center">\
+                    <select name="question_type" class="form-control question_type">\
+                        <option label="Radio (Singe Select)" value="radio">Radio (Singe Select)</option>\
+                        <option label="Checkbox (Multi select)" value="checkbox">Checkbox (Multi select)</option>\
+                        <option label="Multi-line text box" value="text-area">Multi-line text box</option>\
+                        <option label="Single-line text box" value="input-text">Single-line text box</option>\
+                        <option label="Number box" value="input-number">Number box</option>\
+                        <option label="Slider (number selector)" value="input-slider">Slider (number selector)</option>\
+                    </select>\
+                    <div class="d-flex mx-2">\
+                        <input type="checkbox" name="" id="requiredCheck" class="mx-2">\
+                            <label class="mb-0" for="requiredCheck">Required</label>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>'
+            $('#questionsField').append(q);
         });
     </script>
 @endsection
