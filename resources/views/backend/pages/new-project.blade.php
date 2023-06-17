@@ -454,39 +454,39 @@
 
                         <div class="form-section">
                             <div id="questionsField">
-                                <div class="form-group border p-3 bg-gradient-light rounded" data-qid="q1">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <h5>Q1</h5>
-                                        </div>
-                                        <div class="col-6 text-right">
-                                            <button class="btn"><i class="fas fa-trash-alt"></i></button>
-                                        </div>
-                                    </div>
-                                    <div class="question-title mb-3">
-                                        <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>
-                                    </div>
-                                    <div class="question-body">
-                                       <div class="d-flex align-items-center">
-                                           <select name="question_type" class="form-control question_type" id="questionType">
-                                               <option label="Radio (Singe Select)" value="radio" id="questionTypeRadio">Radio (Singe Select)</option>
-                                               <option label="Checkbox (Multi select)" value="checkbox" id="questionTypeCheckbox">Checkbox (Multi select)</option>
-                                               <option label="Multi-line text box" value="text-area" id="questionTypeTextarea">Multi-line text box</option>
-                                               <option label="Single-line text box" value="input-text" id="questionTypeTextbox">Single-line text box</option>
-                                               <option label="Number box" value="input-number" id="questionTypeNumber">Number box</option>
-                                               <option label="Slider (number selector)" value="input-slider" id="questionTypeSlider">Slider (number selector)</option>
-                                           </select>
-                                           <div class="d-flex mx-2">
-                                               <input type="checkbox" name="req" id="requiredCheck" class="mx-2">
-                                               <label class="mb-0" for="requiredCheck">Required</label>
-                                           </div>
-                                       </div>
-                                        <div id="answer">
+{{--                                <div class="form-group border p-3 bg-gradient-light rounded" data-qid="q1">--}}
+{{--                                    <div class="row">--}}
+{{--                                        <div class="col-6">--}}
+{{--                                            <h5>Q1</h5>--}}
+{{--                                        </div>--}}
+{{--                                        <div class="col-6 text-right">--}}
+{{--                                            <button class="btn"><i class="fas fa-trash-alt"></i></button>--}}
+{{--                                        </div>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="question-title mb-3">--}}
+{{--                                        <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>--}}
+{{--                                    </div>--}}
+{{--                                    <div class="question-body">--}}
+{{--                                       <div class="d-flex align-items-center">--}}
+{{--                                           <select name="question_type" class="form-control question_type" id="questionType">--}}
+{{--                                               <option label="Radio (Singe Select)" value="radio" id="questionTypeRadio">Radio (Singe Select)</option>--}}
+{{--                                               <option label="Checkbox (Multi select)" value="checkbox" id="questionTypeCheckbox">Checkbox (Multi select)</option>--}}
+{{--                                               <option label="Multi-line text box" value="text-area" id="questionTypeTextarea">Multi-line text box</option>--}}
+{{--                                               <option label="Single-line text box" value="input-text" id="questionTypeTextbox">Single-line text box</option>--}}
+{{--                                               <option label="Number box" value="input-number" id="questionTypeNumber">Number box</option>--}}
+{{--                                               <option label="Slider (number selector)" value="input-slider" id="questionTypeSlider">Slider (number selector)</option>--}}
+{{--                                           </select>--}}
+{{--                                           <div class="d-flex mx-2">--}}
+{{--                                               <input type="checkbox" name="req" id="requiredCheck" class="mx-2">--}}
+{{--                                               <label class="mb-0" for="requiredCheck">Required</label>--}}
+{{--                                           </div>--}}
+{{--                                       </div>--}}
+{{--                                        <div id="answer">--}}
 
-                                        </div>
+{{--                                        </div>--}}
 
-                                    </div>
-                                </div>
+{{--                                    </div>--}}
+{{--                                </div>--}}
                             </div>
                             <div class="d-flex justify-content-center">
                                 <button class="btn btn-success" id="addQuestion">Add Question</button>
@@ -616,41 +616,83 @@
     </script>
     <script>
         $(document).ready(function (){
-            let questionType = $('#questionType').val();
-            if(questionType == 'radio'){
-                questionTypeRadio();
-            }else if(questionType == 'checkbox'){
-                questionTypeCheckbox();
-            }else if(questionType == 'text-area'){
-                $('#answer').html('');
-                $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-text'){
-                $('#answer').html('');
-                $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-number'){
-                $('#answer').html('');
-                $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-slider'){
-                questionTypeSlide();
-            }
+
+
+            // let questionType = $('#questionType').val();
+            // if(questionType == 'radio'){
+            //     questionTypeRadio();
+            // }else if(questionType == 'checkbox'){
+            //     questionTypeCheckbox();
+            // }else if(questionType == 'text-area'){
+            //     $('#answer').html('');
+            //     $('#requiredCheck').attr('checked', true);
+            // }else if(questionType == 'input-text'){
+            //     $('#answer').html('');
+            //     $('#requiredCheck').attr('checked', true);
+            // }else if(questionType == 'input-number'){
+            //     $('#answer').html('');
+            //     $('#requiredCheck').attr('checked', true);
+            // }else if(questionType == 'input-slider'){
+            //     questionTypeSlide();
+            // }
+        });
+
+
+
+        $('#addQuestion').on('click', function (){
+            let qestion = '<div class="form-group border p-3 bg-gradient-light rounded" data-qid="q'+qnum+'">\
+                <div class="row">\
+                <div class="col-6">\
+                <h5>Q1</h5>\
+        </div>\
+            <div class="col-6 text-right">\
+                <button class="btn"><i class="fas fa-trash-alt"></i></button>\
+            </div>\
+        </div>\
+            <div class="question-title mb-3">\
+                <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>\
+            </div>\
+            <div class="question-body">\
+                <div class="d-flex align-items-center">\
+                    <select name="question_type" class="form-control question_type" id="questionType">\
+                        <option label="Radio (Singe Select)" value="radio'+qnum+'" id="questionTypeRadio">Radio (Singe Select)</option>\
+                        <option label="Checkbox (Multi select)" value="checkbox'+qnum+'" id="questionTypeCheckbox">Checkbox (Multi select)</option>\
+                        <option label="Multi-line text box" value="text-area'+qnum+'" id="questionTypeTextarea">Multi-line text box</option>\
+                        <option label="Single-line text box" value="input-text'+qnum+'" id="questionTypeTextbox">Single-line text box</option>\
+                        <option label="Number box" value="input-number'+qnum+'" id="questionTypeNumber">Number box</option>\
+                        <option label="Slider (number selector)" value="input-slider'+qnum+'" id="questionTypeSlider">Slider (number selector)</option>\
+                    </select>\
+                    <div class="d-flex mx-2">\
+                        <input type="checkbox" name="req" id="requiredCheck" class="mx-2">\
+                            <label class="mb-0" for="requiredCheck">Required</label>\
+                    </div>\
+                </div>\
+                <div id="answer'+qnum+'">\
+                </div>\
+            </div>\
+        </div>';
+
+            $('#questionsField').append(qestion);
+            qnum +=1;
+            console.log(qnum);
         });
         $('#questionType').on('change', function (){
 
             let questionType = $(this).val();
-            if(questionType == 'radio'){
+            if(questionType == 'radio'+qnum){
                 questionTypeRadio();
-            }else if(questionType == 'checkbox'){
+            }else if(questionType == 'checkbox'+qnum){
                 questionTypeCheckbox();
-            }else if(questionType == 'text-area'){
+            }else if(questionType == 'text-area'+qnum){
                 $('#answer').html('');
                 $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-text'){
+            }else if(questionType == 'input-text'+qnum){
                 $('#answer').html('');
                 $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-number'){
+            }else if(questionType == 'input-number'+qnum){
                 $('#answer').html('');
                 $('#requiredCheck').attr('checked', true);
-            }else if(questionType == 'input-slider'){
+            }else if(questionType == 'input-slider'+qnum){
                 questionTypeSlide();
             }
         });
@@ -661,7 +703,7 @@
                 <p class="serial_nom m-0">1</p>\
         </div>\
             <div class="col-7">\
-                <input type="text" class="form-control" placeholder="Answer" required>\
+                <input type="text" class="form-control" placeholder="Answer" >\
             </div>\
             <div class="col-3">\
                 <select name="qualify-or-not" class="form-control" id="">\
@@ -678,7 +720,7 @@
                     <p class="serial_nom m-0">2</p>\
                 </div>\
                 <div class="col-7">\
-                    <input type="text" class="form-control" placeholder="Answer" required>\
+                    <input type="text" class="form-control" placeholder="Answer" >\
                 </div>\
                 <div class="col-3">\
                     <select name="qualify-or-not" class="form-control" id="">\
@@ -756,38 +798,6 @@
             $('#answer').html(show);
         }
 
-
-        $('#addQuestion').on('click', function (){
-            let q = '<div class="form-group border p-3 bg-gradient-light rounded" data-qid="q2">\
-                <div class="row">\
-                <div class="col-6">\
-                <h5>Q1</h5>\
-        </div>\
-            <div class="col-6 text-right">\
-                <button type="button" class="btn remove-this" data-remove="q2"><i class="fas fa-trash-alt"></i></button>\
-            </div>\
-        </div>\
-            <div class="question_title mb-3">\
-                <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" ></textarea>\
-            </div>\
-            <div class="question_body">\
-                <div class="d-flex align-items-center">\
-                    <select name="question_type" class="form-control question_type">\
-                        <option label="Radio (Singe Select)" value="radio">Radio (Singe Select)</option>\
-                        <option label="Checkbox (Multi select)" value="checkbox">Checkbox (Multi select)</option>\
-                        <option label="Multi-line text box" value="text-area">Multi-line text box</option>\
-                        <option label="Single-line text box" value="input-text">Single-line text box</option>\
-                        <option label="Number box" value="input-number">Number box</option>\
-                        <option label="Slider (number selector)" value="input-slider">Slider (number selector)</option>\
-                    </select>\
-                    <div class="d-flex mx-2">\
-                        <input type="checkbox" name="" id="requiredCheck" class="mx-2">\
-                            <label class="mb-0" for="requiredCheck">Required</label>\
-                    </div>\
-                </div>\
-            </div>\
-        </div>'
-            $('#questionsField').append(q);
-        });
+        let qnum = 1;
     </script>
 @endsection
