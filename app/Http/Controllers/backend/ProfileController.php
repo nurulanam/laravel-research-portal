@@ -107,22 +107,13 @@ class ProfileController extends Controller
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();
         if (Auth::user()->hasRole('participant')){
-            if ($request->phone !== null){
-                $request->validate([
-                    'phone' => 'numeric|digits:10',
+            $request->validate([
+                    'phone' => 'nullable|numeric|digits:10',
                     'paypal_email' => 'required|email',
                     'state' => 'required|string',
                     'city' => 'required|string',
                     'zip_code' => 'required|integer',
                 ]);
-            }else{
-                $request->validate([
-                    'paypal_email' => 'required|email',
-                    'state' => 'required|string',
-                    'city' => 'required|string',
-                    'zip_code' => 'required|integer',
-                ]);
-            }
             if ($find_profile !== null){
                 if ($request->phone !== null){
                     $find_profile->phone = $request->phone;
