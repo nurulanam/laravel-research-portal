@@ -23,9 +23,11 @@
 @section('mainContent')
     <div class="row">
         <div class="col-12">
-            <div class="card">
+            <form action="" method="post">
+                @csrf
+                <div class="card">
                 <div class="card-header bg-dark-blue">
-                    <h5 class="text-light mb-0"id="main_title">Project Title</h5>
+                    <h5 class="text-light mb-0" id="main_title">Project Title</h5>
                 </div>
                 <div class="card-body">
                     <div class="nav nav-fill my-2">
@@ -75,12 +77,40 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="audience">
-                                            <span class="mx-2">Industry Professionals (B2B)</span>
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" value="b2b">
+                                            <span class="mx-2"><label for="targetB2b">Industry Professionals (B2B)</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="audience" required>
-                                            <span class="mx-2">General Population (B2C)</span>
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" value="b2c" required>
+                                            <span class="mx-2"><label for="targetB2c">Population (B2C)</label></span>
+                                        </div>
+                                        <div id="projectTopic" style="display: none">
+                                            <select data-placeholder="Select Maximum 2 Topic.." name="projectTopic[]"
+                                                    class="chosen-topic-select form-control" multiple tabindex="4">
+                                                <option value="arts-and-entertainment">Arts & Entertainment</option>
+                                                <option value="automobile-and-vehicles">Automobile & Vehicles</option>
+                                                <option value="beauty">Beauty</option>
+                                                <option value="business">Business</option>
+                                                <option value="computer-and-electronics">Computer & Electronics</option>
+                                                <option value="education">Education</option>
+                                                <option value="family-and-relationships">Family & Relationships</option>
+                                                <option value="finance">Finance</option>
+                                                <option value="food-and-drink">Food & Drink</option>
+                                                <option value="games">Games</option>
+                                                <option value="health-and-wellness">Health & Wellness</option>
+                                                <option value="home-and-garden">Home & Garden</option>
+                                                <option value="information-technology">Information Technology</option>
+                                                <option value="law-and-government">Law & Government</option>
+                                                <option value="other">Other</option>
+                                                <option value="pets-and-animals">Pets & Animals</option>
+                                                <option value="real-estate">Real Estate</option>
+                                                <option value="science">Science</option>
+                                                <option value="shopping">Shopping</option>
+                                                <option value="social-media">Social Media</option>
+                                                <option value="sports-and-outdoors">sports & outdoors</option>
+                                                <option value="travel">Travel</option>
+                                            </select>
+                                            <p class="font-13 pt-2">Tagging your projects with topics will better help match your general population project with participants that have indicated interest in these topics. </p>
                                         </div>
                                     </div>
                                 </div>
@@ -92,12 +122,12 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="research_type">
-                                            <span class="mx-2">Remote</span>
+                                            <input type="radio" name="research_type" id="typeRemote">
+                                            <span class="mx-2"><label for="typeRemote">Remote</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="research_type">
-                                            <span class="mx-2">In-Person</span>
+                                            <input type="radio" name="research_type" id="typeInPerson">
+                                            <span class="mx-2"><label for="typeInPerson">In-Person</label></span>
                                         </div>
                                     </div>
                                 </div>
@@ -472,6 +502,7 @@
                     </form>
                 </div>
             </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -549,14 +580,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"
             integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-    <script>
-        $('.chosen-select').chosen({
-            max_selected_options: 5
-        }).change(function(obj, result) {
-            console.debug("changed: %o", arguments);
-            // console.log("selected: " + result.selected);
-        });
-    </script>
+
     <script>
         $(document).ready(function() {
             var stateVal = $('#state').val();
@@ -583,29 +607,35 @@
         });
     </script>
     <script>
-        // $(document).ready(function (){
-        //
-        //
-        //     let questionType = $('#questionType').val();
-        //     if(questionType == 'radio'){
-        //         questionTypeRadio();
-        //     }else if(questionType == 'checkbox'){
-        //         questionTypeCheckbox();
-        //     }else if(questionType == 'text-area'){
-        //         $('#answer').html('');
-        //         $('#requiredCheck').attr('checked', true);
-        //     }else if(questionType == 'input-text'){
-        //         $('#answer').html('');
-        //         $('#requiredCheck').attr('checked', true);
-        //     }else if(questionType == 'input-number'){
-        //         $('#answer').html('');
-        //         $('#requiredCheck').attr('checked', true);
-        //     }else if(questionType == 'input-slider'){
-        //         questionTypeSlide();
-        //     }
-        // });
-
-
+        $('.target-audience').on('click', function (){
+            if($(this).val() == 'b2c'){
+                $('#projectTopic').show();
+                // $('#projectTopic .chosen-topic-select').html('<option value="arts-and-entertainment">Arts & Entertainment</option>\
+                // <option value="automobile-and-vehicles">Automobile & Vehicles</option>\
+                // <option value="beauty">Beauty</option>\
+                // <option value="business">Business</option>\
+                // <option value="computer-and-electronics">Computer & Electronics</option>\
+                // <option value="education">Education</option>\
+                // <option value="family-and-relationships">Family & Relationships</option>\
+                // <option value="finance">Finance</option>\
+                // <option value="food-and-drink">Food & Drink</option>\
+                // <option value="games">Games</option>\
+                // <option value="health-and-wellness">Health & Wellness</option>\
+                // <option value="home-and-garden">Home & Garden</option>\
+                // <option value="information-technology">Information Technology</option>\
+                // <option value="law-and-government">Law & Government</option>\
+                // <option value="other">Other</option>\
+                // <option value="pets-and-animals">Pets & Animals</option>\
+                // <option value="real-estate">Real Estate</option>\
+                // <option value="science">Science</option>\
+                // <option value="shopping">Shopping</option>\
+                // <option value="social-media">Social Media</option>\
+                // <option value="sports-and-outdoors">sports & outdoors</option>\
+                // <option value="travel">Travel</option>');
+            }else{
+                $('#projectTopic').hide('')
+            }
+        });
 
 
         $('#addQuestion').on('click', function (){
@@ -670,6 +700,7 @@
                 $('#requiredCheck'+ questionTypeId).attr('checked', true);
             }else if($this.val() == 'slider'){
                 questionTypeSlide(questionTypeId);
+                $('#requiredCheck'+ questionTypeId).attr('checked', true);
             }else if($this.val() == ""){
                 $('#answer'+ questionTypeId).html('');
                 $('#requiredCheck'+ questionTypeId).attr('checked', false);
@@ -698,7 +729,7 @@
         // });
         function questionTypeRadio( id ){
             let show = '<div class="radio-answer pt-2" id="radioAnswer'+ id +'">\
-                <div class="row align-items-center py-2">\
+                <div class="row align-items-top py-2 radioAnswerItem'+id+'">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">1</p>\
                 </div>\
@@ -714,7 +745,7 @@
                     <div class="col-1 text-right">\
                     </div>\
                 </div>\
-                <div class="row align-items-center py-2">\
+                <div class="row align-items-top py-2 radioAnswerItem'+id+'">\
                     <div class="col-1">\
                         <p class="serial_nom m-0">2</p>\
                     </div>\
@@ -735,45 +766,43 @@
             $('#answer'+ id).html(show);
         }
         function questionTypeCheckbox( id ){
-            let show ='<div class="checkbox-answer pt-2">\
-                <div class="row align-items-center py-2">\
+            let show ='<div class="checkbox-answer pt-2" id="checkboxAnswer'+ id +'">\
+                <div class="row align-items-top py-2 checkboxAnsweItem="'+ id +'">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">1</p>\
         </div>\
             <div class="col-7">\
-                <input type="text" class="form-control" placeholder="Answer" required>\
+                <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
-                <select name="qualify-or-not" class="form-control" id="">\
+                <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
                     <option value="may-select" selected>May Select</option>\
                     <option value="must-select">Must Select</option>\
                     <option value="disqualify">Disqualify</option>\
                 </select>\
             </div>\
             <div class="col-1 text-right">\
-                <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
             </div>\
         </div>\
-            <div class="row align-items-center py-2">\
+            <div class="row align-items-top py-2">\
                 <div class="col-1">\
                     <p class="serial_nom m-0">2</p>\
                 </div>\
                 <div class="col-7">\
-                    <input type="text" class="form-control" placeholder="Answer" required>\
+                    <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
-                    <select name="qualify-or-not" class="form-control" id="">\
+                    <select name="answerQualify['+ id +'][]" class="form-control" id="">\
                         <option value="may-select" selected>May Select</option>\
                         <option value="must-select">Must Select</option>\
                         <option value="disqualify">Disqualify</option>\
                     </select>\
                 </div>\
                 <div class="col-1 text-right">\
-                    <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
                 </div>\
             </div>\
-            <button class="btn btn-primary" id="addAnswer"><i class="fas fa-plus mr-2"></i> Answer</button>\
-        </div>';
+        </div>\
+        <button class="btn btn-primary" id="addCheckboxAnswer" data-id="'+ id +'"><i class="fas fa-plus mr-2"></i> Answer</button>';
             $('#answer'+ id).html(show);
         }
         function questionTypeSlide(id){
@@ -799,7 +828,7 @@
         $('#questionsField').on('click', '.addRadioAnswer', function (){
             let id = $(this).data('id');
             let count = $('#radioAnswer'+ id).children().length;
-            $('#radioAnswer'+ id).append('<div class="row align-items-center py-2">\
+            $('#radioAnswer'+ id).append('<div class="row align-items-top py-2 radioAnswerItem'+id+'">\
                 <div class="col-1">\
                     <p class="serial_nom m-0">'+ ++count +'</p>\
                 </div>\
@@ -813,12 +842,49 @@
                     </select>\
                 </div>\
                 <div class="col-1 text-right">\
-                    <button class="btn btn-danger remove "><i class="fas fa-trash-alt"></i></button>\
                 </div>\
             </div>');
-
         });
+        $('#questionsField').on('click', '#addCheckboxAnswer', function (){
+            let id = $(this).data('id');
+            let count = $('#checkboxAnswer'+ id).children().length;
+            $('#checkboxAnswer'+ id).append('<div class="row align-items-top py-2 checkboxAnsweItem="'+ id +'">\
+                <div class="col-1">\
+                <p class="serial_nom m-0">'+ ++count +'</p>\
+        </div>\
+            <div class="col-7">\
+                <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
+            </div>\
+            <div class="col-3">\
+                <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                    <option value="may-select" selected>May Select</option>\
+                    <option value="must-select">Must Select</option>\
+                    <option value="disqualify">Disqualify</option>\
+                </select>\
+            </div>\
+            <div class="col-1 text-right">\
+            </div>\
+        </div>');
+        });
+        {{--<button class="btn btn-danger radioAnswerRemove " data-radioanswerid="'+ count +'" data-fieldid="'+ id +'"><i class="fas fa-trash-alt"></i></button>--}}
+        $("#questionsField").on('click', '.radioAnswerRemove', function () {
+            let rowId = $(this).data('radioanswerid');
+            let fieldId = $(this).data('fieldid');
+            $(this).parents('.radioAnswerItem'+fieldId).remove();
+        })
 
         let qnum = 1;
+    </script>
+    <script>
+        $('.chosen-select').chosen({
+            max_selected_options: 5
+        }).change(function(obj, result) {
+            console.debug("changed: %o", arguments);
+        });
+        $('.chosen-topic-select').chosen({
+            max_selected_options: 2
+        }).change(function(obj, result) {
+            console.debug("changed: %o", arguments);
+        });
     </script>
 @endsection
