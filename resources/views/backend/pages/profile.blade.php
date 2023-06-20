@@ -1,7 +1,11 @@
 @extends('backend.dashboardMaster')
+@section('extraMeta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('title', 'profile')
 @section('extraCss')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
     <div class="row">
@@ -587,7 +591,7 @@
             </span>
             <p class="mt-2 mb-0">Details around your professional work experience.</p>
         </button>
-        <div class="modal fade" id="employment" tabindex="-1" role="dialog" aria-labelledby="demographicsLabel"
+        <div class="modal fade" id="employment" tabindex="-1" role="dialog" aria-labelledby="employmentLabel"
             aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                 <div class="modal-content">
@@ -795,10 +799,64 @@
             </div>
         </div>
     </div>
+
+
+
+
+
+
+
+        <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+            <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
+                    data-toggle="modal" data-target="#skills">
+            <span class="d-flex justify-content-start align-items-center">
+                <i class="fas fa-briefcase fa-2x mr-3"></i>
+                <span class="font-weight-bold font-18">Skills</span>
+            </span>
+                <p class="mt-2 mb-0">Details around your professional work experience.</p>
+            </button>
+            <div class="modal fade" id="skills" tabindex="-1" role="dialog" aria-labelledby="skillsLabel"
+                 aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Skills</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <form action="{{ route('skills.store') }}" method="POST">
+                            @csrf
+                            <div class="modal-body">
+                                <div class="form-group">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="font-13">Enter up to 25 professional skills, tools, and certifications to help us match you to projects.</p>
+                                            <select name="skills[]"  class="form-control w-100 skill-box" multiple="multiple">
+                                            </select>
+                                            @error('skills')
+                                            <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                    <button class="btn btn-primary">Save changes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+
+
 
 @endsection
 @section('extraJs')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(() => {
             $(function () {
@@ -816,6 +874,38 @@
                 }
                 $('.btn-profile-save').css("display", "inline-block")
             });
+            $('.skill-box').select2({
+                tags: true,
+                minimumInputLength: 2,
+                ajax: {
+                    method: 'GET',
+                    url: "{{ route('skills.api') }}",
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    delay: 250,
+                    data: function (params){
+                      return{
+                          search: params.term
+                      }
+                    },
+                    processResults: function(response) {
+                        console.log($.map(response.options, function (obj) {
+                            return {id: obj.id, skill_name: obj.skill_name};
+                        }))
+                        return {
+                            result: $.map(response.options, function (obj) {
+                                return {id: obj.id, skill_name: obj.skill_name};
+                            }),
+                        }
+                    },
+                    cache: true,
+                }
+            });
+
+
+
         });
     </script>
 

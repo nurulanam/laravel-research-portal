@@ -63,3 +63,7 @@
 .search-choice .search-choice-close{
     filter: brightness(1.75) !important;
 }
+
+.select2-container{
+    width: 100% !important;
+}

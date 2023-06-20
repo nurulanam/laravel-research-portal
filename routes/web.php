@@ -3,8 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\dashboardController;
 use App\Http\Controllers\backend\ProfileController;
+use App\Http\Controllers\backend\SkillController;
 use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -22,11 +24,17 @@ Route::get('/', function () {
 
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
+
+    //Profile
     Route::resource('/profile', ProfileController::class);
     Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
     Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
     Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
+
+    //Skills
+    Route::resource('/skills', SkillController::class);
+    Route::get('/skills', [SkillController::class, 'skillsApi'])->name('skills.api');
 
     Route::middleware('role:researcher')->group(function (){
         // Project
