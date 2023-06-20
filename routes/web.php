@@ -22,6 +22,7 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+//Dashboard
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
 
@@ -33,8 +34,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
 
     //Skills
+
     Route::resource('/skills', SkillController::class);
-    Route::get('/skills', [SkillController::class, 'skillsApi'])->name('skills.api');
+    Route::post('/skills/list', [SkillController::class, 'skillsApi'])->name('skills.api');
 
     Route::middleware('role:researcher')->group(function (){
         // Project

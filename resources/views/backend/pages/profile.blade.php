@@ -878,7 +878,7 @@
                 tags: true,
                 minimumInputLength: 2,
                 ajax: {
-                    method: 'GET',
+                    method: 'POST',
                     url: "{{ route('skills.api') }}",
                     dataType: 'json',
                     headers: {
@@ -891,16 +891,13 @@
                       }
                     },
                     processResults: function(response) {
-                        console.log($.map(response.options, function (obj) {
-                            return {id: obj.id, skill_name: obj.skill_name};
-                        }))
                         return {
-                            result: $.map(response.options, function (obj) {
-                                return {id: obj.id, skill_name: obj.skill_name};
-                            }),
+                            results: $.map(response.options, function (obj) {
+                                return {'id': obj.skill_name, 'text': obj.skill_name}
+                            })
                         }
                     },
-                    cache: true,
+                    cache: false,
                 }
             });
 
