@@ -41,7 +41,7 @@
         </div>
     </div>
     <div class="row my-4 ">
-        <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+        <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
             <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
                 data-toggle="modal" data-target="#contactDetails">
                 <span class="d-flex justify-content-start align-items-center">
@@ -231,7 +231,7 @@
             </div>
         </div>
         @if (Auth::user()->hasRole('participant'))
-            <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+            <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
                 <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
                     data-toggle="modal" data-target="#demographics">
                     <span class="d-flex justify-content-start align-items-center">
@@ -581,8 +581,7 @@
     </div>
 
     </div>
-    @endif
-    <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+    @endif    <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
         <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
             data-toggle="modal" data-target="#employment">
             <span class="d-flex justify-content-start align-items-center">
@@ -799,21 +798,14 @@
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-        <div class="col-12 col-md-6 col-lg-4 d-flex align-items-stretch">
+        <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
             <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
                     data-toggle="modal" data-target="#skills">
             <span class="d-flex justify-content-start align-items-center">
-                <i class="fas fa-briefcase fa-2x mr-3"></i>
+                <i class="fas fa-wrench fa-2x mr-3"></i>
                 <span class="font-weight-bold font-18">Skills</span>
             </span>
-                <p class="mt-2 mb-0">Details around your professional work experience.</p>
+                <p class="mt-2 mb-0">Show off your expertise in specific skills, tools, or software. </p>
             </button>
             <div class="modal fade" id="skills" tabindex="-1" role="dialog" aria-labelledby="skillsLabel"
                  aria-hidden="true">
@@ -833,6 +825,11 @@
                                         <div class="col-12">
                                             <p class="font-13">Enter up to 25 professional skills, tools, and certifications to help us match you to projects.</p>
                                             <select name="skills[]"  class="form-control w-100 skill-box" multiple="multiple">
+                                                @if(!empty($userSkills))
+                                                    @foreach($userSkills as $skill)
+                                                        <option value="{{ $skill->skillName->skill_name }}" @if($skill->skillName->id == $skill->skill_id) selected @endif >{{ $skill->skillName->skill_name }}</option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                             @error('skills')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
@@ -877,6 +874,7 @@
             $('.skill-box').select2({
                 tags: true,
                 minimumInputLength: 2,
+                maximumSelectionLength: 25,
                 ajax: {
                     method: 'POST',
                     url: "{{ route('skills.api') }}",

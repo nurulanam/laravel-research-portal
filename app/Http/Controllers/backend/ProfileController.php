@@ -5,6 +5,8 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\backend\Industry;
 use App\Models\backend\Profile;
+use App\Models\backend\Skill;
+use App\Models\backend\userHasSkills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use File;
@@ -28,10 +30,11 @@ class ProfileController extends Controller
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
         if (Auth::user()->hasRole('participant')) {
             $profileIndustry = Industry::where('user_id', '=', $user_id)->get();
+            $userSkills = userHasSkills::where('user_id', '=', $user_id)->get();
         }elseif (Auth::user()->hasRole('researcher')) {
             $profileIndustry = Industry::where('user_id', '=', $user_id)->first();
         }
-        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
     }
     public static function showAvatar(){
         $user_id = Auth::id();

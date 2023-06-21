@@ -1,7 +1,11 @@
 @extends('backend.dashboardMaster')
+@section('extraMeta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('title', 'Create New Project')
 @section('extraCss')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
     <style>
         .form-section{
             display: none;
@@ -23,7 +27,7 @@
 @section('mainContent')
     <div class="row">
         <div class="col-12">
-            <form action="" method="post" class="new-project-form">
+            <form action="{{ route('project.store') }}" method="post" class="new-project-form">
                 @csrf
                 <div class="card">
                 <div class="card-header bg-dark-blue">
@@ -197,7 +201,7 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <select data-placeholder="Select Maximum 5 Industries.." name="industry[]"
-                                            class="chosen-select form-control" multiple tabindex="4">
+                                            class="chosen-select form-control" multiple tabindex="4" required>
 
                                         @foreach ($industries as $industry)
                                             <option value="{{ $industry }}" @if (old('industry') == $industry) selected @endif>{{ $industry }}</option>
@@ -209,47 +213,47 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <lable class="label">Company Size <span class="text-danger">*</span></lable>
+                                    <lable class="label">Company Size (Optional)</lable>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="self-employed" id="self-employed" @if (old('company_size') == 'self-employed') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="self-employed" id="self-employed" @if (old('company_size') == 'self-employed') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="self-employed">Self Employed</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="1to10" id="1to10" @if (old('company_size') == '1to10') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="1to10" id="1to10" @if (old('company_size') == '1to10') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="1to10">1 - 10</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="11to50" id="11to50" @if (old('company_size') == '11to50') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="11to50" id="11to50" @if (old('company_size') == '11to50') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="11to50">11 - 50</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="51to200" id="51to200" @if (old('company_size') == '51to200') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="51to200" id="51to200" @if (old('company_size') == '51to200') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="51to200">51 - 200</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="201to500" id="201to500" @if (old('company_size') == '201to500') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="201to500" id="201to500" @if (old('company_size') == '201to500') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="201to500">201 - 500</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="501to1000" id="501to1000" @if (old('company_size') == '501to1000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="501to1000" id="501to1000" @if (old('company_size') == '501to1000') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="501to1000">501 - 1,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="1001to5000" id="1001to5000" @if (old('company_size') == '1001to5000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="1001to5000" id="1001to5000" @if (old('company_size') == '1001to5000') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="1001to5000">1,001 - 5,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="5001to10000" id="5001to10000" @if (old('company_size') == '5001to10000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="5001to10000" id="5001to10000" @if (old('company_size') == '5001to10000') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="5001to10000">5,001 - 10,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="10000plus" id="10000plus" @if (old('company_size') == '10000plus') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="10000plus" id="10000plus" @if (old('company_size') == '10000plus') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="10000plus">10,000+</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size" value="allCompanySize" id="allCompanySize" @if (old('company_size') == 'allCompanySize') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="" id="allCompanySize" @if (old('company_size') == 'allCompanySize') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="allCompanySize">All Company Sizes</label></span>
                                     </div>
                                 </div>
@@ -295,34 +299,49 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg-3">
+                                    <lable class="label">Skills</lable>
+                                </div>
+                                <div class="col-lg-9">
+                                    <p class="font-13">Select up to 25 skills, knowledge areas, tools and/or certifications you would like to target </p>
+                                    <select name="skills[]"  class="form-control w-100 skills-box" multiple="multiple"></select>
+                                    @error('skills')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-lg-3">
                                     <lablel class="label">Household Income (Optional)</lablel>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="less20000" id="less20000" @if (old('household_income') == 'less20000') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="less20000" id="less20000" @if (old('household_income') == 'less20000') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="less20000">Less than $20,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="20000to34999" id="20000to34999" @if (old('household_income') == '20000to34999') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="20000to34999" id="20000to34999" @if (old('household_income') == '20000to34999') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="20000to34999">$20,000 – $34,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="35000to49999" id="35000to49999" @if (old('household_income') == '35000to49999') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="35000to49999" id="35000to49999" @if (old('household_income') == '35000to49999') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="35000to49999">$35,000– $49,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="50000to74999" id="50000to74999" @if (old('household_income') == '50000to74999') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="50000to74999" id="50000to74999" @if (old('household_income') == '50000to74999') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="50000to74999">$50,000 – $74,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="75000to99999" id="75000to99999" @if (old('household_income') == '75000to99999') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="75000to99999" id="75000to99999" @if (old('household_income') == '75000to99999') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="75000to99999">$75,000 - $99,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income" value="100000plus" id="100000plus" @if (old('household_income') == '100000plus') checked @endif>
+                                        <input type="checkbox" name="household_income[]" value="100000plus" id="100000plus" @if (old('household_income') == '100000plus') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="100000plus">$100,000 +</label></span>
-                                    </div><div class="">
-                                        <input type="checkbox" name="household_income" value="allHouseholeIncome" id="allHouseholeIncome" @if (old('household_income') == 'allHouseholeIncome') checked @endif>
+                                    </div>
+                                    <div class="">
+                                        <input type="checkbox" name="household_income[]" value="" id="allHouseholeIncome" @if (old('household_income') == 'allHouseholeIncome') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="allHouseholeIncome">All Household Income</label></span>
                                     </div>
                                 </div>
@@ -335,23 +354,23 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="gender" value="male" id="male" @if (old('gender') == 'male') checked @endif>
+                                        <input type="checkbox" name="gender[]" value="male" id="male" @if (old('gender') == 'male') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="male">Male</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender" value="female" id="female" @if (old('gender') == 'female') checked @endif>
+                                        <input type="checkbox" name="gender[]" value="female" id="female" @if (old('gender') == 'female') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="female">Female</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender" value="non-binary" id="non-binary" @if (old('gender') == 'non-binary') checked @endif>
+                                        <input type="checkbox" name="gender[]" value="non-binary" id="non-binary" @if (old('gender') == 'non-binary') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="non-binary">Non Binary</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender" value="prefer-not-to-say" id="prefer-not-to-say" @if (old('gender') == 'prefer-not-to-say') checked @endif>
+                                        <input type="checkbox" name="gender[]" value="prefer-not-to-say" id="prefer-not-to-say" @if (old('gender') == 'prefer-not-to-say') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="prefer-not-to-say">Prefer Not To Say</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender" value="all-gender" id="allGender">
+                                        <input type="checkbox" name="gender[]" value="" id="allGender">
                                         <span class="mx-2"><label class="form-check-label" for="allGender">All Gender</label></span>
                                     </div>
                                 </div>
@@ -364,39 +383,39 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="less-than-a-high-school-diploma" id="less-than-a-high-school-diploma" @if (old('education_level') == 'less-than-a-high-school-diploma') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="less-than-a-high-school-diploma" id="less-than-a-high-school-diploma" @if (old('education_level') == 'less-than-a-high-school-diploma') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="less-than-a-high-school-diploma">Less Than a High School Diploma</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="high-school-diploma-or-equivalent" id="high-school-diploma-or-equivalent" @if (old('education_level') == 'high-school-diploma-or-equivalent') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="high-school-diploma-or-equivalent" id="high-school-diploma-or-equivalent" @if (old('education_level') == 'high-school-diploma-or-equivalent') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="high-school-diploma-or-equivalent">High School Diploma or Equivalent</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="some-college-no-degree" id="some-college-no-degree" @if (old('education_level') == 'some-college-no-degree') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="some-college-no-degree" id="some-college-no-degree" @if (old('education_level') == 'some-college-no-degree') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="some-college-no-degree">Some College No Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="associate-degree" id="associate-degree" @if (old('education_level') == 'associate-degree') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="associate-degree" id="associate-degree" @if (old('education_level') == 'associate-degree') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="associate-degree">Associate Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="bachelors-degree" id="bachelors-degree" @if (old('education_level') == 'bachelors-degree') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="bachelors-degree" id="bachelors-degree" @if (old('education_level') == 'bachelors-degree') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="bachelors-degree">Bachelor's Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="masters-degree" id="masters-degree" @if (old('education_level') == 'masters-degree') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="masters-degree" id="masters-degree" @if (old('education_level') == 'masters-degree') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="masters-degree">Master's Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="professional-degree" id="professional-degree" @if (old('education_level') == 'professional-degree') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="professional-degree" id="professional-degree" @if (old('education_level') == 'professional-degree') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="professional-degree">Professional Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="doctorate" id="doctorate" @if (old('education_level') == 'doctorate') checked @endif>
+                                        <input type="checkbox" name="education_level[]" value="doctorate" id="doctorate" @if (old('education_level') == 'doctorate') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="doctorate">Doctorate</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level" value="all-education-levels" id="allEducationLevels">
+                                        <input type="checkbox" name="education_level[]" value="" id="allEducationLevels">
                                         <span class="mx-2"><label class="form-check-label" for="allEducationLevels">All Education Levels</label></span>
                                     </div>
                                 </div>
@@ -409,39 +428,39 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="american-indian-or-alaska-native" id="american-indian-or-alaska-native" @if(old('ethnicity') == 'american-indian-or-alaska-native') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="american-indian-or-alaska-native" id="american-indian-or-alaska-native" @if(old('ethnicity') == 'american-indian-or-alaska-native') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="american-indian-or-alaska-native">American Indian / Alaskan Native</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="asian" id="asian" @if(old('ethnicity') == 'asian') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="asian" id="asian" @if(old('ethnicity') == 'asian') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="asian">Asian</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="white-caucasian" id="white-caucasian" @if(old('ethnicity') == 'white-caucasian') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="white-caucasian" id="white-caucasian" @if(old('ethnicity') == 'white-caucasian') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="white-caucasian">White/Caucasian</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="pacific-islander" id="pacific-islander" @if(old('ethnicity') == 'pacific-islander') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="pacific-islander" id="pacific-islander" @if(old('ethnicity') == 'pacific-islander') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="pacific-islander">Pacific Islander</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="african-american" id="african-american" @if(old('ethnicity') == 'african-american') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="african-american" id="african-american" @if(old('ethnicity') == 'african-american') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="african-american">African American</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="hispanic" id="hispanic" @if(old('ethnicity') == 'hispanic') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="hispanic" id="hispanic" @if(old('ethnicity') == 'hispanic') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="hispanic">Hispanic</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="multiracial" id="multiracial" @if(old('ethnicity') == 'multiracial') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="multiracial" id="multiracial" @if(old('ethnicity') == 'multiracial') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="multiracial">Multiracial</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="other" id="other" @if(old('ethnicity') == 'other') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="other" id="other" @if(old('ethnicity') == 'other') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="other">Other</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity" value="all-ethnicity" id="allEthnicity" @if(old('ethnicity') == 'all-ethnicity') checked @endif>
+                                        <input type="checkbox" name="ethnicity[]" value="" id="allEthnicity" @if(old('ethnicity') == 'all-ethnicity') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="allEthnicity">All Ethnicity</label></span>
                                     </div>
                                 </div>
@@ -454,27 +473,27 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="18-20" id="18-20" @if(old('age_range') == '18-20') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="18-20" id="18-20" @if(old('age_range') == '18-20') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="18-20">18-20</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="21-29" id="21-29" @if(old('age_range') == '21-29') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="21-29" id="21-29" @if(old('age_range') == '21-29') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="21-29">21-29</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="30-39" id="30-39" @if(old('age_range') == '30-39') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="30-39" id="30-39" @if(old('age_range') == '30-39') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="30-39">30-39</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="40-54" id="40-54" @if(old('age_range') == '40-54') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="40-54" id="40-54" @if(old('age_range') == '40-54') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="40-54">40-54</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="55plus" id="55plus" @if(old('age_range') == '55plus') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="55plus" id="55plus" @if(old('age_range') == '55plus') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="55plus">55+</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range" value="all-ages" id="allAges" @if(old('age_range') == 'all-ages') checked @endif>
+                                        <input type="checkbox" name="age_range[]" value="" id="allAges" @if(old('age_range') == 'all-ages') checked @endif>
                                         <span class="mx-2"><label class="form-check-label" for="allAges">All Ages</label></span>
                                     </div>
                                 </div>
@@ -492,11 +511,25 @@
                     </div>
                     <div class="form-section">
                         <div class="row">
-                            <div class="col-12 col-lg-8 offset-lg-2 bg-gradient-light rounded">
+                            <div class="col-12 col-lg-8 offset-lg-2 shadow rounded p-4 my-3">
                                 <div class="row">
-                                    <div class="col-md-4">Total Incentive</div>
-                                    <div class="col-md-8">
+                                    <div class="col-md-4"><b>Total Incentive</b></div>
+                                    <div class="col-md-8 text-right">
                                         <p class="m-0">$<span id="totalIncentive"></span> USD</p>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4"><b>Total Service Fees</b></div>
+                                    <div class="col-md-8 text-right">
+                                        <p class="m-0">$<span id="totalServiceFrees"></span> USD</p>
+                                    </div>
+                                </div>
+
+                                <hr class="py-30">
+                                <div class="row">
+                                    <div class="col-md-4"><h4><b>Total Cost</b></h4></div>
+                                    <div class="col-md-8 text-right">
+                                        <h4 class="m-0"><b>$<span id="totalCost"></span> USD</b></h4>
                                     </div>
                                 </div>
                             </div>
@@ -505,7 +538,7 @@
                     <div class="form-navigation mt-3">
                         <button type="button" class="previous btn btn-primary float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
                         <button type="button" class="next btn btn-primary float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
-                        <button type="submit" class="btn btn-success float-right">Submit</button>
+                        <button type="submit" class="btn btn-success float-right">Publish</button>
                     </div>
                 </div>
             </div>
@@ -516,23 +549,80 @@
 @section('extraJs')
 {{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js" integrity="sha512-eyHL1atYNycXNXZMDndxrDhNAegH2BDWt1TmkXJPoGf1WLlNYt08CSjkqF5lnCRmdm3IrkHid8s2jOUY4NIZVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>--}}
     <script src="{{ asset('backend/js/parsley.min.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
-        $('#incentive_range').on('input', function (){
-            let range = $(this).val();
-            $('#incentive').val(range);
+        $(document).ready(function() {
+            $('input[name="company_size[]"]').click(function() {
+                if ($(this).index('input[name="company_size[]"]') === 9) {
+                $('input[name="company_size[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="company_size[]"]').eq(9).prop('checked', false);
+                }
+            });
+            $('input[name="household_income[]"]').click(function() {
+                if ($(this).index('input[name="household_income[]"]') === 6) {
+                $('input[name="household_income[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="household_income[]"]').eq(6).prop('checked', false);
+                }
+            });
+            $('input[name="gender[]"]').click(function() {
+                if ($(this).index('input[name="gender[]"]') === 4) {
+                $('input[name="gender[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="gender[]"]').eq(4).prop('checked', false);
+                }
+            });
+            $('input[name="education_level[]"]').click(function() {
+                if ($(this).index('input[name="education_level[]"]') === 8) {
+                $('input[name="education_level[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="education_level[]"]').eq(8).prop('checked', false);
+                }
+            });
+            $('input[name="ethnicity[]"]').click(function() {
+                if ($(this).index('input[name="ethnicity[]"]') === 8) {
+                $('input[name="ethnicity[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="ethnicity[]"]').eq(8).prop('checked', false);
+                }
+            });
+            $('input[name="age_range[]"]').click(function() {
+                if ($(this).index('input[name="age_range[]"]') === 5) {
+                $('input[name="age_range[]"]').not(this).prop('checked', false);
+                } else {
+                $('input[name="age_range[]"]').eq(5).prop('checked', false);
+                }
+            });
+            $('.skills-box').select2({
+                // tags: true,
+                minimumInputLength: 2,
+                maximumSelectionLength: 25,
+                ajax: {
+                    method: 'POST',
+                    url: "{{ route('skills.api') }}",
+                    dataType: 'json',
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    delay: 250,
+                    data: function (params){
+                      return{
+                          search: params.term
+                      }
+                    },
+                    processResults: function(response) {
+                        return {
+                            results: $.map(response.options, function (obj) {
+                                return {'id': obj.skill_name, 'text': obj.skill_name}
+                            })
+                        }
+                    },
+                    cache: false,
+                }
+            })
         });
-        $('#target_participant_range').on('input', function (){
-            let range = $(this).val();
-            $('#target_participant').val(range);
-        });
-        $('#internal_name').on('keyup', function (){
-            let name = $(this).val();
-            if (name !== ""){
-                $('#main_title').html(name);
-            }else {
-                $('#main_title').html('Project Title');
-            }
-        });
+
         $(function(){
             var $sections=$('.form-section');
 
@@ -570,7 +660,21 @@
                 }).done(function(){
                     navigateTo(curIndex()+1);
                 });
+                if (curIndex() == 3){
+                    let incentive =  $('#incentive_range').val();
+                    let participant =  $('#target_participant_range').val();
+
+                    let totalIncentive = (incentive*participant);
+                    let serviceFree = (totalIncentive/2);
+                    let totalCost = (totalIncentive+serviceFree);
+
+                    $("#totalIncentive").html(totalIncentive);
+                    $("#totalServiceFrees").html(serviceFree);
+                    $("#totalCost").html(totalCost);
+                }
             });
+
+
 
             $sections.each(function(index,section){
                 $(section).find(':input').attr('data-parsley-group','block-'+index);
@@ -580,12 +684,32 @@
 
         });
 
+        $('#incentive_range').on('input', function (){
+            let range = $(this).val();
+            $('#incentive').val(range);
+        });
+        $('#target_participant_range').on('input', function (){
+            let targetRange = $(this).val();
+            $('#target_participant').val(targetRange);
+        });
+        $('#internal_name').on('keyup', function (){
+            let name = $(this).val();
+            if (name !== ""){
+                $('#main_title').html(name);
+            }else {
+                $('#main_title').html('Project Title');
+            }
+        });
+
+
+
+
+
 
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"
             integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
-{{--    <scrip src="{{ asset('backend/js/chosen.jquery.min.js') }}"></scrip>--}}
     <script>
         $(document).ready(function() {
             var stateVal = $('#state').val();

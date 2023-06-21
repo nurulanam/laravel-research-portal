@@ -39,11 +39,20 @@ class SkillController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'skills' => 'nullable|array',
-            'skills.*' => 'string|min:2'
+            'skills' => 'required | array',
+            'skills.*' => 'string | min:2'
         ]);
 
         $user_id = Auth::id();
+
+
+        $deleteUserSkill = userHasSkills::where('user_id', '=', $user_id)->get();
+        if (count($deleteUserSkill) > 0){
+            foreach ($deleteUserSkill as $userSkill){
+                $userSkill->delete();
+            }
+        }
+
         foreach ($request->skills as $skill_name){
             $find_skill = Skill::where('skill_name', '=', $skill_name)->first();
             if ($find_skill !== null){
@@ -66,6 +75,7 @@ class SkillController extends Controller
                 }
             }
         }
+        return back()->with('success', 'Your Skills Saved');
 
     }
 

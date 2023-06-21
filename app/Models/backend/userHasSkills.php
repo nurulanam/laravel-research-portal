@@ -4,6 +4,7 @@ namespace App\Models\backend;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\backend\Skill;
 
 class userHasSkills extends Model
 {
@@ -12,4 +13,7 @@ class userHasSkills extends Model
       'user_id',
       'skill_id',
     ];
+    public function skillName(){
+        return $this->belongsTo(Skill::class, 'skill_id');
+    }
 }
