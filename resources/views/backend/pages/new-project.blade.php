@@ -260,38 +260,40 @@
                             </div>
                         </div>
                         <hr class="my-30">
-                        <div class="form-group">
+                        <div class="form-group all-locations">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lable class="label">Location</lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <div class="d-flex justify-content-between">
-                                        <div class="country w-100 mx-lg-1">
-                                            <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">
-                                        </div>
-                                        <div class="state w-100 mx-lg-1">
-                                            <select name="state" class="form-control w-100" id="state">
-                                                <option value="">Select Your State</option>
-                                                @foreach ($us_states as $key => $states)
-                                                    <option value="{{ $key }}"
-                                                            @if (old('state') == $key) selected @endif>{{ $key }}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                        <div class="state-city w-100 mx-lg-1">
-                                            @foreach ($us_states as $key => $cities)
-                                                <select name="city" class="form-control w-100 city"
-                                                        data-state="{{ $key }}">
-                                                    <option value="">Select Your City</option>
-                                                    @foreach ($cities as $city)
-                                                        <option value="{{ $city }}" @if (old('city') == $city) selected @endif>{{ $city }}</option>
-                                                    @endforeach
-                                                </select>
-                                            @endforeach
-                                        </div>
+                                    <div class="location">
+{{--                                        <div class="d-flex justify-content-between mb-2">--}}
+{{--                                            <div class="country w-100 mx-lg-1">--}}
+{{--                                                <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">--}}
+{{--                                            </div>--}}
+{{--                                            <div class="state w-100 mx-lg-1">--}}
+{{--                                                <select name="state" class="form-control w-100" id="state">--}}
+{{--                                                    <option value="">Select Your State</option>--}}
+{{--                                                    @foreach ($us_states as $key => $states)--}}
+{{--                                                        <option value="{{ $key }}"--}}
+{{--                                                                @if (old('state') == $key) selected @endif>{{ $key }}</option>--}}
+{{--                                                    @endforeach--}}
+{{--                                                </select>--}}
+{{--                                            </div>--}}
+{{--                                            <div class="state-city w-100 mx-lg-1">--}}
+{{--                                                @foreach ($us_states as $key => $cities)--}}
+{{--                                                    <select name="city" class="form-control w-100 city"--}}
+{{--                                                            data-state="{{ $key }}">--}}
+{{--                                                        <option value="">Select Your City</option>--}}
+{{--                                                        @foreach ($cities as $city)--}}
+{{--                                                            <option value="{{ $city }}" @if (old('city') == $city) selected @endif>{{ $city }}</option>--}}
+{{--                                                        @endforeach--}}
+{{--                                                    </select>--}}
+{{--                                                @endforeach--}}
+{{--                                            </div>--}}
+{{--                                        </div>--}}
                                     </div>
-
+                                    <button class="btn btn-primary my-2 add-location">Add Location</button>
                                 </div>
                             </div>
                         </div>
@@ -703,37 +705,79 @@
 
 
 
-
-
-
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"
             integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g=="
             crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        $(document).ready(function() {
-            var stateVal = $('#state').val();
-            $('.city').each(function(index) {
-                var dataState = $(this).data('state');
-                if (dataState == stateVal) {
-                    $(this).addClass('d-block').attr('disabled', false, 'selected');
-                } else {
-                    $(this).removeClass('d-block').attr('disabled', true);
-                }
-            });
-        });
-        $('#state').on('change', function() {
-            var state = $(this).val();
+        // $(document).ready(function() {
+        //     var stateVal = $('#state').val();
+        //     $('.city').each(function(index) {
+        //         var dataState = $(this).data('state');
+        //         if (dataState == stateVal) {
+        //             $(this).addClass('d-block').attr('disabled', false, 'selected');
+        //         } else {
+        //             $(this).removeClass('d-block').attr('disabled', true);
+        //         }
+        //     });
+        // });
+        // $('#state').on('change', function() {
+        //     var state = $(this).val();
+        //
+        //     $('.city').each(function(index) {
+        //         var dataState = $(this).data('state');
+        //         if (dataState == state) {
+        //             $(this).addClass('d-block').attr('disabled', false);
+        //         } else {
+        //             $(this).removeClass('d-block').attr('disabled', true);
+        //         }
+        //     });
+        // });
+        let usStateAndCity = @json($us_states);
+        console.log(usStateAndCity);
 
-            $('.city').each(function(index) {
-                var dataState = $(this).data('state');
-                if (dataState == state) {
-                    $(this).addClass('d-block').attr('disabled', false);
-                } else {
-                    $(this).removeClass('d-block').attr('disabled', true);
-                }
+
+        $('.add-location').on('click', function(){
+            $('.location').append('<div class="d-flex justify-content-between mb-2 location-item">\
+                <div class="country w-100 mx-lg-1">\
+                <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">\
+                </div>\
+            <div class="state w-100 mx-lg-1">\
+                <select name="state[]" class="form-control w-100" id="state['+ ++locationNum +']">\
+                    <option value="">Select Your State</option>\
+                    @foreach ($us_states as $key => $states)\
+                    <option value="{{ $key }}"\
+                            @if (old('state') == $key) selected @endif>{{ $key }}</option>\
+                    @endforeach\
+                </select>\
+            </div>\
+            <div class="state-city w-100 mx-lg-1">\
+                <select name="city[]" class="form-control w-100 city"\
+                        data-state="" id="city['+ locationNum +']">\
+                <option value="">Select Your City</option>\
+                @foreach($us_states as $key => $states)\
+                <option value="{{ $states }}" @if (old('city') == $city) selected @endif>{{ $city }}</option>\
+                </select>\
+                @endforeach\
+            </div>\
+        </div> ');
+            $('.form-section.current').on('change', "#state"+'['+locationNum+']', function() {
+                console.log('working');
+                var state = $(this).val();
+
+                // $('#city'+'['+locationNum+']').each(function(index) {
+                //     var dataState = $(this).data('state');
+                //     if (dataState == state) {
+                //         $(this).addClass('d-block').attr('disabled', false);
+                //     } else {
+                //         $(this).removeClass('d-block').attr('disabled', true);
+                //     }
+                // });
             });
         });
+        let locationNum = 0;
+
+
     </script>
     <script>
         $('.chosen-select').chosen({
