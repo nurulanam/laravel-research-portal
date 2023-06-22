@@ -259,37 +259,12 @@
                         <div class="form-group all-locations">
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <lable class="label">Location</lable>
+                                    <lable class="label">Location (Optional)</lable>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="location-container">
-{{--                                        <div class="d-flex justify-content-between mb-2">--}}
-{{--                                            <div class="country w-100 mx-lg-1">--}}
-{{--                                                <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">--}}
-{{--                                            </div>--}}
-{{--                                            <div class="state w-100 mx-lg-1">--}}
-{{--                                                <select name="state" class="form-control w-100" id="state">--}}
-{{--                                                    <option value="">Select Your State</option>--}}
-{{--                                                    @foreach ($us_states as $key => $states)--}}
-{{--                                                        <option value="{{ $key }}"--}}
-{{--                                                                @if (old('state') == $key) selected @endif>{{ $key }}</option>--}}
-{{--                                                    @endforeach--}}
-{{--                                                </select>--}}
-{{--                                            </div>--}}
-{{--                                            <div class="state-city w-100 mx-lg-1">--}}
-{{--                                                @foreach ($us_states as $key => $cities)--}}
-{{--                                                    <select name="city" class="form-control w-100 city"--}}
-{{--                                                            data-state="{{ $key }}">--}}
-{{--                                                        <option value="">Select Your City</option>--}}
-{{--                                                        @foreach ($cities as $city)--}}
-{{--                                                            <option value="{{ $city }}" @if (old('city') == $city) selected @endif>{{ $city }}</option>--}}
-{{--                                                        @endforeach--}}
-{{--                                                    </select>--}}
-{{--                                                @endforeach--}}
-{{--                                            </div>--}}
-{{--                                        </div>--}}
                                     </div>
-                                    <button class="btn btn-primary my-2 add-location">Add Location</button>
+                                    <button class="btn btn-primary my-2 add-location">Add City</button>
                                 </div>
                             </div>
                         </div>
@@ -739,7 +714,7 @@
                 const country = $("<input class='form-control mx-1' placeholder='US' disabled='disabled' readonly='readonly'>")
                 const stateSelect = $("<select class='states form-control mx-1'></select>");
                 const citySelect = $("<select class='cities form-control mx-1' name='city[]' required></select>");
-                const deleteButton = $("<button class='btn btn-danger deleteLocation mx-1'><i class='fas fa-trash-alt'></i></button>");
+                const deleteButton = $("<button class='btn btn-danger deleteLocation ml-1'><i class='fas fa-trash-alt'></i></button>");
 
                 // Populate state select options
                 populateStateOptions(stateSelect);
@@ -797,11 +772,11 @@
             </div>\
         </div>\
             <div class="question-title mb-3">\
-                <textarea name="question_name[]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>\
+                <textarea name="question_name['+qnum+'][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>\
             </div>\
             <div class="question-body">\
                 <div class="d-flex align-items-center">\
-                    <select name="question_type[]" class="form-control question_type" data-typeid="'+qnum+'" required>\
+                    <select name="question_type['+qnum+'][]" class="form-control question_type" data-typeid="'+qnum+'" required>\
                         <option value="" id="">Select a Type</option>\
                         <option value="radio">Radio (Singe Select)</option>\
                         <option value="checkbox">Checkbox (Multi select)</option>\
@@ -811,7 +786,7 @@
                         <option value="slider">Slider (number selector)</option>\
                     </select>\
                     <div class="d-flex mx-2">\
-                        <input type="checkbox" name="req" id="requiredCheck'+qnum+'" class="mx-2">\
+                        <input type="checkbox" name="required['+qnum+'][]" id="requiredCheck'+qnum+'" class="mx-2">\
                             <label class="mb-0" for="requiredCheck'+qnum+'">Required</label>\
                     </div>\
                 </div>\
@@ -864,7 +839,7 @@
                         <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                     </div>\
                     <div class="col-3">\
-                        <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                        <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
                             <option value="qualify" selected>Qualify</option>\
                             <option value="disqualify">Disqualify</option>\
                         </select>\
@@ -880,7 +855,7 @@
                         <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                     </div>\
                     <div class="col-3">\
-                        <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                        <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
                             <option value="qualify" selected>Qualify</option>\
                             <option value="disqualify">Disqualify</option>\
                         </select>\
@@ -902,7 +877,7 @@
                 <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
-                <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
                     <option value="may-select" selected>May Select</option>\
                     <option value="must-select">Must Select</option>\
                     <option value="disqualify">Disqualify</option>\
@@ -919,7 +894,7 @@
                     <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
-                    <select name="answerQualify['+ id +'][]" class="form-control" id="">\
+                    <select name="answer-qualify['+ id +'][]" class="form-control" id="">\
                         <option value="may-select" selected>May Select</option>\
                         <option value="must-select">Must Select</option>\
                         <option value="disqualify">Disqualify</option>\
@@ -936,16 +911,16 @@
             let show  = '<div class="text-area-answer pt-2">\
                 <div class="row align-items-center py-2">\
                 <div class="col-4">\
-                <label for="" class="col-form-label">Min Value</label>\
-            <input type="number" name="min-value" class="form-control" required>\
+                <label for="" class="col-form-label" title="required">Min Value <span class="text-danger">*</span></label>\
+            <input type="number" name="min-value['+id+'][]" class="form-control" required>\
             </div>\
             <div class="col-4">\
-                <label for="" class="col-form-label">Max Value</label>\
-                <input type="number" name="max-value" class="form-control" required>\
+                <label for="" class="col-form-label" title="required">Max Value <span class="text-danger">*</span></label>\
+                <input type="number" name="max-value['+id+'][]" class="form-control" required>\
             </div>\
             <div class="col-4">\
-                <label for="" class="col-form-label">Step</label>\
-                <input type="number" name="steps" class="form-control">\
+                <label for="" class="col-form-label" title="required">Step <span class="text-danger">*</span></label>\
+                <input type="number" name="steps['+id+'][]" class="form-control" required>\
             </div>\
         </div>\
         </div>';
@@ -963,7 +938,7 @@
                     <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
-                    <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                    <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
                         <option value="qualify" selected>Qualify</option>\
                         <option value="disqualify">Disqualify</option>\
                     </select>\
@@ -983,7 +958,7 @@
                 <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
-                <select name="answerQualify['+ id +'][]" class="form-control" id="" required>\
+                <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
                     <option value="may-select" selected>May Select</option>\
                     <option value="must-select">Must Select</option>\
                     <option value="disqualify">Disqualify</option>\
@@ -993,7 +968,6 @@
             </div>\
         </div>');
         });
-        {{--<button class="btn btn-danger radioAnswerRemove " data-radioanswerid="'+ count +'" data-fieldid="'+ id +'"><i class="fas fa-trash-alt"></i></button>--}}
         $("#questionsField").on('click', '.radioAnswerRemove', function () {
             let rowId = $(this).data('radioanswerid');
             let fieldId = $(this).data('fieldid');
