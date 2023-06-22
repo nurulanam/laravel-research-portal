@@ -4,7 +4,6 @@
 @endsection
 @section('title', 'Create New Project')
 @section('extraCss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
     <style>
         .form-section{
@@ -88,9 +87,8 @@
                                             <span class="mx-2"><label for="targetB2c">Population (B2C)</label></span>
                                         </div>
                                         <div id="projectTopic" style="display: none">
-                                            <p class="pt-2" title="Required">Project Topic <span class="text-danger">*</span></p>
-                                            <select data-placeholder="Select Maximum 2 Topic.." name="projectTopic[]"
-                                                    class="chosen-topic-select form-control" multiple tabindex="4">
+                                            <p class="pt-2" title="Required">Project Topic <span class="text-danger">(Max:2) *</span></p>
+                                            <select name="project_topic[]" class="topic-select form-control" multiple >
                                                 <option value="arts-and-entertainment">Arts & Entertainment</option>
                                                 <option value="automobile-and-vehicles">Automobile & Vehicles</option>
                                                 <option value="beauty">Beauty</option>
@@ -171,7 +169,7 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="d-md-flex">
-                                            <input type="number" name="incentive" id="incentive" min="5" max="1000" value="5" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
+                                            <input type="number" name="incentive" id="incentive" min="5" max="1000" value="5" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
                                             <input type="range" id="incentive_range" min="5" max="1000" step="5" value="5" class="form-control-range">
                                         </div>
 
@@ -187,8 +185,8 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-md-flex">
-                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" disabled="disabled" readonly="readonly">
-                                        <input type="range" name="" id="target_participant_range" min="1" max="50" step="1" value="1" class="form-control-range" required>
+                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
+                                        <input type="range" id="target_participant_range" min="1" max="50" step="1" value="1" class="form-control-range" required>
                                     </div>
 
                                 </div>
@@ -197,12 +195,10 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <lable class="label">Industries <span class="text-danger">*</span></lable>
+                                    <lable class="label">Industries <span class="text-danger">(Max:5) *</span></lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select data-placeholder="Select Maximum 5 Industries.." name="industry[]"
-                                            class="chosen-select form-control" multiple tabindex="4" required>
-
+                                    <select name="industry[]" class="industry-select form-control" multiple required>
                                         @foreach ($industries as $industry)
                                             <option value="{{ $industry }}" @if (old('industry') == $industry) selected @endif>{{ $industry }}</option>
                                         @endforeach
@@ -266,7 +262,7 @@
                                     <lable class="label">Location</lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <div class="location">
+                                    <div class="location-container">
 {{--                                        <div class="d-flex justify-content-between mb-2">--}}
 {{--                                            <div class="country w-100 mx-lg-1">--}}
 {{--                                                <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">--}}
@@ -504,9 +500,7 @@
                     </div>
 
                     <div class="form-section">
-                        <div id="questionsField">
-
-                        </div>
+                        <div id="questionsField"></div>
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-success" id="addQuestion">Add Question</button>
                         </div>
@@ -596,10 +590,23 @@
                 $('input[name="age_range[]"]').eq(5).prop('checked', false);
                 }
             });
+            $('.topic-select').select2({
+                maximumSelectionLength: 2,
+                placeholder: "Select Maximum 2 Topics",
+                allowClear: true,
+
+            });
+            $('.industry-select').select2({
+                maximumSelectionLength: 5,
+                placeholder: "Select Maximum 5 Industries",
+                allowClear: true,
+
+            });
+
             $('.skills-box').select2({
-                // tags: true,
                 minimumInputLength: 2,
                 maximumSelectionLength: 25,
+                delay: 250,
                 ajax: {
                     method: 'POST',
                     url: "{{ route('skills.api') }}",
@@ -629,14 +636,11 @@
             var $sections=$('.form-section');
 
             function navigateTo(index){
-
                 $sections.removeClass('current').eq(index).addClass('current');
-
                 $('.form-navigation .previous').toggle(index>0);
                 var atTheEnd = index >= $sections.length - 1;
                 $('.form-navigation .next').toggle(!atTheEnd);
                 $('.form-navigation [Type=submit]').toggle(atTheEnd);
-
 
                 const step= document.querySelector('.step'+index);
                 step.style.backgroundColor="#092D5F";
@@ -675,15 +679,10 @@
                     $("#totalCost").html(totalCost);
                 }
             });
-
-
-
             $sections.each(function(index,section){
                 $(section).find(':input').attr('data-parsley-group','block-'+index);
             });
-
             navigateTo(0);
-
         });
 
         $('#incentive_range').on('input', function (){
@@ -702,94 +701,77 @@
                 $('#main_title').html('Project Title');
             }
         });
-
-
-
     </script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js"
-            integrity="sha512-rMGGF4wg1R73ehtnxXBt5mbUfN9JUJwbk21KMlnLZDJh7BkPmeovBuddZCENJddHYYMkCh9hPFnPmS9sspki8g=="
-            crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script>
-        // $(document).ready(function() {
-        //     var stateVal = $('#state').val();
-        //     $('.city').each(function(index) {
-        //         var dataState = $(this).data('state');
-        //         if (dataState == stateVal) {
-        //             $(this).addClass('d-block').attr('disabled', false, 'selected');
-        //         } else {
-        //             $(this).removeClass('d-block').attr('disabled', true);
-        //         }
-        //     });
-        // });
-        // $('#state').on('change', function() {
-        //     var state = $(this).val();
-        //
-        //     $('.city').each(function(index) {
-        //         var dataState = $(this).data('state');
-        //         if (dataState == state) {
-        //             $(this).addClass('d-block').attr('disabled', false);
-        //         } else {
-        //             $(this).removeClass('d-block').attr('disabled', true);
-        //         }
-        //     });
-        // });
-        let usStateAndCity = @json($us_states);
-        console.log(usStateAndCity);
+        $(document).ready(function() {
+            let addLocation = $(".add-location");
+            let locationContainer = $(".location-container");
 
 
-        $('.add-location').on('click', function(){
-            $('.location').append('<div class="d-flex justify-content-between mb-2 location-item">\
-                <div class="country w-100 mx-lg-1">\
-                <input type="text" class="form-control" value="US" placeholder="US" disabled="disabled" readonly="readonly">\
-                </div>\
-            <div class="state w-100 mx-lg-1">\
-                <select name="state[]" class="form-control w-100" id="state['+ ++locationNum +']">\
-                    <option value="">Select Your State</option>\
-                    @foreach ($us_states as $key => $states)\
-                    <option value="{{ $key }}"\
-                            @if (old('state') == $key) selected @endif>{{ $key }}</option>\
-                    @endforeach\
-                </select>\
-            </div>\
-            <div class="state-city w-100 mx-lg-1">\
-                <select name="city[]" class="form-control w-100 city"\
-                        data-state="" id="city['+ locationNum +']">\
-                <option value="">Select Your City</option>\
-                @foreach($us_states as $key => $states)\
-                <option value="{{ $states }}" @if (old('city') == $city) selected @endif>{{ $city }}</option>\
-                </select>\
-                @endforeach\
-            </div>\
-        </div> ');
-            $('.form-section.current').on('change', "#state"+'['+locationNum+']', function() {
-                console.log('working');
-                var state = $(this).val();
+            function populateStateOptions(selectElement) {
+                for (const state in usStateAndCity) {
+                    const option = $("<option></option>").val(state).text(state);
+                    selectElement.append(option);
+                }
+            }
 
-                // $('#city'+'['+locationNum+']').each(function(index) {
-                //     var dataState = $(this).data('state');
-                //     if (dataState == state) {
-                //         $(this).addClass('d-block').attr('disabled', false);
-                //     } else {
-                //         $(this).removeClass('d-block').attr('disabled', true);
-                //     }
-                // });
+            // Function to populate the city select options based on the selected state
+            function populateCityOptions(selectElement, selectedState) {
+                const cities = usStateAndCity[selectedState];
+
+                // Clear city select options
+                selectElement.empty();
+
+                // Add default option for city select
+                const defaultOption = $("<option></option>").val("").text("Select City");
+                selectElement.append(defaultOption);
+
+                // Populate city select options
+                for (const city of cities) {
+                    const option = $("<option></option>").val(city).text(city);
+                    selectElement.append(option);
+                }
+            }
+
+            // Function to create a new location set
+            function createLocationSet() {
+                const locationDiv = $("<div class='location d-flex justify-content-between my-2'></div>");
+                const country = $("<input class='form-control mx-1' placeholder='US' disabled='disabled' readonly='readonly'>")
+                const stateSelect = $("<select class='states form-control mx-1'></select>");
+                const citySelect = $("<select class='cities form-control mx-1' name='city[]' required></select>");
+                const deleteButton = $("<button class='btn btn-danger deleteLocation mx-1'><i class='fas fa-trash-alt'></i></button>");
+
+                // Populate state select options
+                populateStateOptions(stateSelect);
+
+                // Event handler for the state select change event
+                stateSelect.on("change", function() {
+                    const selectedState = $(this).val();
+                    populateCityOptions(citySelect, selectedState);
+                });
+
+                locationDiv.append(country);
+                locationDiv.append(stateSelect);
+                locationDiv.append(citySelect);
+                locationDiv.append(deleteButton);
+                locationContainer.append(locationDiv);
+
+                // Automatically select the first state and populate the city options
+                const firstState = stateSelect.find("option:first").val();
+                stateSelect.val(firstState).trigger("change");
+            }
+
+            // Event handler for the "add location" button click
+            addLocation.on("click", function() {
+                createLocationSet();
             });
-        });
-        let locationNum = 0;
+            // Event delegation for the delete button click
+            locationContainer.on("click", ".deleteLocation", function() {
+                $(this).closest(".location").remove();
+            });
 
-
-    </script>
-    <script>
-        $('.chosen-select').chosen({
-            max_selected_options: 5
-        }).change(function(obj, result) {
-            console.debug("changed: %o", arguments);
         });
-        $('.chosen-topic-select').chosen({
-            max_selected_options: 2
-        }).change(function(obj, result) {
-            console.debug("changed: %o", arguments);
-        });
+        let usStateAndCity = @json($us_states);
     </script>
     <script>
         $('.target-audience').on('click', function (){
@@ -815,11 +797,11 @@
             </div>\
         </div>\
             <div class="question-title mb-3">\
-                <textarea name="question_name" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>\
+                <textarea name="question_name[]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>\
             </div>\
             <div class="question-body">\
                 <div class="d-flex align-items-center">\
-                    <select name="question_type" class="form-control question_type" data-typeid="'+qnum+'" required>\
+                    <select name="question_type[]" class="form-control question_type" data-typeid="'+qnum+'" required>\
                         <option value="" id="">Select a Type</option>\
                         <option value="radio">Radio (Singe Select)</option>\
                         <option value="checkbox">Checkbox (Multi select)</option>\
@@ -872,27 +854,6 @@
                 $('#requiredCheck'+ questionTypeId).attr('checked', false);
             }
         }
-        // $('#questionType').on('change', function (){
-        //     let questionType = $(this).val()+qnum;
-        //     console.log($(this).val());
-        //
-        //     if(questionType == 'radio'+qnum){
-        //         questionTypeRadio();
-        //     }else if(questionType == 'checkbox'+qnum){
-        //         questionTypeCheckbox();
-        //     }else if(questionType == 'text-area'+qnum){
-        //         $('#answer').html('');
-        //         $('#requiredCheck').attr('checked', true);
-        //     }else if(questionType == 'input-text'+qnum){
-        //         $('#answer').html('');
-        //         $('#requiredCheck'+qnum).attr('checked', true);
-        //     }else if(questionType == 'input-number'+qnum){
-        //         $('#answer').html('');
-        //         $('#requiredCheck').attr('checked', true);
-        //     }else if(questionType == 'input-slider'+qnum){
-        //         questionTypeSlide();
-        //     }
-        // });
         function questionTypeRadio( id ){
             let show = '<div class="radio-answer pt-2" id="radioAnswer'+ id +'">\
                 <div class="row align-items-top py-2 radioAnswerItem'+id+'">\

@@ -31,10 +31,11 @@ class ProfileController extends Controller
         if (Auth::user()->hasRole('participant')) {
             $profileIndustry = Industry::where('user_id', '=', $user_id)->get();
             $userSkills = userHasSkills::where('user_id', '=', $user_id)->get();
+            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
         }elseif (Auth::user()->hasRole('researcher')) {
             $profileIndustry = Industry::where('user_id', '=', $user_id)->first();
+            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
         }
-        return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
     }
     public static function showAvatar(){
         $user_id = Auth::id();

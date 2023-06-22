@@ -798,6 +798,7 @@
             </div>
         </div>
     </div>
+        @if (Auth::user()->hasRole('participant'))
         <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
             <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
                     data-toggle="modal" data-target="#skills">
@@ -847,6 +848,7 @@
                 </div>
             </div>
         </div>
+        @endif
     </div>
 
 
