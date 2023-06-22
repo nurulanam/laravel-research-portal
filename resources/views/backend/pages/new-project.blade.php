@@ -839,7 +839,7 @@
                         <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                     </div>\
                     <div class="col-3">\
-                        <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
+                        <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
                             <option value="qualify" selected>Qualify</option>\
                             <option value="disqualify">Disqualify</option>\
                         </select>\
@@ -855,7 +855,7 @@
                         <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                     </div>\
                     <div class="col-3">\
-                        <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
+                        <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
                             <option value="qualify" selected>Qualify</option>\
                             <option value="disqualify">Disqualify</option>\
                         </select>\
@@ -877,7 +877,7 @@
                 <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
-                <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
+                <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
                     <option value="may-select" selected>May Select</option>\
                     <option value="must-select">Must Select</option>\
                     <option value="disqualify">Disqualify</option>\
@@ -894,7 +894,7 @@
                     <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
-                    <select name="answer-qualify['+ id +'][]" class="form-control" id="">\
+                    <select name="answer_qualify['+ id +'][]" class="form-control" id="">\
                         <option value="may-select" selected>May Select</option>\
                         <option value="must-select">Must Select</option>\
                         <option value="disqualify">Disqualify</option>\
@@ -938,7 +938,7 @@
                     <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
-                    <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
+                    <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
                         <option value="qualify" selected>Qualify</option>\
                         <option value="disqualify">Disqualify</option>\
                     </select>\
@@ -958,7 +958,7 @@
                 <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
-                <select name="answer-qualify['+ id +'][]" class="form-control" id="" required>\
+                <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
                     <option value="may-select" selected>May Select</option>\
                     <option value="must-select">Must Select</option>\
                     <option value="disqualify">Disqualify</option>\
