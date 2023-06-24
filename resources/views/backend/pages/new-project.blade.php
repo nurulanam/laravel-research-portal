@@ -155,7 +155,7 @@
                             <div class="form-group">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <lable class="label" title="Required">Time Required (<span class="text-danger">Minutes</span>)</lable>
+                                        <lable class="label" title="In Minutes">Time Required (Optional)</lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <input type="number" name="required_time" class="form-control" placeholder="Time Required in Minute(s)">

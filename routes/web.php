@@ -36,7 +36,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     //Skills
 
     Route::resource('/skills', SkillController::class);
-    Route::post('/skills/list', [SkillController::class, 'skillsApi'])->name('skills.api');
+//    Route::post('/skills/list', [SkillController::class, 'skillsApi'])->name('skills.api');
 
     Route::middleware('role:researcher')->group(function (){
         // Project

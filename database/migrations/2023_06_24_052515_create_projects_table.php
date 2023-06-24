@@ -21,13 +21,15 @@ class CreateProjectsTable extends Migration
             $table->text('project_details');
             $table->string('audience');
             $table->string('research_type');
-            $table->string('research_method');
-            $table->integer('required_time');
+            $table->string('research_method')->nullable();
+            $table->integer('required_time')->nullable();
             $table->integer('incentive');
             $table->string('target_participant');
             $table->integer('total_incentive');
             $table->integer('total_service_fee');
             $table->integer('total_coast');
+
+            $table->string('status')->comment('publish, draft');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();
