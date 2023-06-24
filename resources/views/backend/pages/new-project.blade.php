@@ -480,7 +480,7 @@
                             <button class="btn btn-success" id="addQuestion">Add Question</button>
                         </div>
                     </div>
-                    <div class="form-section">
+                    <div class="form-section" >
                         <div class="row">
                             <div class="col-12 col-lg-8 offset-lg-2 shadow rounded p-4 my-3">
                                 <div class="row">
