@@ -46,7 +46,7 @@
                                         <lable class="label" title="required">Internal Project Name <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="internal_name" id="internal_name" class="form-control" placeholder="Internal Project Name" required>
+                                        <input type="text" name="internal_name" id="internal_name" class="form-control" value="{{ old('internal_name') }}" placeholder="Internal Project Name" required>
                                     </div>
                                 </div>
                             </div>
@@ -57,7 +57,7 @@
                                         <lable class="label" title="required">Project Title <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="project_title" class="form-control" placeholder="Project Title" required>
+                                        <input type="text" name="project_title" value="{{ old('project_title') }}" class="form-control" placeholder="Project Title" required>
                                     </div>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                         <lable class="label" title="required">Project Details <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <textarea name="project_details" class="form-control" placeholder="Project Full Details" rows="5" required></textarea>
+                                        <textarea name="project_details" class="form-control" placeholder="Project Full Details" rows="5" required>value="{{ old('project_details') }}"</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -473,7 +473,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="form-section">
                         <div id="questionsField"></div>
                         <div class="d-flex justify-content-center">
@@ -503,13 +502,23 @@
                                         <h4 class="m-0"><b>$<span id="totalCost"></span> USD</b></h4>
                                     </div>
                                 </div>
+                                <div class="d-flex justify-content-center">
+                                    <select name="status" class="form-control bg-success text-light w-25 publish-status" required>
+                                        <option value="">Please Select Status</option>
+                                        <option value="draft">Draft</option>
+                                        <option value="publish">Publish</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="form-navigation mt-3">
                         <button type="button" class="previous btn btn-primary float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
                         <button type="button" class="next btn btn-primary float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
-                        <button type="submit" class="btn btn-success float-right">Publish</button>
+
+                        <button type="submit" class="btn btn-success mx-1 publish-btn float-right">Select Status</button>
+
                     </div>
                 </div>
             </div>
@@ -617,6 +626,7 @@
                 $('.form-navigation .next').toggle(!atTheEnd);
                 $('.form-navigation [Type=submit]').toggle(atTheEnd);
 
+
                 const step= document.querySelector('.step'+index);
                 step.style.backgroundColor="#092D5F";
                 step.style.color="white";
@@ -652,6 +662,19 @@
                     $("#totalIncentive").html(totalIncentive);
                     $("#totalServiceFrees").html(serviceFree);
                     $("#totalCost").html(totalCost);
+
+
+                    $('.publish-status').on('change', function (){
+                        let status = $(this).val();
+                        console.log(status);
+                        if (status == 'draft'){
+                            $('.publish-btn').html('Draft');
+                        }else if (status == 'publish'){
+                            $('.publish-btn').html('Publish');
+                        }else if(status == ""){
+                            $('.publish-btn').html('Select Status');
+                        }
+                    });
                 }
             });
             $sections.each(function(index,section){
@@ -713,7 +736,7 @@
                 const locationDiv = $("<div class='location d-flex justify-content-between my-2'></div>");
                 const country = $("<input class='form-control mx-1' placeholder='US' disabled='disabled' readonly='readonly'>")
                 const stateSelect = $("<select class='states form-control mx-1'></select>");
-                const citySelect = $("<select class='cities form-control mx-1' name='city[]' required></select>");
+                const citySelect = $("<select class='cities form-control mx-1' name='cities[]' required></select>");
                 const deleteButton = $("<button class='btn btn-danger deleteLocation ml-1'><i class='fas fa-trash-alt'></i></button>");
 
                 // Populate state select options
