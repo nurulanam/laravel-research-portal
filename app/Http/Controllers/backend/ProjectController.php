@@ -3,8 +3,13 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\ProjectHasAgeRange;
 use App\Models\backend\ProjectHasCity;
 use App\Models\backend\ProjectHasCompanySize;
+use App\Models\backend\ProjectHasEducationLevel;
+use App\Models\backend\ProjectHasEthnicity;
+use App\Models\backend\ProjectHasGender;
+use App\Models\backend\ProjectHasHouseholdIncome;
 use App\Models\backend\ProjectHasIndustry;
 use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasSkill;
@@ -65,9 +70,19 @@ class ProjectController extends Controller
            'cities.*' => 'string',
            'skills' => 'nullable|array|max:25',
            'skills.*' => 'string',
+           'household_income' => 'nullable|array',
+           'household_income.*' => 'string',
+           'gender' => 'nullable|array',
+           'gender.*' => 'string',
+           'education_level' => 'nullable|array',
+           'education_level.*' => 'string',
+           'ethnicity' => 'nullable|array',
+           'ethnicity.*' => 'string',
+           'age_range' => 'nullable|array',
+           'age_range.*' => 'string',
            'status' => 'required',
         ]);
-//        dd($request->industry);
+
         // User Info
         $user_id = Auth::id();
 
@@ -100,51 +115,106 @@ class ProjectController extends Controller
         // Creating New Project Topics belongsToProject
         if ($request->project_topic !== null){
             foreach ($request->project_topic as $topic){
-                $project_topic = new ProjectHasProjectTopic();
-                $project_topic->project_id = $project->id;
-                $project_topic->project_topic = $topic;
-                $project_topic->save();
+                $new_project_topic = new ProjectHasProjectTopic();
+                $new_project_topic->project_id = $project->id;
+                $new_project_topic->project_topic = $topic;
+                $new_project_topic->save();
             }
         }
 
         // Creating New Industires belongsToProject
         if ($request->industry !== null){
             foreach ($request->industry as $industry){
-                $project_topic = new ProjectHasIndustry();
-                $project_topic->project_id = $project->id;
-                $project_topic->industry_name = $industry;
-                $project_topic->save();
+                $new_indestry = new ProjectHasIndustry();
+                $new_indestry->project_id = $project->id;
+                $new_indestry->industry_name = $industry;
+                $new_indestry->save();
             }
         }
         // Creating New Company Size belongsToProject
         if ($request->industry !== null){
             foreach ($request->company_size as $company_size){
-                $project_topic = new ProjectHasCompanySize();
-                $project_topic->project_id = $project->id;
-                $project_topic->company_size = $company_size;
-                $project_topic->save();
+                $new_company_size = new ProjectHasCompanySize();
+                $new_company_size->project_id = $project->id;
+                $new_company_size->company_size = $company_size;
+                $new_company_size->save();
             }
         }
 
         // Creating New Company Size belongsToProject
         if ($request->cities !== null){
             foreach ($request->cities as $city){
-                $project_topic = new ProjectHasCity();
-                $project_topic->project_id = $project->id;
-                $project_topic->city_name = $city;
-                $project_topic->save();
+                $new_cities = new ProjectHasCity();
+                $new_cities->project_id = $project->id;
+                $new_cities->city_name = $city;
+                $new_cities->save();
             }
         }
 
         // Creating New Skills belongsToProject
         if ($request->skills !== null){
             foreach ($request->skills as $skill){
-                $project_topic = new ProjectHasSkill();
-                $project_topic->project_id = $project->id;
-                $project_topic->skill_name = $skill;
-                $project_topic->save();
+                $new_skills = new ProjectHasSkill();
+                $new_skills->project_id = $project->id;
+                $new_skills->skill_name = $skill;
+                $new_skills->save();
             }
         }
+
+        // Creating New Household Income belongsToProject
+        if ($request->household_income !== null){
+            foreach ($request->household_income as $household_income){
+                $new_household_income = new ProjectHasHouseholdIncome();
+                $new_household_income->project_id = $project->id;
+                $new_household_income->household_income = $household_income;
+                $new_household_income->save();
+            }
+        }
+
+        // Creating New Gender belongsToProject
+        if ($request->gender !== null){
+            foreach ($request->gender as $gender){
+                $new_gender = new ProjectHasGender();
+                $new_gender->project_id = $project->id;
+                $new_gender->gender = $gender;
+                $new_gender->save();
+            }
+        }
+
+        // Creating New Education Level belongsToProject
+        if ($request->education_level !== null){
+            foreach ($request->education_level as $education_level){
+                $new_education_level = new ProjectHasEducationLevel();
+                $new_education_level->project_id = $project->id;
+                $new_education_level->education_level = $education_level;
+                $new_education_level->save();
+            }
+        }
+
+        // Creating New Ethnicity belongsToProject
+        if ($request->ethnicity !== null){
+            foreach ($request->ethnicity as $ethnicity){
+                $new_ethnicity = new ProjectHasEthnicity();
+                $new_ethnicity->project_id = $project->id;
+                $new_ethnicity->ethnicity = $ethnicity;
+                $new_ethnicity->save();
+            }
+        }
+
+        // Creating New Age Range belongsToProject
+        if ($request->age_range !== null){
+            foreach ($request->age_range as $age_range){
+                $new_age_range = new ProjectHasAgeRange();
+                $new_age_range->project_id = $project->id;
+                $new_age_range->age_range = $age_range;
+                $new_age_range->save();
+            }
+        }
+
+        return route('dashboard.index');
+
+
+
 
     }
 

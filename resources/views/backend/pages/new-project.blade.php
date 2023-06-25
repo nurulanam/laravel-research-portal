@@ -67,7 +67,7 @@
                                         <lable class="label" title="required">Project Details <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <textarea name="project_details" class="form-control" placeholder="Project Full Details" rows="5" required>value="{{ old('project_details') }}"</textarea>
+                                        <textarea name="project_details" class="form-control" placeholder="Project Full Details" rows="5" required>{{ old('project_details') }}</textarea>
                                     </div>
                                 </div>
                             </div>
@@ -79,38 +79,38 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" value="b2b">
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" value="b2b" @if (old('audience') == 'b2b') checked @endif>
                                             <span class="mx-2"><label for="targetB2b">Industry Professionals (B2B)</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" value="b2c" required>
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" value="b2c" @if (old('audience') == 'b2c') checked @endif required>
                                             <span class="mx-2"><label for="targetB2c">Population (B2C)</label></span>
                                         </div>
                                         <div id="projectTopic" style="display: none">
                                             <p class="pt-2" title="Required">Project Topic <span class="text-danger">(Max:2) *</span></p>
                                             <select name="project_topic[]" class="topic-select form-control" multiple >
-                                                <option value="arts-and-entertainment">Arts & Entertainment</option>
-                                                <option value="automobile-and-vehicles">Automobile & Vehicles</option>
-                                                <option value="beauty">Beauty</option>
-                                                <option value="business">Business</option>
-                                                <option value="computer-and-electronics">Computer & Electronics</option>
-                                                <option value="education">Education</option>
-                                                <option value="family-and-relationships">Family & Relationships</option>
-                                                <option value="finance">Finance</option>
-                                                <option value="food-and-drink">Food & Drink</option>
-                                                <option value="games">Games</option>
-                                                <option value="health-and-wellness">Health & Wellness</option>
-                                                <option value="home-and-garden">Home & Garden</option>
-                                                <option value="information-technology">Information Technology</option>
-                                                <option value="law-and-government">Law & Government</option>
-                                                <option value="other">Other</option>
-                                                <option value="pets-and-animals">Pets & Animals</option>
-                                                <option value="real-estate">Real Estate</option>
-                                                <option value="science">Science</option>
-                                                <option value="shopping">Shopping</option>
-                                                <option value="social-media">Social Media</option>
-                                                <option value="sports-and-outdoors">sports & outdoors</option>
-                                                <option value="travel">Travel</option>
+                                                <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', old('project_topic', [])) ? 'selected' : '' }}>Arts & Entertainment</option>
+                                                <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', old('project_topic', [])) ? 'selected' : '' }}>Automobile & Vehicles</option>
+                                                <option value="beauty" {{ in_array('beauty', old('project_topic', [])) ? 'selected' : '' }}>Beauty</option>
+                                                <option value="business" {{ in_array('business', old('project_topic', [])) ? 'selected' : '' }}>Business</option>
+                                                <option value="computer-and-electronics" {{ in_array('computer-and-electronics', old('project_topic', [])) ? 'selected' : '' }}>Computer & Electronics</option>
+                                                <option value="education" {{ in_array('education', old('project_topic', [])) ? 'selected' : '' }}>Education</option>
+                                                <option value="family-and-relationships" {{ in_array('family-and-relationships', old('project_topic', [])) ? 'selected' : '' }}>Family & Relationships</option>
+                                                <option value="finance" {{ in_array('finance', old('project_topic', [])) ? 'selected' : '' }}>Finance</option>
+                                                <option value="food-and-drink" {{ in_array('food-and-drink', old('project_topic', [])) ? 'selected' : '' }}>Food & Drink</option>
+                                                <option value="games" {{ in_array('games', old('project_topic', [])) ? 'selected' : '' }}>Games</option>
+                                                <option value="health-and-wellness" {{ in_array('health-and-wellness', old('project_topic', [])) ? 'selected' : '' }}>Health & Wellness</option>
+                                                <option value="home-and-garden" {{ in_array('home-and-garden', old('project_topic', [])) ? 'selected' : '' }}>Home & Garden</option>
+                                                <option value="information-technology" {{ in_array('information-technology', old('project_topic', [])) ? 'selected' : '' }}>Information Technology</option>
+                                                <option value="law-and-government" {{ in_array('law-and-government', old('project_topic', [])) ? 'selected' : '' }}>Law & Government</option>
+                                                <option value="other" {{ in_array('other', old('project_topic', [])) ? 'selected' : '' }}>Other</option>
+                                                <option value="pets-and-animals" {{ in_array('pets-and-animals', old('project_topic', [])) ? 'selected' : '' }}>Pets & Animals</option>
+                                                <option value="real-estate" {{ in_array('real-estate', old('project_topic', [])) ? 'selected' : '' }}>Real Estate</option>
+                                                <option value="science" {{ in_array('science', old('project_topic', [])) ? 'selected' : '' }}>Science</option>
+                                                <option value="shopping" {{ in_array('shopping', old('project_topic', [])) ? 'selected' : '' }}>Shopping</option>
+                                                <option value="social-media" {{ in_array('social-media', old('project_topic', [])) ? 'selected' : '' }}>Social Media</option>
+                                                <option value="sports-and-outdoors" {{ in_array('sports-and-outdoors', old('project_topic', [])) ? 'selected' : '' }}>sports & outdoors</option>
+                                                <option value="travel" {{ in_array('travel', old('project_topic', [])) ? 'selected' : '' }}>Travel</option>
                                             </select>
                                             <p class="font-13 pt-2">Tagging your projects with topics will better help match your general population project with participants that have indicated interest in these topics. </p>
                                         </div>
