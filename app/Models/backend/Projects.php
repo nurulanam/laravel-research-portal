@@ -4,6 +4,7 @@ namespace App\Models\backend;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\backend\ProjectHasCity;
 
 class Projects extends Model
 {
@@ -24,4 +25,8 @@ class Projects extends Model
         'total_coast',
         'status',
     ];
+
+    public function projectHasCity(){
+        return $this->belongsTo(ProjectHasCity::class, 'project_id');
+    }
 }

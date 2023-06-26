@@ -12,6 +12,7 @@ use App\Models\backend\ProjectHasGender;
 use App\Models\backend\ProjectHasHouseholdIncome;
 use App\Models\backend\ProjectHasIndustry;
 use App\Models\backend\ProjectHasProjectTopic;
+use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        //
+        $projects = Projects::where('user_id', '=', Auth::id())->paginate(5);
+        return view('backend.pages.all-projects', compact('projects'));
     }
 
     /**
@@ -113,22 +115,24 @@ class ProjectController extends Controller
         $project->save();
 
         // Creating New Project Topics belongsToProject
-        if ($request->project_topic !== null){
-            foreach ($request->project_topic as $topic){
-                $new_project_topic = new ProjectHasProjectTopic();
-                $new_project_topic->project_id = $project->id;
-                $new_project_topic->project_topic = $topic;
-                $new_project_topic->save();
+        if ($request->audience == 'b2c'){
+            if ($request->project_topic !== null){
+                foreach ($request->project_topic as $topic){
+                    $new_project_topic = new ProjectHasProjectTopic();
+                    $new_project_topic->project_id = $project->id;
+                    $new_project_topic->project_topic = $topic;
+                    $new_project_topic->save();
+                }
             }
         }
 
-        // Creating New Industires belongsToProject
+        // Creating New Industries belongsToProject
         if ($request->industry !== null){
             foreach ($request->industry as $industry){
-                $new_indestry = new ProjectHasIndustry();
-                $new_indestry->project_id = $project->id;
-                $new_indestry->industry_name = $industry;
-                $new_indestry->save();
+                $new_industry = new ProjectHasIndustry();
+                $new_industry->project_id = $project->id;
+                $new_industry->industry_name = $industry;
+                $new_industry->save();
             }
         }
         // Creating New Company Size belongsToProject
@@ -210,10 +214,41 @@ class ProjectController extends Controller
                 $new_age_range->save();
             }
         }
+        // Creating New Questions belongsToProject
+        if ($request->has('question_name')){
+            $new_project_question = new ProjectHasQuestion();
+            $new_project_question->project_id = $project->id;
 
-        return route('dashboard.index');
+            $question_name = $request->question_name;
+            $question_type = $request->question_type;
+            $required = $request->required;
+            $answer = $request->answer;
+            $answer_qualify = $request->answer_qualify;
+            $min_value = $request->min_value;
+            $max_value = $request->max_value;
+            $steps = $request->steps;
 
+            $combinedArray = [];
 
+            foreach ($question_name as $index => $name) {
+                $combinedArray[] = [
+                    'question_name' => $name,
+                    'question_type' => isset($question_type[$index]) ? $question_type[$index] : null,
+                    'required' => isset($required[$index]) ? $required[$index] : null,
+                    'answer' => isset($answer[$index]) ? $answer[$index] : null,
+                    'answer_qualify' => isset($answer_qualify[$index]) ? $answer_qualify[$index] : null,
+                    'min_value' => isset($min_value[$index]) ? $min_value[$index] : null,
+                    'max_value' => isset($max_value[$index]) ? $max_value[$index] : null,
+                    'steps' => isset($steps[$index]) ? $steps[$index] : null,
+                ];
+            }
+            $json_questions = json_encode($combinedArray);
+
+            $new_project_question->questions = $json_questions;
+            $new_project_question->save();
+        }
+
+        return redirect()->route('dashboard.index')->with('success', 'Your Project Added Successfully');
 
 
     }

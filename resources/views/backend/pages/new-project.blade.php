@@ -88,7 +88,7 @@
                                         </div>
                                         <div id="projectTopic" style="display: none">
                                             <p class="pt-2" title="Required">Project Topic <span class="text-danger">(Max:2) *</span></p>
-                                            <select name="project_topic[]" class="topic-select form-control" multiple >
+                                            <select name="project_topic[]" class="topic-select form-control" multiple disabled>
                                                 <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', old('project_topic', [])) ? 'selected' : '' }}>Arts & Entertainment</option>
                                                 <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', old('project_topic', [])) ? 'selected' : '' }}>Automobile & Vehicles</option>
                                                 <option value="beauty" {{ in_array('beauty', old('project_topic', [])) ? 'selected' : '' }}>Beauty</option>
@@ -527,7 +527,6 @@
     </div>
 @endsection
 @section('extraJs')
-{{--    <script src="https://cdnjs.cloudflare.com/ajax/libs/parsley.js/2.9.2/parsley.min.js" integrity="sha512-eyHL1atYNycXNXZMDndxrDhNAegH2BDWt1TmkXJPoGf1WLlNYt08CSjkqF5lnCRmdm3IrkHid8s2jOUY4NIZVQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>--}}
     <script src="{{ asset('backend/js/parsley.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
@@ -775,11 +774,13 @@
         $('.target-audience').on('click', function (){
             if($(this).val() == 'b2c'){
                 $('#projectTopic').show();
-                $('select.chosen-topic-select').attr('required', true);
+                $('select.topic-select').attr('required', true);
+                $('select.topic-select').attr('disabled', false);
 
             }else{
                 $('#projectTopic').hide('')
-                $('select.chosen-topic-select').attr('required', false);
+                $('select.topic-select').attr('required', false);
+                $('select.topic-select').attr('disabled', true);
             }
         });
 
@@ -935,11 +936,11 @@
                 <div class="row align-items-center py-2">\
                 <div class="col-4">\
                 <label for="" class="col-form-label" title="required">Min Value <span class="text-danger">*</span></label>\
-            <input type="number" name="min-value['+id+'][]" class="form-control" required>\
+            <input type="number" name="min_value['+id+'][]" class="form-control" required>\
             </div>\
             <div class="col-4">\
                 <label for="" class="col-form-label" title="required">Max Value <span class="text-danger">*</span></label>\
-                <input type="number" name="max-value['+id+'][]" class="form-control" required>\
+                <input type="number" name="max_value['+id+'][]" class="form-control" required>\
             </div>\
             <div class="col-4">\
                 <label for="" class="col-form-label" title="required">Step <span class="text-danger">*</span></label>\

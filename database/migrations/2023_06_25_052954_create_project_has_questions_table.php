@@ -16,7 +16,7 @@ class CreateProjectHasQuestionsTable extends Migration
         Schema::create('project_has_questions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('questions');
+            $table->json('questions');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
