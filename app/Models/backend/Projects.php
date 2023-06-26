@@ -26,7 +26,7 @@ class Projects extends Model
         'status',
     ];
 
-    public function projectHasCity(){
-        return $this->belongsTo(ProjectHasCity::class, 'project_id');
+    public function projectHasCities(){
+        return $this->hasMany(ProjectHasCity::class, 'project_id');
     }
 }

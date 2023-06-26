@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\Projects;
 use Illuminate\Http\Request;
 
 class dashboardController extends Controller
@@ -14,7 +15,8 @@ class dashboardController extends Controller
      */
     public function index()
     {
-        return view('backend.pages.dashboard');
+        $projects = Projects::where('status', '=', 'publish')->get();
+        return view('backend.pages.dashboard', compact('projects'));
     }
 
     /**

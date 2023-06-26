@@ -248,7 +248,7 @@ class ProjectController extends Controller
             $new_project_question->save();
         }
 
-        return redirect()->route('dashboard.index')->with('success', 'Your Project Added Successfully');
+        return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
 
 
     }
