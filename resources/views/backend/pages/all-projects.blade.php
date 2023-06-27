@@ -42,7 +42,12 @@
                             <td class="align-middle">0</td>
                             <td class="align-middle"></td>
                             <td class="align-middle">{{ $project->research_type }}</td>
-                            <td class="align-middle">@if($project->status == "publish") <a class="alert alert-success text-decoration-none text-dark p-1">Publish</a> @endif</td>
+                            <td class="align-middle">@if($project->status == "publish") <a class="alert alert-success text-decoration-none text-dark p-1">Publish</a>
+                                @elseif($project->status == "draft")
+                                    <a class="alert alert-secondary text-decoration-none text-dark p-1">Draft</a>
+                                @elseif($project->status == "closed")
+                                            <a class="alert alert-danger text-decoration-none text-dark p-1">Closed</a>
+                                @endif</td>
                             <td class="align-middle">{{ $project->updated_at->diffForHumans()  }}</td>
                             <td class="align-middle">
                                 <div class="d-flex">
