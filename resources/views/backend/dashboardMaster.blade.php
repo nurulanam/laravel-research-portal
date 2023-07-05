@@ -22,7 +22,7 @@
 <div id="wrapper">
 
     <!-- Sidebar -->
-    @include('backend.includes.sidebar')
+{{--    @include('backend.includes.sidebar')--}}
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
@@ -36,7 +36,7 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container-fluid">
+            <div class="container">
                 @yield('mainContent')
 
 

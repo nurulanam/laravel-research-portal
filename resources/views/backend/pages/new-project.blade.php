@@ -24,20 +24,20 @@
     </style>
 @endsection
 @section('mainContent')
-    <div class="row">
+    <div class="row mb-4">
         <div class="col-12">
             <form action="{{ route('project.store') }}" method="post" class="new-project-form">
                 @csrf
-                <div class="card">
+                <div class="card shadow p-2">
                 <div class="card-header bg-dark-blue">
                     <h5 class="text-light mb-0" id="main_title">Project Title</h5>
                 </div>
                 <div class="card-body">
                     <div class="nav nav-fill my-2">
-                        <label class="nav-link shadow-sm step0 border rounded mx-2">Details</label>
-                        <label class="nav-link shadow-sm step1 border rounded mx-2">Audience</label>
-                        <label class="nav-link shadow-sm step2 border rounded mx-2">Questions</label>
-                        <label class="nav-link shadow-sm step3 border rounded mx-2">Summery</label>
+                        <label class="nav-link shadow-sm step0 border rounded-pill mx-2">Details</label>
+                        <label class="nav-link shadow-sm step1 border rounded-pill mx-2">Audience</label>
+                        <label class="nav-link shadow-sm step2 border rounded-pill mx-2">Questions</label>
+                        <label class="nav-link shadow-sm step3 border rounded-pill mx-2">Summery</label>
                     </div>
                     <div class="form-section">
                             <div class="form-group">
@@ -514,10 +514,10 @@
 
                     </div>
                     <div class="form-navigation mt-3">
-                        <button type="button" class="previous btn btn-primary float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
-                        <button type="button" class="next btn btn-primary float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
+                        <button type="button" class="previous btn btn-primary btn-custom float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
+                        <button type="button" class="next btn btn-primary btn-custom float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
 
-                        <button type="submit" class="btn btn-success mx-1 publish-btn float-right">Select Status</button>
+                        <button type="submit" class="btn btn-success mx-1 publish-btn btn-custom float-right">Select Status</button>
 
                     </div>
                 </div>

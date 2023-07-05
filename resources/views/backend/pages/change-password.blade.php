@@ -18,7 +18,7 @@
                                             <label for="" class="col-form-label text-dark">Current Password</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="password" name="current_password" value="{{ old('current_password') }}" class="form-control" placeholder="Your Current Password">
+                                            <input type="password" name="current_password" value="{{ old('current_password') }}" class="form-control rounded-pill" placeholder="Your Current Password">
                                             @error('current_password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
@@ -31,7 +31,7 @@
                                             <label for="" class="col-form-label text-dark">New Password</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="password" name="password" id="" class="form-control" placeholder="New Password">
+                                            <input type="password" name="password" id="" class="form-control rounded-pill" placeholder="New Password">
                                             @error('password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
@@ -44,7 +44,7 @@
                                             <label for="" class="col-form-label text-dark">Confirm Password</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="password" name="confirm_password" value="{{ old('confirm_password') }}"  class="form-control" placeholder="Confirm Password">
+                                            <input type="password" name="confirm_password" value="{{ old('confirm_password') }}"  class="form-control rounded-pill" placeholder="Confirm Password">
                                             @error('confirm_password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
@@ -56,7 +56,7 @@
                                         <div class="col-md-4">
                                         </div>
                                         <div class="col-md-8">
-                                            <button class="btn btn-primary">Save Changes</button>
+                                            <button class="btn btn-primary btn-custom">Save Changes</button>
                                         </div>
                                     </div>
                                 </div>

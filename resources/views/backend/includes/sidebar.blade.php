@@ -49,9 +49,9 @@
     <!-- Divider -->
     <hr class="sidebar-divider">
     <!-- Heading -->
-    <div class="sidebar-heading">
-        Settings
-    </div>
+{{--    <div class="sidebar-heading">--}}
+{{--        Settings--}}
+{{--    </div>--}}
 
     @if(Auth::user()->hasRole('researcher'))
     <!-- Nav Item - Manage Organization Menu -->
@@ -62,26 +62,26 @@
         </a>
     </li>
     @endif
-    <!-- Nav Item - My Account -->
-    <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMyAccount"
-           aria-expanded="true" aria-controls="collapseMyAccount">
-            <i class="fas fa-fw fa-user-cog"></i>
-            <span>My Account</span>
-        </a>
-        <div id="collapseMyAccount" class="collapse" aria-labelledby="headingMyAccount"
-             data-parent="#accordionSidebar">
-            <div class="bg-white py-2 collapse-inner rounded">
-                <a class="collapse-item" href="{{ route('profile.index') }}">Edit Profile</a>
-                <a class="collapse-item" href="{{ route('change-password.index') }}">Change Password</a>
-                <a class="collapse-item" href="#">Notification</a>
-            </div>
-        </div>
-    </li>
+{{--    <!-- Nav Item - My Account -->--}}
+{{--    <li class="nav-item">--}}
+{{--        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseMyAccount"--}}
+{{--           aria-expanded="true" aria-controls="collapseMyAccount">--}}
+{{--            <i class="fas fa-fw fa-user-cog"></i>--}}
+{{--            <span>My Account</span>--}}
+{{--        </a>--}}
+{{--        <div id="collapseMyAccount" class="collapse" aria-labelledby="headingMyAccount"--}}
+{{--             data-parent="#accordionSidebar">--}}
+{{--            <div class="bg-white py-2 collapse-inner rounded">--}}
+{{--                <a class="collapse-item" href="{{ route('profile.index') }}">Edit Profile</a>--}}
+{{--                <a class="collapse-item" href="{{ route('change-password.index') }}">Change Password</a>--}}
+{{--                <a class="collapse-item" href="#">Notification</a>--}}
+{{--            </div>--}}
+{{--        </div>--}}
+{{--    </li>--}}
 
 
     <!-- Divider -->
-    <hr class="sidebar-divider d-none d-md-block">
+{{--    <hr class="sidebar-divider d-none d-md-block">--}}
 
     <!-- Sidebar Toggler (Sidebar) -->
     <div class="text-center d-none d-md-inline">

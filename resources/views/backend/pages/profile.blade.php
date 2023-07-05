@@ -40,6 +40,180 @@
             </div>
         </div>
     </div>
+    <div class="row my-2">
+        <div class="col-12 col-md-6 col-lg-6 my-3">
+            <div class="card shadow p-2">
+                <div class="card-header d-flex justify-content-start align-items-center bg-dark-blue">
+                    <i class="fas fa-id-card-alt mr-3"></i>
+                    <h2 class="font-18 text-light font-weight-bold mb-0">Contact Details</h2>
+                </div>
+            <div class="card-body">
+            <form action="{{ route('profile.contact.details') }}" method="POST">
+                @csrf
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <label class="col-form-label text-dark">First Name</label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="text" name="first_name" class="form-control rounded-pill"
+                                       value="{{ Auth::user()->first_name }}" disabled="disabled" readonly>
+                                @error('first_name')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <label class="col-form-label text-dark">Last Name</label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="text" name="last_name" class="form-control rounded-pill"
+                                       value="{{ Auth::user()->last_name }}" disabled="disabled" readonly>
+                                @error('last_name')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <label class="col-form-label text-dark">E-mail @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="Verified"><i class="fas fa-check-circle text-success"></i></span> @endif </label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input class="form-control rounded-pill m-0" value="{{ Auth::user()->email }}"
+                                       disabled="disabled" readonly>
+                                @error('email')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <label class="col-form-label text-dark">Phone</label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="number" name="phone" class="form-control rounded-pill"
+                                       placeholder="Your Phone Number"
+                                       @if (!empty($profileInfo)) @if (!empty($profileInfo->phone)) value="{{ $profileInfo->phone }}" @else value="{{ old('phone') }}" @endif
+                                       @elseif(empty($profileInfo)) value="{{ old('phone') }}"
+                                    @endif>
+                                @error('phone')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    </div>
+                    @if (Auth::user()->hasRole('participant'))
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">Paypal E-mail</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <input name="paypal_email" class="form-control rounded-pill m-0"
+                                           placeholder="Your Paypal E-mail"
+                                           @if (!empty($profileInfo)) @if (!empty($profileInfo->paypal_email)) value="{{ $profileInfo->paypal_email }}" @else value="{{ old('paypal_email') }}" @endif
+                                           @elseif(empty($profileInfo))
+                                               value="{{ old('paypal_email') }}" @endif>
+                                    @error('paypal_email')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">Country</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <input class="form-control rounded-pill" value="US" disabled="disabled" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">State</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    <select name="state" class="form-control rounded-pill" id="state">
+                                        <option value="">Select Your State</option>
+
+                                        @foreach ($us_states as $key => $states)
+                                            <option value="{{ $key }}"
+                                                    @if (!empty($profileInfo)) @if (!empty($profileInfo->state) && $profileInfo->state == $key) selected @elseif(old('state') == $key) selected @endif
+                                                    @elseif(empty($profileInfo))
+                                                        @if (old('state') == $key) selected @endif
+                                                @endif>{{ $key }}</option>
+                                        @endforeach
+
+                                    </select>
+                                    @error('state')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-12 col-md-4">
+                                    <label class="col-form-label text-dark">City</label>
+                                </div>
+                                <div class="col-12 col-md-8">
+                                    @foreach ($us_states as $key => $cities)
+                                        <select name="city" class="form-control rounded-pill city"
+                                                data-state="{{ $key }}">
+                                            <option value="">Select Your City</option>
+                                            @foreach ($cities as $city)
+                                                <option value="{{ $city }}"
+                                                        @if (!empty($profileInfo)) @if (!empty($profileInfo->city) && $profileInfo->city == $city) selected @elseif(old('city') == $city) selected @endif
+                                                        @elseif(empty($profileInfo))
+                                                            @if (old('city') == $city) selected @endif
+                                                    @endif>{{ $city }}</option>
+                                            @endforeach
+                                        </select>
+                                    @endforeach
+                                    @error('city')
+                                    <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-4">
+                                <label class="col-form-label text-dark">Zip Code</label>
+                            </div>
+                            <div class="col-12 col-md-8">
+                                <input type="number" name="zip_code" class="form-control rounded-pill"
+                                       placeholder="Your Zip Code"
+                                       @if (!empty($profileInfo)) @if (!empty($profileInfo->zip_code)) value="{{ $profileInfo->zip_code }}" @else value="{{ old('zip_code') }}" @endif
+                                       @elseif(empty($profileInfo)) value="{{ old('zip_code') }}"
+                                    @endif>
+                                @error('zip_code')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                @enderror
+                            </div>
+                        </div>
+                    @endif
+                <div class="row">
+                        <div class="col-12 col-md-4">
+                        </div>
+                        <div class="col-12 col-md-8">
+                            <button class="btn btn-outline-primary btn-custom mt-4">Save changes</button>
+                        </div>
+                    </div>
+            </form>
+            </div>
+            </div>
+        </div>
+    </div>
     <div class="row my-4 ">
         <div class="col-12 col-md-6 col-lg-4 my-3 d-flex align-items-stretch">
             <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
