@@ -36,10 +36,8 @@
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container">
+            <div class="container" style="padding-top: 118px; min-height: 93vh">
                 @yield('mainContent')
-
-
             </div>
             <!-- /.container-fluid -->
 

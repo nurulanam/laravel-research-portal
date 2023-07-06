@@ -9,7 +9,13 @@
         box-shadow: none !important;
     }
 }
-
+.nav-link.dropdown-toggle.no-arrow::after{
+    display: none;
+}
+.dropdown-menu.drop-position{
+    left: -75px;
+    right: 0;
+}
 
 .bg-dark-blue{
     background: #092D5F;
@@ -30,7 +36,7 @@
 .btn-custom {
     font-size: .9rem;
     border-radius: 10rem;
-    padding: .75rem 3rem;
+    padding: .75rem 2rem;
 }
 
 #preview_profile{

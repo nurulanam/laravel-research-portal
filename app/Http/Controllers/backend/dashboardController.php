@@ -18,7 +18,9 @@ class dashboardController extends Controller
         $projects = Projects::where('status', '=', 'publish')->get();
         return view('backend.pages.dashboard', compact('projects'));
     }
+    public function sidebarProjectShow($id){
 
+    }
     /**
      * Show the form for creating a new resource.
      *

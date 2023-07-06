@@ -13,7 +13,7 @@
     @if(Auth::user()->hasRole('participant'))
         <div class="row my-4">
             <div class="col-12">
-                <div class="card mb-4">
+                <div class="card mb-4 bg-transparent">
                     <div class="d-flex justify-content-between align-items-center">
                         <div class="d-flex justify-content-start align-items-center w-100 mr-2">
                             <form action="" method="post" class="w-100">
@@ -124,7 +124,7 @@
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
                             <p class="mb-0 text-capitalize">{{ $project->research_method }}</p>
                         </div>
-                        <p class="mt-2 mb-0">{{ Str::limit($project->project_details, 300) }}</p>
+                        <p class="mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="">[See Details]</a></p>
                     </div>
                 @endforeach
             </div>

@@ -2,8 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\backend\SkillController;
 
+use App\Http\Controllers\backend\api\ApiController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -18,6 +18,7 @@ use App\Http\Controllers\backend\SkillController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+Route::post('/dashboard/skills/list', [ApiController::class, 'skillsApi'])->name('skills.api');
+Route::post('/dashboard/show-project/{id}', [ApiController::class, 'projectShowApi'])->name('show.project.api');
 
-Route::post('/dashboard/skills/list', [SkillController::class, 'skillsApi'])->name('skills.api');
 

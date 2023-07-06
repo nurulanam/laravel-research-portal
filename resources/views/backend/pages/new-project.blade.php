@@ -732,11 +732,11 @@
 
             // Function to create a new location set
             function createLocationSet() {
-                const locationDiv = $("<div class='location d-flex justify-content-between my-2'></div>");
-                const country = $("<input class='form-control mx-1' placeholder='US' disabled='disabled' readonly='readonly'>")
-                const stateSelect = $("<select class='states form-control mx-1'></select>");
-                const citySelect = $("<select class='cities form-control mx-1' name='cities[]' required></select>");
-                const deleteButton = $("<button class='btn btn-danger deleteLocation ml-1'><i class='fas fa-trash-alt'></i></button>");
+                const locationDiv = $("<div class='location d-lg-flex justify-content-between my-2'></div>");
+                const country = $("<input class='form-control mx-1 my-2 my-lg-0' placeholder='US' disabled='disabled' readonly='readonly'>")
+                const stateSelect = $("<select class='states form-control mx-1 my-2 my-lg-0'></select>");
+                const citySelect = $("<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[]' required></select>");
+                const deleteButton = $("<button class='btn btn-danger deleteLocation ml-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");
 
                 // Populate state select options
                 populateStateOptions(stateSelect);

@@ -5,7 +5,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-12 col-lg-8 offset-lg-2">
-                    <div class="card">
+                    <div class="card p-2">
                         <div class="card-header bg-dark-blue">
                             <h5 class="text-light mb-0">Reset Your Password</h5>
                         </div>
