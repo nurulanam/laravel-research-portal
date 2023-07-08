@@ -28,16 +28,27 @@ class ProfileController extends Controller
         $industries = config('app.industries');
 
         $user_id = Auth::id();
+
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
-//        if (Auth::user()->hasRole('participant')) {
-            $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-            $profileIndustry = json_decode($findProfileIndustry);
-            $userSkills = userHasSkills::where('user_id', '=', $user_id)->get();
+        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+
+
+        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
             return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
-//        }elseif (Auth::user()->hasRole('researcher')) {
-//            $profileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-//            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
-//        }
+        }elseif(!empty($findProfileIndustry)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        }elseif(!empty($findUserSkills)){
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+        }else{
+            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo'));
+        }
     }
     public static function showAvatar(){
         $user_id = Auth::id();

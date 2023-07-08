@@ -40,41 +40,21 @@ class SkillController extends Controller
     {
         $request->validate([
             'skills' => 'required | array',
-            'skills.*' => 'string | min:2'
+            'skills.*' => 'numeric'
         ]);
-
         $user_id = Auth::id();
 
-
-        $deleteUserSkill = userHasSkills::where('user_id', '=', $user_id)->get();
-        if (count($deleteUserSkill) > 0){
-            foreach ($deleteUserSkill as $userSkill){
-                $userSkill->delete();
-            }
+        $findUserSkill = userHasSkills::where('user_id', '=', $user_id)->first();
+        if ($findUserSkill !== null){
+            $findUserSkill->delete();
         }
+        $skills = json_encode($request->skills);
+        $newUserSkill = new userHasSkills();
+        $newUserSkill->user_id = $user_id;
+        $newUserSkill->skills = $skills;
+        $newUserSkill->save();
 
-        foreach ($request->skills as $skill_name){
-            $find_skill = Skill::where('skill_name', '=', $skill_name)->first();
-            if ($find_skill !== null){
-                $find_user_skill = userHasSkills::where('user_id', '=', $user_id)->where('skill_id', '=', $find_skill->id)->first();
-                if ($find_user_skill == null){
-                    $new_user_skill = new userHasSkills();
-                    $new_user_skill->user_id = $user_id;
-                    $new_user_skill->skill_id = $find_skill->id;
-                    $new_user_skill->save();
-                }
-            }elseif($find_skill == null){
-                $new_skill = new Skill();
-                $new_skill->skill_name = $skill_name;
-                $new_skill->save();
-                if ($new_skill){
-                    $new_user_skill = new userHasSkills();
-                    $new_user_skill->user_id = $user_id;
-                    $new_user_skill->skill_id = $new_skill->id;
-                    $new_user_skill->save();
-                }
-            }
-        }
+
         return back()->with('success', 'Your Skills Saved');
 
     }

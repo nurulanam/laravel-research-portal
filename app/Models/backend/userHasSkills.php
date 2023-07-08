@@ -11,9 +11,9 @@ class userHasSkills extends Model
     use HasFactory;
     protected $fillable = [
       'user_id',
-      'skill_id',
+      'skills',
     ];
-    public function skillName(){
-        return $this->belongsTo(Skill::class, 'skill_id');
-    }
+//    public function skillName(){
+//        return $this->belongsToMany(Skill::class);
+//    }
 }
