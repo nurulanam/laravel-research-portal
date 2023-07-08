@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\backend\Industry;
+use App\Models\backend\Profile;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -43,4 +45,11 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+
+    public function industries(){
+        return $this->belongsTo(Industry::class);
+    }public function profile(){
+        return $this->belongsTo(Profile::class);
+    }
 }

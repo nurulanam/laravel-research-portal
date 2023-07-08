@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend\api;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\Projects;
 use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 
@@ -17,6 +18,11 @@ class ApiController extends Controller
         ]);
     }
     public function projectShowApi($id){
-
+        $projectInfo = Projects::find($id);
+        return response()->json(
+            [
+                'data' => $projectInfo
+            ]
+        );
     }
 }

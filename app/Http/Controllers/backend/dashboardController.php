@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\Industry;
 use App\Models\backend\Projects;
+use App\Models\backend\UserHasIndustry;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class dashboardController extends Controller
 {
@@ -15,11 +19,12 @@ class dashboardController extends Controller
      */
     public function index()
     {
-        $projects = Projects::where('status', '=', 'publish')->get();
-        return view('backend.pages.dashboard', compact('projects'));
-    }
-    public function sidebarProjectShow($id){
+        $projects = Projects::where('status', '=', 'publish')->paginate(2);
+//        $user = Auth::user();
+//        $userIndustries = UserHasIndustry::where('user_id', '=', $user->id)->get();
+//        $userIndustriesNames = $userIndustries->pluck('industry')->toArray();
 
+        return view('backend.pages.dashboard', compact('projects'));
     }
     /**
      * Show the form for creating a new resource.

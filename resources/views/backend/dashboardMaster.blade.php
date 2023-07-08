@@ -45,7 +45,7 @@
         <!-- End of Main Content -->
 
         <!-- Footer -->
-        @include('backend.includes.footer')
+
         <!-- End of Footer -->
 
     </div>
@@ -53,7 +53,7 @@
 
 </div>
 <!-- End of Page Wrapper -->
-
+@include('backend.includes.footer')
 <!-- Scroll to Top Button-->
 <a class="scroll-to-top rounded" href="#page-top">
     <i class="fas fa-angle-up"></i>

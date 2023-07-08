@@ -84,7 +84,7 @@
 {{--</nav>--}}
 
 <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top mb-4 shadow">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" href="{{ route('dashboard.index') }}">
         <img src="{{ asset('backend/img/logo.png') }}" class="w-75" alt="logo">
     </a>
     <button class="navbar-toggler ml-auto border-0 rounded-circle" type="button" data-toggle="collapse" data-target="#topNavDropdown" aria-controls="topNavDropdown" aria-expanded="false" aria-label="Toggle navigation">

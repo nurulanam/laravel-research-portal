@@ -745,28 +745,30 @@
                                                     <select data-placeholder="Type To Search.." name="industry[]"
                                                             class="chosen-select form-control" multiple tabindex="4">
 
-                                                        @foreach ($industries as $industry)
-                                                            <option value="{{ $industry }}"
-                                                                    @if (!empty($profileIndustry)) @foreach ($profileIndustry as $hasIndustry)
-                                                                        @if ($hasIndustry->industry == $industry) selected @endif
-                                                                    @endforeach
-                                                                    @elseif(empty($profileIndustry))
-                                                                        @if (old('industry') == $industry) selected @endif
-                                                                @endif>{{ $industry }}</option>
+                                                        @foreach ($industries as $key => $industry)
+                                                            <option value="{{ $key }}"
+                                                                    @if (!empty($profileIndustry) && is_array($profileIndustry) && in_array($key, $profileIndustry))
+                                                                        selected
+                                                                    @elseif (empty($profileIndustry) && old('industry') == $key)
+                                                                        selected
+                                                                @endif
+                                                            >{{ $industry }}</option>
                                                         @endforeach
+
+
                                                     </select>
                                                 @endif
-                                                @if (Auth::user()->hasRole('researcher'))
-                                                    <select name="industry" class="form-control">
-                                                        <option value="">Select Your Industry</option>
-                                                        @foreach ($industries as $industry)
-                                                            <option value="{{ $industry }}"
-                                                                    @if (!empty($profileIndustry) && $profileIndustry->industry == $industry) selected
-                                                                    @elseif(empty($profileInfo)) @if (old('industry') == $industry) selected @endif
-                                                                @endif >{{ $industry }}</option>
-                                                        @endforeach
-                                                    </select>
-                                                @endif
+{{--                                                @if (Auth::user()->hasRole('researcher'))--}}
+{{--                                                    <select name="industry" class="form-control">--}}
+{{--                                                        <option value="">Select Your Industry</option>--}}
+{{--                                                        @foreach ($industries as $key => $industry)--}}
+{{--                                                            <option value="{{ $key }}"--}}
+{{--                                                                    @if (!empty($profileIndustry) && $profileIndustry->industry == $industryKey) selected--}}
+{{--                                                                    @elseif(empty($profileInfo)) @if (old('industry') == $key) selected @endif--}}
+{{--                                                                @endif >{{ $industry }}</option>--}}
+{{--                                                        @endforeach--}}
+{{--                                                    </select>--}}
+{{--                                                @endif--}}
                                                 @error('industry')
                                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
                                                 @enderror

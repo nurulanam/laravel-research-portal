@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\backend\Industry;
 use App\Models\backend\Profile;
 use App\Models\backend\Skill;
+use App\Models\backend\UserHasIndustry;
 use App\Models\backend\userHasSkills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -26,16 +26,18 @@ class ProfileController extends Controller
     {
         $us_states = config('app.us_states');
         $industries = config('app.industries');
+
         $user_id = Auth::id();
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
-        if (Auth::user()->hasRole('participant')) {
-            $profileIndustry = Industry::where('user_id', '=', $user_id)->get();
+//        if (Auth::user()->hasRole('participant')) {
+            $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+            $profileIndustry = json_decode($findProfileIndustry);
             $userSkills = userHasSkills::where('user_id', '=', $user_id)->get();
             return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
-        }elseif (Auth::user()->hasRole('researcher')) {
-            $profileIndustry = Industry::where('user_id', '=', $user_id)->first();
-            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
-        }
+//        }elseif (Auth::user()->hasRole('researcher')) {
+//            $profileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+//            return view('backend.pages.profile', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+//        }
     }
     public static function showAvatar(){
         $user_id = Auth::id();
@@ -245,32 +247,20 @@ class ProfileController extends Controller
             $find_profile->job_title = $request->job_title;
             if (Auth::user()->hasRole('participant')){
                 $find_profile->employment_status = $request->employment_status;
+            }
+            $find_industry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+            if ($find_industry !== null){
+                $find_industry->delete();
 
-                $find_industry = Industry::where('user_id', '=', $user_id)->get();
-                foreach ($find_industry as $delete_intustry){
-                    $delete_intustry->delete();
-                }
-                foreach ($request->industry as $industry_name){
-                    $industry = new Industry();
-                    $industry->user_id = $user_id;
-                    $industry->industry = $industry_name;
-                    $industry->save();
-                }
-            }elseif(Auth::user()->hasRole('researcher')){
-                $find_industry = Industry::where('user_id', '=', $user_id)->first();
-                if ($find_industry !== null){
-                    $find_industry->delete();
-
-                    $industry = new Industry();
-                    $industry->user_id = $user_id;
-                    $industry->industry = $request->industry;
-                    $industry->save();
-                }elseif($find_industry == null){
-                    $industry = new Industry();
-                    $industry->user_id = $user_id;
-                    $industry->industry = $request->industry;
-                    $industry->save();
-                }
+                $industry = new UserHasIndustry();
+                $industry->user_id = $user_id;
+                $industry->industry = json_encode($request->industry);
+                $industry->save();
+            }elseif($find_industry == null){
+                $industry = new UserHasIndustry();
+                $industry->user_id = $user_id;
+                $industry->industry = json_encode($request->industry);
+                $industry->save();
             }
             $find_profile->update();
             return redirect()->back()->with('success', 'Employment Information Updated');
@@ -281,21 +271,15 @@ class ProfileController extends Controller
             $profile->company_name = $request->company_name;
             $profile->company_size = $request->company_size;
             $profile->job_title = $request->job_title;
+
             if (Auth::user()->hasRole('participant')){
                 $find_profile->employment_status = $request->employment_status;
-
-                foreach ($request->industry as $industry_name){
-                    $industry = new Industry();
-                    $industry->user_id = $user_id;
-                    $industry->industry = $industry_name;
-                    $industry->save();
-                }
-            }elseif(Auth::user()->hasRole('researcher')){
-                $industry = new Industry();
-                $industry->user_id = $user_id;
-                $industry->industry = $request->industry;
-                $industry->save();
             }
+            $industry = new UserHasIndustry();
+            $industry->user_id = $user_id;
+            $industry->industry = json_encode($request->industry);
+            $industry->save();
+
             $profile->save();
             return redirect()->back()->with('success', 'Employment Information Saved');
         }

@@ -1,4 +1,7 @@
 @extends('backend.dashboardMaster')
+@section('extraMeta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endsection
 @section('title', 'Dashboard')
 @section('extraCss')
 
@@ -98,9 +101,10 @@
                 </div>
 
                 @foreach($projects as $key => $project)
-                    <div class="card p-4">
+                    <div class="card p-4 my-3">
                         <div class="d-flex justify-content-between">
-                            <a href="#" class="text-primary text-capitalize text-decoration-none"><h4>{{ $project->project_title }}</h4></a>
+                            <a href="#" type="button" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal" class="text-primary show-details text-capitalize text-decoration-none modal-project-title"><h4>
+                                    {{ $project->project_title }}</h4></a>
                             <div class="d-flex">
                                 <div class="dropdown mr-1">
                                     <button type="button" class="btn btn-primary dropdown-toggle" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
@@ -114,7 +118,7 @@
                             </div>
                         </div>
                         <div class="d-flex justify-content-start align-items-center">
-                            <p class="text-success font-weight-bold mb-0">${{ $project->incentive }}</p>
+                            <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
                             <p class="mb-0">{{ $project->updated_at->diffForHumans() }} </p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
@@ -124,11 +128,54 @@
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
                             <p class="mb-0 text-capitalize">{{ $project->research_method }}</p>
                         </div>
-                        <p class="mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="">[See Details]</a></p>
+                        <p class="mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="#" type="button" class="btn btn-sm text-primary show-details" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal">[ See Details ]</a></p>
                     </div>
                 @endforeach
-            </div>
-        </div>
+                <div class="d-flex justify-content-center justify-content-lg-start">
+                    {{ $projects->links() }}
+                </div>
+
+                <div class="modal fade project-details-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-xl float-lg-right w-100 mr-lg-3">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3 class="modal-title text-capitalize font-weight-bold" id="exampleModalLabel">New message</h3>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body " style="min-height: 86vh; min-width: 100%">
+                                <div class="row">
+                                    <div class="col-lg-8">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <p class="project-full-details text-justify"></p>
+                                            </div>
+                                        </div>
+                                        <a href="" class="btn btn-sm btn-primary btn-custom-sm project-participate mt-3">Let's Go!</a>
+
+                                    </div>
+                                    <div class="col-lg-4 ">
+                                        <div class="card rounded-sm">
+                                            <div class="card-header">
+                                                <p class="text-success font-weight-bold font-18">$<span class="project-total-incentive"></span></p>
+                                            </div>
+                                            <div class="card-body">
+                                                <p class="mb-2"><i class="fas fa-calendar-alt mr-2"></i><span class="project-posted-time"></span></p>
+                                                <p class="mb-2"><i class="fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
+                                                <p class="mb-2"><i class="fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
+                                                <p class="mb-2"><i class="fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
+                                                <p class="mb-2"><i class="fas fa-bullseye mr-2"></i><span class="project-research-method"></span></p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
     @endif
 
 
@@ -156,6 +203,54 @@
                 } else {
                     minIncentive.removeClass("border-danger");
                 }
+            }
+        });
+    </script>
+
+
+    <script>
+        $('.show-details').on('click', function (){
+           let id = $(this).data('id');
+           let url = "{{ route('show.project.api', ':id') }}";
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+            $.ajax({
+                method: 'POST',
+                url: url.replace(':id', id),
+                data: {
+                    'id': id
+                },
+                dataType: 'JSON',
+                success: function (response){
+                    console.log(response)
+                    if (response){
+                        $('.modal-title').html(response.data.project_title);
+                        $(".project-participate").attr('href', '/dashboard/project/'+response.data.id);
+                        $('.project-full-details').html(response.data.project_details);
+                        $('.project-total-incentive').html(response.data.total_incentive);
+                        $('.project-required-time').html(response.data.required_time);
+                        $('.project-total-participants').html(response.data.target_participant);
+                        $('.project-research-type').html(response.data.research_type);
+                        $('.project-research-method').html(response.data.research_method);
+
+                        let time = formatDate(response.data.created_at);
+                        $('.project-posted-time').html(time);
+                    }
+                }
+            })
+            function formatDate(dateString) {
+                var date = new Date(dateString);
+                var options = {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                };
+                return date.toLocaleDateString(undefined, options);
             }
         });
     </script>
