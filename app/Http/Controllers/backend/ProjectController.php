@@ -15,6 +15,7 @@ use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
+use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -157,12 +158,19 @@ class ProjectController extends Controller
 
         // Creating New Skills belongsToProject
         if ($request->skills !== null){
+            $skillIds = [];
+
             foreach ($request->skills as $skill){
-                $new_skills = new ProjectHasSkill();
-                $new_skills->project_id = $project->id;
-                $new_skills->skill_name = $skill;
-                $new_skills->save();
+                $findSkill = Skill::where('skill_name', $skill)->first();
+                if ($findSkill) {
+                    $skillIds[] = $findSkill->id;
+                }
             }
+            $json_skills = json_encode($skillIds);
+            $new_skills = new ProjectHasSkill();
+            $new_skills->project_id = $project->id;
+            $new_skills->skills = $json_skills;
+            $new_skills->save();
         }
 
         // Creating New Household Income belongsToProject

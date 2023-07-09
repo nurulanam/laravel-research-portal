@@ -138,30 +138,38 @@
                 <div class="modal fade project-details-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl float-lg-right w-100 mr-lg-3">
                         <div class="modal-content">
-                            <div class="modal-header">
-                                <h3 class="modal-title text-capitalize font-weight-bold" id="exampleModalLabel">New message</h3>
+                            <div class="modal-header border-0">
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
-                            <div class="modal-body " style="min-height: 86vh; min-width: 100%">
+                            <div class="modal-body px-lg-5" style="min-height: 86vh; min-width: 100%">
                                 <div class="row">
                                     <div class="col-lg-8">
                                         <div class="card">
                                             <div class="card-body">
+                                                <h3 class="project-title text-capitalize text-dark"></h3>
+                                                <p class="mb-2"><i class="fas fa-calendar-alt text-success mr-2"></i><span class="project-posted-time"></span></p>
+                                                <hr>
                                                 <p class="project-full-details text-justify"></p>
                                             </div>
                                         </div>
-                                        <a href="" class="btn btn-sm btn-primary btn-custom-sm project-participate mt-3">Let's Go!</a>
+                                        <hr>
+                                        <div class="card">
+                                            <div class="card-body">
+
+                                            </div>
+                                        </div>
+
 
                                     </div>
                                     <div class="col-lg-4 ">
                                         <div class="card rounded-sm">
-                                            <div class="card-header">
-                                                <p class="text-success font-weight-bold font-18">$<span class="project-total-incentive"></span></p>
+                                            <div class="card-header p-3">
+                                                <a href="" class="btn btn-sm btn-primary btn-custom w-100 font-weight-bold project-apply">Apply Now</a>
                                             </div>
                                             <div class="card-body">
-                                                <p class="mb-2"><i class="fas fa-calendar-alt mr-2"></i><span class="project-posted-time"></span></p>
+                                                <p class="text-success text-uppercase font-18">Project Budget: $<span class="project-total-incentive"></span></p>
                                                 <p class="mb-2"><i class="fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
                                                 <p class="mb-2"><i class="fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
                                                 <p class="mb-2"><i class="fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
@@ -227,8 +235,8 @@
                 success: function (response){
                     console.log(response)
                     if (response){
-                        $('.modal-title').html(response.data.project_title);
-                        $(".project-participate").attr('href', '/dashboard/project/'+response.data.id);
+                        $('.project-title').html(response.data.project_title);
+                        $(".project-apply").attr('href', '/dashboard/project/'+response.data.id);
                         $('.project-full-details').html(response.data.project_details);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         $('.project-required-time').html(response.data.required_time);

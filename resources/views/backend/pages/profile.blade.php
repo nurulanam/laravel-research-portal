@@ -819,7 +819,7 @@
                                                     <select name="skills[]"  class="form-control w-100 skill-box" multiple="multiple">
                                                         @if(!empty($userSkills))
                                                             @foreach($userSkills as $skill)
-                                                                <option value="{{ $skill->id }}" selected>{{ $skill->skill_name }}</option>
+                                                                <option value="{{ $skill->skill_name }}" selected>{{ $skill->skill_name }}</option>
                                                             @endforeach
                                                         @endif
                                                     </select>
@@ -886,7 +886,7 @@
                     processResults: function(response) {
                         return {
                             results: $.map(response.options, function (obj) {
-                                return {'id': obj.id, 'text': obj.skill_name}
+                                return {'id': obj.skill_name, 'text': obj.skill_name}
                             })
                         }
                     },

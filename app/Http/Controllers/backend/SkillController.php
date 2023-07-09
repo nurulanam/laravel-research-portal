@@ -40,23 +40,43 @@ class SkillController extends Controller
     {
         $request->validate([
             'skills' => 'required | array',
-            'skills.*' => 'numeric'
+            'skills.*' => 'string | min:2'
         ]);
+
         $user_id = Auth::id();
+        $requestSkills = $request->skills;
+        $skillIds = [];
 
-        $findUserSkill = userHasSkills::where('user_id', '=', $user_id)->first();
-        if ($findUserSkill !== null){
-            $findUserSkill->delete();
+        foreach ($requestSkills as $skillName) {
+            $skill = Skill::where('skill_name', $skillName)->first();
+
+            if ($skill) {
+                $skillIds[] = $skill->id;
+            } else {
+                $newSkill = new Skill();
+                $newSkill->skill_name = $skillName;
+                $newSkill->save();
+
+                if ($newSkill) {
+                    $skillIds[] = $newSkill->id;
+                }
+            }
         }
-        $skills = json_encode($request->skills);
-        $newUserSkill = new userHasSkills();
-        $newUserSkill->user_id = $user_id;
-        $newUserSkill->skills = $skills;
-        $newUserSkill->save();
 
+        $json = json_encode($skillIds);
+        $findUserSkill = userHasSkills::where('user_id', '=', $user_id)->first();
 
-        return back()->with('success', 'Your Skills Saved');
-
+        if ($findUserSkill !== null){
+            $findUserSkill->skills = $json;
+            $findUserSkill->update();
+            return back()->with('success', 'Your Skills Updated');
+        }elseif ($findUserSkill == null){
+            $newUserSkill = new userHasSkills();
+            $newUserSkill->user_id = $user_id;
+            $newUserSkill->skills = $json;
+            $newUserSkill->save();
+            return back()->with('success', 'Your Skills Saved Successfully');
+        }
     }
 
     /**
