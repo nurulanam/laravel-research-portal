@@ -15,6 +15,7 @@ use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
+use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -128,15 +129,14 @@ class ProjectController extends Controller
 
         // Creating New Industries belongsToProject
         if ($request->industry !== null){
-            foreach ($request->industry as $industry){
-                $new_industry = new ProjectHasIndustry();
-                $new_industry->project_id = $project->id;
-                $new_industry->industry_name = $industry;
-                $new_industry->save();
-            }
+            $new_industry = new ProjectHasIndustry();
+            $new_industry->project_id = $project->id;
+            $new_industry->industries = json_encode($request->industry);
+            $new_industry->save();
         }
+
         // Creating New Company Size belongsToProject
-        if ($request->industry !== null){
+        if ($request->company_size !== null){
             foreach ($request->company_size as $company_size){
                 $new_company_size = new ProjectHasCompanySize();
                 $new_company_size->project_id = $project->id;
@@ -157,12 +157,19 @@ class ProjectController extends Controller
 
         // Creating New Skills belongsToProject
         if ($request->skills !== null){
+            $skillIds = [];
+
             foreach ($request->skills as $skill){
-                $new_skills = new ProjectHasSkill();
-                $new_skills->project_id = $project->id;
-                $new_skills->skill_name = $skill;
-                $new_skills->save();
+                $findSkill = Skill::where('skill_name', $skill)->first();
+                if ($findSkill) {
+                    $skillIds[] = $findSkill->id;
+                }
             }
+            $json_skills = json_encode($skillIds);
+            $new_skills = new ProjectHasSkill();
+            $new_skills->project_id = $project->id;
+            $new_skills->skills = $json_skills;
+            $new_skills->save();
         }
 
         // Creating New Household Income belongsToProject
@@ -295,6 +302,8 @@ class ProjectController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $findProject = Projects::find($id);
+        $findProject->delete();
+        return back()->with('error', 'Project Deleted Successfully');
     }
 }

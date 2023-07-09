@@ -42,11 +42,11 @@
                             <td class="align-middle">0</td>
                             <td class="align-middle"></td>
                             <td class="align-middle">{{ $project->research_type }}</td>
-                            <td class="align-middle">@if($project->status == "publish") <a class="alert alert-success text-decoration-none text-dark p-1">Publish</a>
+                            <td class="align-middle">@if($project->status == "publish") <a class="badge badge-success text-light text-decoration-none p-1">Publish</a>
                                 @elseif($project->status == "draft")
-                                    <a class="alert alert-secondary text-decoration-none text-dark p-1">Draft</a>
+                                    <a class="badge badge-secondary text-decoration-none text-light p-1">Draft</a>
                                 @elseif($project->status == "closed")
-                                            <a class="alert alert-danger text-decoration-none text-dark p-1">Closed</a>
+                                            <a class="badge badge-danger text-decoration-none text-light p-1">Closed</a>
                                 @endif</td>
                             <td class="align-middle">{{ $project->updated_at->diffForHumans()  }}</td>
                             <td class="align-middle">
@@ -57,8 +57,32 @@
                                         </button>
                                         <div class="dropdown-menu" aria-labelledby="actionDropdown">
                                             <a class="dropdown-item" href="#"><i class="fas fa-directions mr-2"></i> Preview Screener</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-edit mr-2"></i> Edit</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-trash-alt mr-2"></i> Delete</a>
+                                            <a class="dropdown-item" href="#"><i class="fas fa-edit text-success mr-2"></i> Edit</a>
+                                            <button type="button" class="dropdown-item" data-toggle="modal" data-target="#deleteModal{{$project->id}}" ><i class="fas fa-trash-alt text-danger mr-2"></i> Delete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteModal{{$project->id}}" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header border-0">
+                                                <h5 class="modal-title text-dark" id="deleteModalLabel">Confirmation Message</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <p class="text-danger font-18">Are you sure to delete <b>{{$project->internal_name}}</b>?</p>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                                                <form action="{{ route('project.destroy', $project->id) }}" method="POST">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                <button class="btn btn-danger">Delete</button>
+                                                </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -69,6 +93,10 @@
                     </tbody>
 
                 </table>
+
+            </div>
+            <div class="d-flex justify-content-center justify-content-lg-start mt-3">
+                {{ $projects->links() }}
             </div>
 
         </div>

@@ -10,6 +10,6 @@ class ProjectHasIndustry extends Model
     use HasFactory;
     protected $fillable = [
         'project_id',
-        'industry_name'
+        'industries'
     ];
 }

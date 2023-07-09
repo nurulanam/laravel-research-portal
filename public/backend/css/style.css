@@ -99,7 +99,12 @@ p{
 .select2-container{
     width: 100% !important;
 }
-
+.project-title{
+    font-weight: 600;
+}
+.font-22{
+    font-size: 22px;
+}
 @media (min-width: 1200px) {
     .container, .container-lg, .container-md, .container-sm, .container-xl {
         max-width: 1360px;

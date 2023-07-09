@@ -33,16 +33,13 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
 
-    //Skills
-
+    // Skills
     Route::resource('/skills', SkillController::class);
-//    Route::post('/skills/list', [SkillController::class, 'skillsApi'])->name('skills.api');
 
     Route::middleware('role:researcher')->group(function (){
         // Project
         Route::resource('/project', ProjectController::class);
     });
-
 
     // Reset Password
     Route::resource('/change-password', ChangePasswordController::class);

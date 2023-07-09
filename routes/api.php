@@ -18,7 +18,9 @@ use App\Http\Controllers\backend\api\ApiController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 Route::post('/dashboard/skills/list', [ApiController::class, 'skillsApi'])->name('skills.api');
 Route::post('/dashboard/show-project/{id}', [ApiController::class, 'projectShowApi'])->name('show.project.api');
+
 
 

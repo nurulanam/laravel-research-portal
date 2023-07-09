@@ -199,8 +199,8 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <select name="industry[]" class="industry-select form-control" multiple required>
-                                        @foreach ($industries as $industry)
-                                            <option value="{{ $industry }}" @if (old('industry') == $industry) selected @endif>{{ $industry }}</option>
+                                        @foreach ($industries as $key => $industry)
+                                            <option value="{{ $key }}" @if (is_array(old('industry')) && in_array($key, old('industry'))) selected @endif>{{ $industry }}</option>
                                         @endforeach
                                     </select>
                                 </div>
