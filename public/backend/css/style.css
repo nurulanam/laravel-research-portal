@@ -1,3 +1,14 @@
+body{
+    font-family: 'circularStd', sans-serif !important;
+    font-weight: 300;
+}
+h1, h2, h3, h4, h5, h6{
+    font-family: 'circularStd', sans-serif !important;
+    font-weight: 400;
+}
+.font-weight-500{
+    font-weight: 500;
+}
 #wrapper #content-wrapper {
     background-color: #FAF9F6;
 }
@@ -22,6 +33,9 @@ p{
 
 .bg-dark-blue{
     background: #092D5F;
+}
+.text-dark-blue{
+    color: #092D5F;
 }
 .font-13{
     font-size: 13px;

@@ -10,7 +10,6 @@
     <div class="row">
         <div class="col-12 col-md-6">
             <h2 class="text-dark">Hey {{ Auth::user()->first_name }} !</h2>
-
         </div>
     </div>
     @if(Auth::user()->hasRole('participant'))
@@ -108,7 +107,6 @@
                             <div class="d-flex">
                                 <div class="dropdown mr-1">
                                     <button type="button" class="btn btn-primary dropdown-toggle" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
-
                                     </button>
                                     <div class="dropdown-menu" aria-labelledby="actionDropdown">
                                         <a class="dropdown-item" href="#"><i class="fas fa-clone mr-2"></i> Copy Project link</a>
@@ -120,15 +118,15 @@
                         <div class="d-flex justify-content-start align-items-center">
                             <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="mb-0">{{ $project->updated_at->diffForHumans() }} </p>
+                            <p class="text-dark-blue mb-0">{{ $project->updated_at->diffForHumans() }} </p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="mb-0">{{ $project->required_time }} Minutes</p>
+                            <p class="text-dark-blue mb-0">{{ $project->required_time }} Minutes</p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="mb-0 text-capitalize">{{ $project->research_type }}</p>
+                            <p class="text-dark-blue mb-0 text-capitalize">{{ $project->research_type }}</p>
                             <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="mb-0 text-capitalize">{{ $project->research_method }}</p>
+                            <p class="text-dark-blue mb-0 text-capitalize">{{ $project->research_method }}</p>
                         </div>
-                        <p class="mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="#" type="button" class="btn btn-sm text-primary show-details" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal">[ See Details ]</a></p>
+                        <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="#" type="button" class="btn btn-sm text-primary show-details" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal">[ See Details ]</a></p>
                     </div>
                 @endforeach
                 <div class="d-flex justify-content-center justify-content-lg-start">
@@ -149,15 +147,50 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <h3 class="project-title text-capitalize text-dark"></h3>
-                                                <p class="mb-2"><i class="fas fa-calendar-alt text-success mr-2"></i><span class="project-posted-time"></span></p>
+                                                <p class="mb-2"><i class="fas fa-calendar-alt text-success mr-2"></i><span class="project-posted-time text-dark-blue"></span></p>
                                                 <hr>
-                                                <p class="project-full-details text-justify"></p>
+                                                <p class="project-full-details text-dark-blue text-justify"></p>
                                             </div>
                                         </div>
                                         <hr>
                                         <div class="card">
                                             <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h5 class="text-dark font-weight-500">Project Demographics</h5>
+                                                        <hr>
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                    <div class="col-12 col-md-6">
+                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
 
+                                                    </div>
+                                                    <div class="col-12 col-md-6">
+                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-bullseye mr-2"></i><span class="project-research-method"></span></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-12">
+                                                        <h5 class="text-dark font-weight-500">Project Activities</h5>
+                                                        <hr>
+                                                        <p class="text-dark-blue mb-2"><i class="fas fa-users text-success mr-2"></i><span>Total Participated</span></p>
+                                                        <p class="text-dark-blue mb-2"><i class="fas fa-users-slash text-success mr-2"></i><span>Total Hired</span></p>
+                                                    </div>
+                                                </div>
+                                                <div class="row ">
+                                                </div>
                                             </div>
                                         </div>
 
@@ -166,20 +199,13 @@
                                     <div class="col-lg-4 ">
                                         <div class="card rounded-sm">
                                             <div class="card-header p-3">
-                                                <a href="" class="btn btn-sm btn-primary btn-custom w-100 font-weight-bold project-apply">Apply Now</a>
+                                                <a href="" class="btn btn-sm btn-primary btn-custom w-100 project-apply">Apply Now</a>
                                             </div>
                                             <div class="card-body">
-                                                <p class="text-success text-uppercase font-18">Project Budget: $<span class="project-total-incentive"></span></p>
-<<<<<<< HEAD
-                                                <div class="my-2 project-skills">
-
-                                                </div>
-=======
->>>>>>> c609b533782cfb08fb35cd1f7ce42442c802ccf1
-                                                <p class="mb-2"><i class="fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
-                                                <p class="mb-2"><i class="fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
-                                                <p class="mb-2"><i class="fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
-                                                <p class="mb-2"><i class="fas fa-bullseye mr-2"></i><span class="project-research-method"></span></p>
+                                                <p class="text-success text-uppercase font-weight-500">Project Budget: $<span class="project-total-incentive"></span></p>
+                                                <hr>
+                                                <div class="my-2 project-skills"></div>
+                                                <div class="my-2 project-industries"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -246,21 +272,33 @@
                         $('.project-full-details').html(response.data.project_details);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
+                        var projectIndustriesDiv = $('.project-industries');
                         if (response.skills){
                             var skills = response.skills;
                             projectSkillsDiv.html('');
-                            var skillTitle = "<h6 class=\"mt-2 font-weight-bold project\">Skills</h6>";
+                            var skillTitle = "<h6 class=\"mt-2 font-weight-bold font-weight-500 mb-3\">Skills & Expertise</h6>";
                             projectSkillsDiv.append(skillTitle);
-                            // Iterate over the skills array
                             $.each(skills, function(index, skill) {
-                                // Create a <p> element and set its text content to the skill_name
-                                var badge = $('<span class="badge badge-success badge-pill mr-2">').text(skill.skill_name);
-
-                                // Append the <p> element to the projectSkillsDiv
+                                var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(skill.skill_name);
                                 projectSkillsDiv.append(badge);
                             });
+                            projectSkillsDiv.append("<hr>");
                         }else{
                             projectSkillsDiv.html('');
+                        }
+
+                        if (response.industries){
+                            var Industries = response.industries;
+                            projectIndustriesDiv.html('');
+                            var industryTitle = "<h6 class=\"mt-2 font-weight-bold font-weight-500 mb-3\">Industries</h6>";
+                            projectIndustriesDiv.append(industryTitle);
+                            $.each(Industries, function(index, industry) {
+                                var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(industry);
+                                projectIndustriesDiv.append(badge);
+                            });
+                            projectIndustriesDiv.append("<hr>");
+                        }else{
+                            projectIndustriesDiv.html('');
                         }
 
                         $('.project-required-time').html(response.data.required_time);
