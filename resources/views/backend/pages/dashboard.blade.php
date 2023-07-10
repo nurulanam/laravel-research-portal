@@ -170,9 +170,12 @@
                                             </div>
                                             <div class="card-body">
                                                 <p class="text-success text-uppercase font-18">Project Budget: $<span class="project-total-incentive"></span></p>
+<<<<<<< HEAD
                                                 <div class="my-2 project-skills">
 
                                                 </div>
+=======
+>>>>>>> c609b533782cfb08fb35cd1f7ce42442c802ccf1
                                                 <p class="mb-2"><i class="fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
                                                 <p class="mb-2"><i class="fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
                                                 <p class="mb-2"><i class="fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
