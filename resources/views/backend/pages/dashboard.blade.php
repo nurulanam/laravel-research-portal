@@ -157,7 +157,7 @@
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
-                                                        <h5 class="text-dark font-weight-500">Project Demographics</h5>
+                                                        <h5 class="text-dark font-weight-500">Project Specifics</h5>
                                                         <hr>
                                                     </div>
                                                 </div>
@@ -185,8 +185,8 @@
                                                     <div class="col-12">
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
-                                                        <p class="text-dark-blue mb-2"><i class="fas fa-users text-success mr-2"></i><span>Total Participated</span></p>
-                                                        <p class="text-dark-blue mb-2"><i class="fas fa-users-slash text-success mr-2"></i><span>Total Hired</span></p>
+                                                        <p class="text-dark-blue mb-2"><i class="fas fa-clipboard-list text-success mr-2"></i><span>Proposals: <span class="">10</span></span></p>
+                                                        <p class="text-dark-blue mb-2"><i class="fas fa-clipboard-check text-success mr-2"></i><span>Total Hired: <span class="">2</span></span></p>
                                                     </div>
                                                 </div>
                                                 <div class="row ">
@@ -268,7 +268,7 @@
                     console.log(response)
                     if (response){
                         $('.project-title').html(response.data.project_title);
-                        $(".project-apply").attr('href', '/dashboard/project/'+response.data.id);
+                        $(".project-apply").attr('href', '/dashboard/project/'+response.data.slug);
                         $('.project-full-details').html(response.data.project_details);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
@@ -276,7 +276,7 @@
                         if (response.skills){
                             var skills = response.skills;
                             projectSkillsDiv.html('');
-                            var skillTitle = "<h6 class=\"mt-2 font-weight-bold font-weight-500 mb-3\">Skills & Expertise</h6>";
+                            var skillTitle = "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Skills & Expertise</h6>";
                             projectSkillsDiv.append(skillTitle);
                             $.each(skills, function(index, skill) {
                                 var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(skill.skill_name);
@@ -290,7 +290,7 @@
                         if (response.industries){
                             var Industries = response.industries;
                             projectIndustriesDiv.html('');
-                            var industryTitle = "<h6 class=\"mt-2 font-weight-bold font-weight-500 mb-3\">Industries</h6>";
+                            var industryTitle = "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Industries</h6>";
                             projectIndustriesDiv.append(industryTitle);
                             $.each(Industries, function(index, industry) {
                                 var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(industry);

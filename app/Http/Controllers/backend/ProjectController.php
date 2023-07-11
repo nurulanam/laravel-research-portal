@@ -18,6 +18,7 @@ use App\Models\backend\Projects;
 use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ProjectController extends Controller
 {
@@ -85,7 +86,6 @@ class ProjectController extends Controller
            'age_range.*' => 'string',
            'status' => 'required',
         ]);
-
         // User Info
         $user_id = Auth::id();
 
@@ -111,6 +111,7 @@ class ProjectController extends Controller
         $project->total_incentive = $total_incentive;
         $project->total_service_fee = $total_service_fee;
         $project->total_coast = $total_cost;
+        $project->slug = $this->createSlug($request->project_title);
 
         $project->status = $request->status;
         $project->save();
@@ -260,6 +261,30 @@ class ProjectController extends Controller
 
     }
 
+
+
+    public function createSlug($title)
+    {
+        // Generate the initial slug from the project title
+        $slug = Str::slug($title);
+
+        // Check if the generated slug already exists in the database
+        $existingProjects = Projects::where('slug', 'LIKE', $slug . '%')->pluck('slug');
+
+        // If the slug already exists, find the latest number suffix and increment it
+        if ($existingProjects->count() > 0) {
+            $suffixes = $existingProjects->map(function ($existingSlug) use ($slug) {
+                $slugSuffix = Str::afterLast($existingSlug, $slug . '-');
+                return intval($slugSuffix);
+            });
+
+            $highestSuffix = $suffixes->max();
+            $slug .= '-' . ($highestSuffix + 1);
+        }
+
+        return $slug;
+    }
+
     /**
      * Display the specified resource.
      *
@@ -304,6 +329,6 @@ class ProjectController extends Controller
     {
         $findProject = Projects::find($id);
         $findProject->delete();
-        return back()->with('error', 'Project Deleted Successfully');
+        return back()->with('info', 'Project Deleted Successfully');
     }
 }

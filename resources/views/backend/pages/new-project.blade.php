@@ -79,11 +79,11 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" value="b2b" @if (old('audience') == 'b2b') checked @endif>
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" @if (old('audience') == 'b2b') checked value="{{ old('audience') }}" @else value="b2b" @endif>
                                             <span class="mx-2"><label for="targetB2b">Industry Professionals (B2B)</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" value="b2c" @if (old('audience') == 'b2c') checked @endif required>
+                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" @if (old('audience') == 'b2c') checked value="{{ old('audience') }}" @else value="b2c" @endif required>
                                             <span class="mx-2"><label for="targetB2c">Population (B2C)</label></span>
                                         </div>
                                         <div id="projectTopic" style="display: none">
@@ -124,11 +124,11 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="research_type" value="remote" id="typeRemote">
+                                            <input type="radio" name="research_type" value="remote" @if(old('research_type') == 'remote') checked @endif id="typeRemote">
                                             <span class="mx-2"><label for="typeRemote">Remote</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="research_type" value="in-person" id="typeInPerson" required>
+                                            <input type="radio" name="research_type" value="in-person" @if(old('research_type') == 'in-person') checked @endif id="typeInPerson" required>
                                             <span class="mx-2"><label for="typeInPerson">In-Person</label></span>
                                         </div>
                                     </div>
@@ -142,11 +142,11 @@
                                     <div class="col-lg-9">
                                         <select name="research_method" class="form-control">
                                             <option value="">Select Research Method</option>
-                                            <option value="one-on-one">One-on-One</option>
-                                            <option value="focus-group">Focus Group</option>
-                                            <option value="unmoderated-study">Unmoderated Study</option>
-                                            <option value="survey">Survey</option>
-                                            <option value="diary-study">Diary Study</option>
+                                            <option value="one-on-one" @if(old('research_method') == 'one-on-one') selected @endif>One-on-One</option>
+                                            <option value="focus-group" @if(old('research_method') == 'focus-group') selected @endif>Focus Group</option>
+                                            <option value="unmoderated-study"@if(old('research_method') == 'unmoderated-study') selected @endif>Unmoderated Study</option>
+                                            <option value="survey"@if(old('research_method') == 'survey') selected @endif>Survey</option>
+                                            <option value="diary-study"@if(old('research_method') == 'diary-study') selected @endif>Diary Study</option>
                                         </select>
                                     </div>
                                 </div>
@@ -158,7 +158,7 @@
                                         <lable class="label" title="In Minutes">Time Required (Optional)</lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="number" name="required_time" class="form-control" placeholder="Time Required in Minute(s)">
+                                        <input type="number" name="required_time" class="form-control" @if(old('required_time')) value="{{ old('required_time') }}" @endif placeholder="Time Required in Minute(s)">
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +169,8 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="d-md-flex">
-                                            <input type="number" name="incentive" id="incentive" min="5" max="1000" value="5" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
-                                            <input type="range" id="incentive_range" min="5" max="1000" step="5" value="5" class="form-control-range">
+                                            <input type="number" name="incentive" id="incentive" min="5" max="1000"  @if(old('incentive')) value="{{ old('incentive') }}" @else value="5" @endif class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
+                                            <input type="range" id="incentive_range" min="5" max="1000" step="5" @if(old('incentive')) value="{{ old('incentive') }}" @else value="5" @endif class="form-control-range">
                                         </div>
 
                                     </div>
@@ -185,8 +185,8 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-md-flex">
-                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" value="1" class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
-                                        <input type="range" id="target_participant_range" min="1" max="50" step="1" value="1" class="form-control-range" required>
+                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
+                                        <input type="range" id="target_participant_range" min="1" max="50" step="1" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control-range" required>
                                     </div>
 
                                 </div>
@@ -213,43 +213,43 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="self-employed" id="self-employed" @if (old('company_size') == 'self-employed') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="self-employed" id="self-employed" {{ in_array('self-employed', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="self-employed">Self Employed</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="1to10" id="1to10" @if (old('company_size') == '1to10') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="1to10" id="1to10" {{ in_array('1to10', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="1to10">1 - 10</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="11to50" id="11to50" @if (old('company_size') == '11to50') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="11to50" id="11to50" {{ in_array('11to50', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="11to50">11 - 50</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="51to200" id="51to200" @if (old('company_size') == '51to200') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="51to200" id="51to200" {{ in_array('51to200', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="51to200">51 - 200</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="201to500" id="201to500" @if (old('company_size') == '201to500') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="201to500" id="201to500" {{ in_array('201to500', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="201to500">201 - 500</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="501to1000" id="501to1000" @if (old('company_size') == '501to1000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="501to1000" id="501to1000" {{ in_array('501to1000', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="501to1000">501 - 1,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="1001to5000" id="1001to5000" @if (old('company_size') == '1001to5000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="1001to5000" id="1001to5000" {{ in_array('1001to5000', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="1001to5000">1,001 - 5,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="5001to10000" id="5001to10000" @if (old('company_size') == '5001to10000') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="5001to10000" id="5001to10000" {{ in_array('5001to10000', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="5001to10000">5,001 - 10,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="10000plus" id="10000plus" @if (old('company_size') == '10000plus') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="10000plus" id="10000plus" {{ in_array('10000plus', old('company_size', [])) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="10000plus">10,000+</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="company_size[]" value="" id="allCompanySize" @if (old('company_size') == 'allCompanySize') checked @endif>
+                                        <input type="checkbox" name="company_size[]" value="" id="allCompanySize" {{ empty(old('company_size')) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="allCompanySize">All Company Sizes</label></span>
                                     </div>
                                 </div>
@@ -276,7 +276,9 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <p class="font-13">Select up to 25 skills, knowledge areas, tools and/or certifications you would like to target </p>
-                                    <select name="skills[]"  class="form-control w-100 skills-box" multiple="multiple"></select>
+                                    <select name="skills[]"  class="form-control w-100 skills-box" multiple="multiple">
+
+                                    </select>
                                     @error('skills')
                                     <p class="text-danger font-13 py-2">{{ $message }}</p>
                                     @enderror
@@ -579,6 +581,7 @@
                 allowClear: true,
 
             });
+
             $('.industry-select').select2({
                 maximumSelectionLength: 5,
                 placeholder: "Select Maximum 5 Industries",
@@ -613,7 +616,16 @@
                     cache: false,
                 }
             })
+
         });
+
+
+
+
+
+
+
+
 
         $(function(){
             var $sections=$('.form-section');
@@ -754,6 +766,7 @@
                 locationContainer.append(locationDiv);
 
                 // Automatically select the first state and populate the city options
+
                 const firstState = stateSelect.find("option:first").val();
                 stateSelect.val(firstState).trigger("change");
             }
@@ -771,18 +784,26 @@
         let usStateAndCity = @json($us_states);
     </script>
     <script>
-        $('.target-audience').on('click', function (){
-            if($(this).val() == 'b2c'){
-                $('#projectTopic').show();
-                $('select.topic-select').attr('required', true);
-                $('select.topic-select').attr('disabled', false);
+        $(document).ready(function() {
+            const audienceValue = $('input[name="audience"].target-audience:checked').val();
 
-            }else{
-                $('#projectTopic').hide('')
-                $('select.topic-select').attr('required', false);
-                $('select.topic-select').attr('disabled', true);
+            if (audienceValue === 'b2c') {
+                $('#projectTopic').show();
+                $('select.topic-select').prop('required', true).prop('disabled', false);
             }
+
+            $('input[name="audience"].target-audience').on('click', function() {
+                const currentValue = $(this).val();
+                if (currentValue === 'b2c') {
+                    $('#projectTopic').show();
+                    $('select.topic-select').prop('required', true).prop('disabled', false);
+                } else {
+                    $('#projectTopic').hide();
+                    $('select.topic-select').prop('required', false).prop('disabled', true);
+                }
+            });
         });
+
 
 
         $('#addQuestion').on('click', function (){

@@ -27,6 +27,7 @@ class Profile extends Model
         'household_income',
         'marital_status',
         'children_in_living',
+        'slug',
         'status',
     ];
 }

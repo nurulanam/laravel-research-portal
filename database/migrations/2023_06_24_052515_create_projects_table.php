@@ -28,6 +28,7 @@ class CreateProjectsTable extends Migration
             $table->integer('total_incentive');
             $table->integer('total_service_fee');
             $table->integer('total_coast');
+            $table->string('slug')->unique();
 
             $table->string('status')->comment('publish, draft');
 
