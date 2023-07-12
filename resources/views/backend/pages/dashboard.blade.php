@@ -13,94 +13,80 @@
         </div>
     </div>
     @if(Auth::user()->hasRole('participant'))
-        <div class="row my-4">
+        <div class="row">
             <div class="col-12">
-                <div class="card mb-4 bg-transparent">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-flex justify-content-start align-items-center w-100 mr-2">
-                            <form action="" method="post" class="w-100">
-                                <div class="input-group mr-sm-2">
-                                    <input type="text" name="search" class="form-control" placeholder="Search Projects By Keyword">
-                                    <div class="input-group-append">
-                                        <button  class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i></button>
-                                    </div>
-                                </div>
-                            </form>
-                        </div>
-                        <!-- Button trigger modal -->
-                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#filterModal">
-                            <span class="d-flex align-items-center"> <i class="fas fa-filter mr-2"></i>Filter</span>
-                        </button>
-
-                        <!-- Modal -->
-                        <div class="modal fade" id="filterModal" tabindex="-1" role="dialog" aria-labelledby="filterModallLabel" aria-hidden="true">
-                            <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
-                                <div class="modal-content">
-                                    <div class="modal-header ">
-                                        <h5 class="modal-title text-dark font-weight-bold" id="filterModalLabel">Filter Projects</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                            <span aria-hidden="true">&times;</span>
-                                        </button>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-12 col-md-6 col-lg-4">
-                                                <div class="form-group">
-                                                    <p class="text-dark font-weight-bold">Audience</p>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="radio" class="form-radio mr-2" name="audience" value="b2b" id="radioB2B">
-                                                        <label class="radio-label mb-0" for="radioB2B" >Industry professional</label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="radio" class="form-radio mr-2" name="audience" value="b2c" id="radioB2C">
-                                                        <label class="radio-label mb-0" for="radioB2C">General population</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6 col-lg-4">
-                                                <div class="form-group">
-                                                    <p class="text-dark font-weight-bold">Project Type</p>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="radio" class="form-radio mr-2" name="research_type" value="in-person" id="inPerson">
-                                                        <label class="radio-label mb-0" for="inPerson" >In-Person</label>
-                                                    </div>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="radio" class="form-radio mr-2" name="research_type" value="remote" id="remote">
-                                                        <label class="radio-label mb-0" for="remote">Remote</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-6 col-lg-4">
-                                                <div class="form-group">
-                                                    <p class="text-dark font-weight-bold">Compensation</p>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="number" class="form-control mr-2" name="min_incentive" min="0" max="999" placeholder="Min" id="minIncentive">
-                                                        <input type="number" class="form-control mr-2" name="max_incentive" min="1" max="1000" placeholder="Max" id="maxIncentive">
-                                                    </div>
-                                                </div>
-                                                <div class="form-group">
-                                                    <p class="text-dark font-weight-bold">Time (minutes)</p>
-                                                    <div class="d-flex align-items-center">
-                                                        <input type="number" class="form-control mr-2" name="min_time" placeholder="Min">
-                                                        <input type="number" class="form-control mr-2" name="max_time" placeholder="Max">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-primary">Save changes</button>
-                                    </div>
+                <div class="card  bg-transparent">
+                    <div class="d-flex justify-content-start align-items-center w-100 mr-2">
+                        <form action="{{ route('dashboard.index') }}" method="get" class="w-100">
+                            @csrf
+                            <div class="input-group mr-sm-2">
+                                <input type="text" name="search" class="form-control" id="search" @if(request('search')) value="{{ request('search') }}" @endif placeholder="Search Projects By Keyword">
+                                <div class="input-group-append">
+                                    <button  class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
-                        </div>
-
+                        </form>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-12 col-lg-3">
+                <div class="card">
+                    <div class="card-header bg-dark-blue">
+                        <h5 class="text-light mb-0">Filter Projects</h5>
+                    </div>
+                    <div class="card-body">
+                        <form action="{{ route('dashboard.index') }}" method="GET">
+                            @csrf
+                        <div class="form-group">
+                            <p class="text-dark font-weight-bold pb-3">Audience</p>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" class="form-radio mr-2" name="audience" value="b2b" id="radioB2B" {{ request('audience') === 'b2b' ? 'checked' : '' }}>
+                                <label class="radio-label mb-0" for="radioB2B" >Industry professional</label>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" class="form-radio mr-2" name="audience" value="b2c" id="radioB2C" {{ request('audience') === 'b2c' ? 'checked' : '' }}>
+                                <label class="radio-label mb-0" for="radioB2C">General population</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-dark font-weight-bold pb-3">Project Type</p>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" class="form-radio mr-2" name="research_type" value="in-person" id="inPerson" {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
+                                <label class="radio-label mb-0" for="inPerson" >In-Person</label>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <input type="radio" class="form-radio mr-2" name="research_type" value="remote" id="remote" {{ request('research_type') === 'remote' ? 'checked' : '' }}>
+                                <label class="radio-label mb-0" for="remote">Remote</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-dark font-weight-bold pb-3">Compensation</p>
+                            <div class="d-flex align-items-center">
+                                <input type="number" class="form-control mr-2" name="min_incentive" min="0" placeholder="Min" id="minIncentive" @if(request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
+                                <input type="number" class="form-control mr-2" name="max_incentive" min="1" placeholder="Max" id="maxIncentive" @if(request('max_incentive')) value="{{ request('max_incentive') }}" @endif>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <p class="text-dark font-weight-bold">Time (minutes)</p>
+                            <div class="d-flex align-items-center">
+                                <input type="number" class="form-control mr-2" name="min_time" id="minTime" min="0" placeholder="Min" @if(request('min_time')) value="{{ request('min_time') }}" @endif>
+                                <input type="number" class="form-control mr-2" name="max_time" id="maxTime" min="1" placeholder="Max" @if(request('max_time')) value="{{ request('max_time') }}" @endif>
+                            </div>
+                        </div>
+                            <div class="d-flex mt-4">
+                                <button class="btn btn-primary mr-3">Apply</button>
+                                <button type="button" class="btn btn-danger reset-filter" onclick="resetForm();">Reset</button>
+                            </div>
 
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-9 ">
                 @foreach($projects as $key => $project)
-                    <div class="card p-4 my-3">
+                    <div class="card p-4 mb-3">
                         <div class="d-flex justify-content-between">
                             <a href="#" type="button" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal" class="text-primary show-details text-capitalize text-decoration-none modal-project-title"><h4>
                                     {{ $project->project_title }}</h4></a>
@@ -244,7 +230,42 @@
                     minIncentive.removeClass("border-danger");
                 }
             }
+
+
+            var minTime = $("#minTime");
+            var maxTime = $("#maxTime");
+
+            // Add event listener for input changes
+            minTime.on("input", validateTimes);
+            maxTime.on("input", validateTimes);
+
+            function validateTimes() {
+                var minValue = parseInt(minTime.val());
+                var maxValue = parseInt(maxTime.val());
+
+                // Remove previous classes
+                minTime.removeClass("border-danger");
+                maxTime.removeClass("border-danger");
+
+                if (minValue >= maxValue) {
+                    minTime.addClass("border-danger");
+                } else {
+                    minTime.removeClass("border-danger");
+                }
+            }
+
         });
+        function resetForm(){
+            $('#search').val('');
+            $('#radioB2B').removeAttr('checked');
+            $('#radioB2C').removeAttr('checked');
+            $('#inPerson').removeAttr('checked');
+            $('#remote').removeAttr('checked');
+            $('#minIncentive').val('');
+            $('#maxIncentive').val('');
+            $('#minTime').val('');
+            $('#maxTime').val('');
+        }
     </script>
 
 
@@ -296,14 +317,17 @@
                                 var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(industry);
                                 projectIndustriesDiv.append(badge);
                             });
-                            projectIndustriesDiv.append("<hr>");
                         }else{
                             projectIndustriesDiv.html('');
                         }
 
                         $('.project-required-time').html(response.data.required_time);
                         $('.project-total-participants').html(response.data.target_participant);
-                        $('.project-research-type').html(response.data.research_type);
+                        if (response.data.research_type === 'remote'){
+                            $('.project-research-type').html('Remote');
+                        }else if(response.data.research_type === 'in-person'){
+                            $('.project-research-type').html('In Person');
+                        }
                         $('.project-research-method').html(response.data.research_method);
 
                         let time = formatDate(response.data.created_at);

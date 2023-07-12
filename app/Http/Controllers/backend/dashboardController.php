@@ -17,12 +17,38 @@ class dashboardController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $projects = Projects::where('status', '=', 'publish')->paginate(2);
-//        $user = Auth::user();
-//        $userIndustries = UserHasIndustry::where('user_id', '=', $user->id)->get();
-//        $userIndustriesNames = $userIndustries->pluck('industry')->toArray();
+        $query = Projects::where('status', '=', 'publish');
+
+        if ($request->filled('search')){
+            $query->where('project_title', 'like', '%' . $request->search . '%')->orWhere('project_details', 'like', '%' . $request->search . '%');
+        }
+        if ($request->filled('audience')) {
+            $query->where('audience', $request->audience);
+        }
+
+        if ($request->filled('research_type')) {
+            $query->where('research_type', $request->research_type);
+        }
+
+        if ($request->filled('min_incentive')) {
+            $query->where('total_incentive', '>=', $request->min_incentive);
+        }
+
+        if ($request->filled('max_incentive')) {
+            $query->where('total_incentive', '<=', $request->max_incentive);
+        }
+
+        if ($request->filled('min_time')) {
+            $query->where('required_time', '>=', $request->min_time);
+        }
+
+        if ($request->filled('max_time')) {
+            $query->where('required_time', '<=', $request->max_time);
+        }
+
+        $projects = $query->orderBy('updated_at', 'desc')->paginate(2);
 
         return view('backend.pages.dashboard', compact('projects'));
     }
