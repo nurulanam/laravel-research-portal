@@ -6,6 +6,7 @@ use App\Http\Controllers\backend\ProfileController;
 use App\Http\Controllers\backend\SkillController;
 use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
+use App\Http\Controllers\backend\ProjectApplyController;
 
 /*
 |--------------------------------------------------------------------------
@@ -40,7 +41,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         // Project
         Route::resource('/project', ProjectController::class);
     });
-
+    Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');
     // Reset Password
     Route::resource('/change-password', ChangePasswordController::class);
 });

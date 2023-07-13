@@ -525,7 +525,40 @@
                         </div>
                     </div>
                     <div class="form-section">
-                        <div id="questionsField"></div>
+                        <div id="questionsField">
+                            <div class="form-group border p-3 bg-gradient-light rounded full-question" data-qid="q1">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <h5>Q1</h5>
+                                    </div>
+                                    <div class="col-6 text-right">
+{{--                                        <button class="btn"><i class="fas fa-trash-alt"></i></button>--}}
+                                    </div>
+                                </div>
+                                <div class="question-title mb-3">
+                                    <textarea name="question_name[1][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>
+                                </div>
+                                <div class="question-body">
+                                    <div class="d-flex align-items-center">
+                                        <select name="question_type[1][]" class="form-control question_type" data-typeid="1" required>
+                                            <option value="" id="">Select a Type</option>
+                                            <option value="radio">Radio (Singe Select)</option>
+                                            <option value="checkbox">Checkbox (Multi select)</option>
+                                            <option value="textarea">Multi-line text box</option>
+                                            <option value="text">Single-line text box</option>
+                                            <option value="number">Number box</option>
+                                            <option value="slider">Slider (number selector)</option>
+                                        </select>
+                                        <div class="d-flex mx-2">
+                                            <input type="checkbox" name="required[1][]" id="requiredCheck1" class="mx-2">
+                                            <label class="mb-0" for="requiredCheck1">Required</label>
+                                        </div>
+                                    </div>
+                                    <div id="answer1">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="d-flex justify-content-center">
                             <button class="btn btn-success" id="addQuestion">Add Question</button>
                         </div>
@@ -724,22 +757,7 @@
                     });
                 }
             }, 1000); // Delay of 1000 milliseconds (1 second)
-
-
-
         });
-
-
-
-
-
-
-
-
-
-
-
-
 
         $(function(){
             var $sections=$('.form-section');
@@ -918,16 +936,17 @@
             });
         });
 
-
-
         $('#addQuestion').on('click', function (){
-            let question = '<div class="form-group border p-3 bg-gradient-light rounded" data-qid="q'+qnum+'">\
+            // var itemCount = $('#questionsField').children('.full-question').length;
+            // let qnum = ++itemCount;
+
+            let question = '<div class="form-group border p-3 bg-gradient-light rounded full-question" data-qid="q'+qnum+'">\
                 <div class="row">\
                 <div class="col-6">\
                 <h5>Q'+qnum+'</h5>\
         </div>\
             <div class="col-6 text-right">\
-                <button class="btn"><i class="fas fa-trash-alt"></i></button>\
+                <button class="btn btn-delete-question"><i class="fas fa-trash-alt"></i></button>\
             </div>\
         </div>\
             <div class="question-title mb-3">\
@@ -1131,9 +1150,12 @@
             let rowId = $(this).data('radioanswerid');
             let fieldId = $(this).data('fieldid');
             $(this).parents('.radioAnswerItem'+fieldId).remove();
-        })
+        });
 
-        let qnum = 1;
+        let qnum = 2;
+        $('#questionsField').on('click', '.btn-delete-question', function (){
+            $(this).closest(".full-question").remove();
+        })
     </script>
 
 @endsection

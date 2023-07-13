@@ -12,17 +12,38 @@
             <h2 class="text-dark">Hey {{ Auth::user()->first_name }} !</h2>
         </div>
     </div>
-    @if(Auth::user()->hasRole('participant'))
+    @if (Auth::user()->hasRole('participant'))
         <div class="row">
             <div class="col-12">
                 <div class="card  bg-transparent">
                     <div class="d-flex justify-content-start align-items-center w-100 mr-2">
-                        <form action="{{ route('dashboard.index') }}" method="get" class="w-100">
+                        <form action="{{ route('dashboard.index') }}" method="get" class="w-100" id="searchForm">
                             @csrf
                             <div class="input-group mr-sm-2">
-                                <input type="text" name="search" class="form-control" id="search" @if(request('search')) value="{{ request('search') }}" @endif placeholder="Search Projects By Keyword">
+                                <input type="text" name="search" class="form-control main-search"
+                                    @if (request('search')) value="{{ request('search') }}" @endif
+                                    placeholder="Search Projects By Keyword">
+                                <div class="hidden">
+                                    <input type="radio" class="d-none audience-b2b" name="audience" value="b2b"
+                                        {{ request('audience') === 'b2b' ? 'checked' : '' }}>
+                                    <input type="radio" class="d-none audience-b2c" name="audience" value="b2c"
+                                        {{ request('audience') === 'b2c' ? 'checked' : '' }}>
+                                    <input type="radio" class="d-none research-type-in-person" name="research_type"
+                                        value="in-person" {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
+                                    <input type="radio" class="d-none research-type-remote" name="research_type"
+                                        value="remote" {{ request('research_type') === 'remote' ? 'checked' : '' }}>
+                                    <input type="number" class="d-none incentive-min" name="min_incentive" min="0"
+                                        @if (request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
+                                    <input type="number" class="d-none incentive-max" name="max_incentive" min="1"
+                                        @if (request('max_incentive')) value="{{ request('max_incentive') }}" @endif>
+                                    <input type="number" class="d-none time-min" name="min_time" min="0"
+                                        @if (request('min_time')) value="{{ request('min_time') }}" @endif>
+                                    <input type="number" class="d-none time-max" name="max_time" min="1"
+                                        @if (request('max_time')) value="{{ request('max_time') }}" @endif>
+                                </div>
+
                                 <div class="input-group-append">
-                                    <button  class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i></button>
+                                    <button class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i></button>
                                 </div>
                             </div>
                         </form>
@@ -37,89 +58,144 @@
                         <h5 class="text-light mb-0">Filter Projects</h5>
                     </div>
                     <div class="card-body">
-                        <form action="{{ route('dashboard.index') }}" method="GET">
+                        <form action="{{ route('dashboard.index') }}" method="GET" id="filterForm">
                             @csrf
-                        <div class="form-group">
-                            <p class="text-dark font-weight-bold pb-3">Audience</p>
-                            <div class="d-flex align-items-center">
-                                <input type="radio" class="form-radio mr-2" name="audience" value="b2b" id="radioB2B" {{ request('audience') === 'b2b' ? 'checked' : '' }}>
-                                <label class="radio-label mb-0" for="radioB2B" >Industry professional</label>
+                            <div class="form-group">
+                                <p class="text-dark font-weight-bold pb-3">Audience</p>
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" class="form-radio audience-b2b mr-2" name="audience"
+                                        value="b2b" id="radioB2B" {{ request('audience') === 'b2b' ? 'checked' : '' }}>
+                                    <label class="radio-label mb-0" for="radioB2B">Industry professional</label>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" class="form-radio audience-b2c mr-2" name="audience"
+                                        value="b2c" id="radioB2C" {{ request('audience') === 'b2c' ? 'checked' : '' }}>
+                                    <label class="radio-label mb-0" for="radioB2C">General population</label>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center">
-                                <input type="radio" class="form-radio mr-2" name="audience" value="b2c" id="radioB2C" {{ request('audience') === 'b2c' ? 'checked' : '' }}>
-                                <label class="radio-label mb-0" for="radioB2C">General population</label>
+                            <div class="form-group">
+                                <p class="text-dark font-weight-bold pb-3">Project Type</p>
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" class="form-radio research-type-in-person mr-2"
+                                        name="research_type" value="in-person" id="inPerson"
+                                        {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
+                                    <label class="radio-label mb-0" for="inPerson">In-Person</label>
+                                </div>
+                                <div class="d-flex align-items-center">
+                                    <input type="radio" class="form-radio research-type-remote mr-2" name="research_type"
+                                        value="remote" id="remote"
+                                        {{ request('research_type') === 'remote' ? 'checked' : '' }}>
+                                    <label class="radio-label mb-0" for="remote">Remote</label>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <p class="text-dark font-weight-bold pb-3">Project Type</p>
-                            <div class="d-flex align-items-center">
-                                <input type="radio" class="form-radio mr-2" name="research_type" value="in-person" id="inPerson" {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
-                                <label class="radio-label mb-0" for="inPerson" >In-Person</label>
+                            <div class="form-group">
+                                <p class="text-dark font-weight-bold pb-3">Compensation</p>
+                                <div class="d-flex align-items-center">
+                                    <input type="number" class="form-control rounded-pill incentive-min mr-2" name="min_incentive"
+                                        min="0" placeholder="Min" id="minIncentive"
+                                        @if (request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
+                                    <input type="number" class="form-control rounded-pill incentive-max" name="max_incentive"
+                                        min="1" placeholder="Max" id="maxIncentive"
+                                        @if (request('max_incentive')) value="{{ request('max_incentive') }}" @endif>
+                                </div>
                             </div>
-                            <div class="d-flex align-items-center">
-                                <input type="radio" class="form-radio mr-2" name="research_type" value="remote" id="remote" {{ request('research_type') === 'remote' ? 'checked' : '' }}>
-                                <label class="radio-label mb-0" for="remote">Remote</label>
+                            <div class="form-group">
+                                <p class="text-dark font-weight-bold pb-3">Time (minutes)</p>
+                                <div class="d-flex align-items-center">
+                                    <input type="number" class="form-control rounded-pill time-min mr-2" name="min_time"
+                                        id="minTime" min="0" placeholder="Min"
+                                        @if (request('min_time')) value="{{ request('min_time') }}" @endif>
+                                    <input type="number" class="form-control rounded-pill time-max" name="max_time"
+                                        id="maxTime" min="1" placeholder="Max"
+                                        @if (request('max_time')) value="{{ request('max_time') }}" @endif>
+                                </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <p class="text-dark font-weight-bold pb-3">Compensation</p>
-                            <div class="d-flex align-items-center">
-                                <input type="number" class="form-control mr-2" name="min_incentive" min="0" placeholder="Min" id="minIncentive" @if(request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
-                                <input type="number" class="form-control mr-2" name="max_incentive" min="1" placeholder="Max" id="maxIncentive" @if(request('max_incentive')) value="{{ request('max_incentive') }}" @endif>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <p class="text-dark font-weight-bold">Time (minutes)</p>
-                            <div class="d-flex align-items-center">
-                                <input type="number" class="form-control mr-2" name="min_time" id="minTime" min="0" placeholder="Min" @if(request('min_time')) value="{{ request('min_time') }}" @endif>
-                                <input type="number" class="form-control mr-2" name="max_time" id="maxTime" min="1" placeholder="Max" @if(request('max_time')) value="{{ request('max_time') }}" @endif>
-                            </div>
-                        </div>
-                            <div class="d-flex mt-4">
-                                <button class="btn btn-primary mr-3">Apply</button>
-                                <button type="button" class="btn btn-danger reset-filter" onclick="resetForm();">Reset</button>
-                            </div>
+                            <div class="hidden">
+                                <input type="text" name="search" class="d-none main-search"
+                                    @if (request('search')) value="{{ request('search') }}" @endif>
 
+                            </div>
+                            <div class="d-flex justify-content-between mt-4">
+                                <button class="btn btn-primary rounded-pill w-100 mr-2">Apply</button>
+                                <a href="{{ route('dashboard.index') }}" class="btn btn-danger rounded-pill w-100">Clear</a>
+                            </div>
                         </form>
                     </div>
                 </div>
             </div>
             <div class="col-12 col-lg-9 ">
-                @foreach($projects as $key => $project)
-                    <div class="card p-4 mb-3">
-                        <div class="d-flex justify-content-between">
-                            <a href="#" type="button" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal" class="text-primary show-details text-capitalize text-decoration-none modal-project-title"><h4>
-                                    {{ $project->project_title }}</h4></a>
-                            <div class="d-flex">
-                                <div class="dropdown mr-1">
-                                    <button type="button" class="btn btn-primary dropdown-toggle" id="actionDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-offset="10,20">
-                                    </button>
-                                    <div class="dropdown-menu" aria-labelledby="actionDropdown">
-                                        <a class="dropdown-item" href="#"><i class="fas fa-clone mr-2"></i> Copy Project link</a>
-                                        <a class="dropdown-item" href="#"><i class="fas fa-eye-slash mr-2"></i> Hide Project</a>
+                @if ($projects->count() > 0)
+                    @foreach ($projects as $key => $project)
+                        <div class="card p-4 mb-3">
+                            <div class="d-flex justify-content-between">
+                                <a href="#" type="button" data-toggle="modal" data-id="{{ $project->id }}"
+                                    data-target=".project-details-modal"
+                                    class="text-primary show-details text-capitalize text-decoration-none modal-project-title">
+                                    <h4>
+                                        {{ $project->project_title }}</h4>
+                                </a>
+                                <div class="d-flex">
+                                    <div class="dropdown mr-1">
+                                        <button type="button" class="btn btn-primary dropdown-toggle"
+                                            id="actionDropdown" data-toggle="dropdown" aria-haspopup="true"
+                                            aria-expanded="false" data-offset="10,20">
+                                        </button>
+                                        <div class="dropdown-menu" aria-labelledby="actionDropdown">
+                                            <a class="dropdown-item" href="#"><i class="fas fa-clone mr-2"></i>
+                                                Copy Project link</a>
+                                            <a class="dropdown-item" href="#"><i class="fas fa-eye-slash mr-2"></i>
+                                                Hide Project</a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+                            <div class="d-flex justify-content-start align-items-center">
+                                <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
+                                <i class="fas fa-grip-lines-vertical mx-2"></i>
+                                <p class="text-dark-blue mb-0">{{ $project->updated_at->diffForHumans() }} </p>
+                                @if($project->required_time)
+                                    <i class="fas fa-grip-lines-vertical mx-2"></i>
+                                    <p class="text-dark-blue mb-0">{{ $project->required_time }} Minutes</p>
+                                @endif
+
+                                <i class="fas fa-grip-lines-vertical mx-2"></i>
+                                @if($project->research_type == 'remote')
+                                    <p class="text-dark-blue mb-0 text-capitalize">Remote</p>
+                                @elseif($project->research_type == 'in-person')
+                                    <p class="text-dark-blue mb-0 text-capitalize">In Person</p>
+                                @endif
+                                @if($project->research_method)
+                                    <i class="fas fa-grip-lines-vertical mx-2"></i>
+                                    @if($project->research_method == 'one-on-one')
+                                        <p class="text-dark-blue mb-0 text-capitalize">One-on-One</p>
+                                    @elseif($project->research_method == 'focus-group')
+                                        <p class="text-dark-blue mb-0 text-capitalize">Focus Group</p>
+                                    @elseif($project->research_method == 'unmoderated-study')
+                                        <p class="text-dark-blue mb-0 text-capitalize">Unmoderated Study</p>
+                                    @elseif($project->research_method == 'survey')
+                                        <p class="text-dark-blue mb-0 text-capitalize">Survey</p>
+                                    @elseif($project->research_method == 'diary-study')
+                                        <p class="text-dark-blue mb-0 text-capitalize">Diary Study</p>
+                                    @endif
+                                @endif
+
+
+                            </div>
+                            <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a
+                                    href="#" type="button" class="btn btn-sm text-primary show-details"
+                                    data-toggle="modal" data-id="{{ $project->id }}"
+                                    data-target=".project-details-modal">[ See Details ]</a></p>
                         </div>
-                        <div class="d-flex justify-content-start align-items-center">
-                            <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
-                            <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="text-dark-blue mb-0">{{ $project->updated_at->diffForHumans() }} </p>
-                            <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="text-dark-blue mb-0">{{ $project->required_time }} Minutes</p>
-                            <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="text-dark-blue mb-0 text-capitalize">{{ $project->research_type }}</p>
-                            <i class="fas fa-grip-lines-vertical mx-2"></i>
-                            <p class="text-dark-blue mb-0 text-capitalize">{{ $project->research_method }}</p>
-                        </div>
-                        <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a href="#" type="button" class="btn btn-sm text-primary show-details" data-toggle="modal" data-id="{{ $project->id }}" data-target=".project-details-modal">[ See Details ]</a></p>
-                    </div>
-                @endforeach
+                    @endforeach
+                @else
+                    <p class="text-center font-weight-500">Opps... No Projects Found.</p>
+                @endif
                 <div class="d-flex justify-content-center justify-content-lg-start">
                     {{ $projects->links() }}
                 </div>
 
-                <div class="modal fade project-details-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal fade project-details-modal" tabindex="-1" role="dialog"
+                    aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl float-lg-right w-100 mr-lg-3">
                         <div class="modal-content">
                             <div class="modal-header border-0">
@@ -133,7 +209,9 @@
                                         <div class="card">
                                             <div class="card-body">
                                                 <h3 class="project-title text-capitalize text-dark"></h3>
-                                                <p class="mb-2"><i class="fas fa-calendar-alt text-success mr-2"></i><span class="project-posted-time text-dark-blue"></span></p>
+                                                <p class="mb-2"><i
+                                                        class="fas fa-calendar-alt text-success mr-2"></i><span
+                                                        class="project-posted-time text-dark-blue"></span></p>
                                                 <hr>
                                                 <p class="project-full-details text-dark-blue text-justify"></p>
                                             </div>
@@ -149,17 +227,26 @@
                                                 </div>
                                                 <div class="row ">
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-clock mr-2"></i><span class="project-required-time"></span> Minutes</p>
+                                                        <p class="text-dark-blue mb-2" title="Required Time"><i
+                                                                class="text-success fas fa-clock mr-2" ></i><span
+                                                                class="project-required-time"></span> Minutes</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-users mr-2"></i><span class="project-total-participants"></span> Target Participants</p>
+                                                        <p class="text-dark-blue mb-2" title="Target Participants"><i
+                                                                class="text-success fas fa-users mr-2"></i><span
+                                                                class="project-total-participants"></span> Target
+                                                            Participants</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-user-shield mr-2"></i><span class="project-research-type"></span></p>
+                                                        <p class="text-dark-blue mb-2" title="Research Type"><i
+                                                                class="text-success fas fa-user-shield mr-2"></i><span
+                                                                class="project-research-type"></span></p>
 
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2"><i class="text-success fas fa-bullseye mr-2"></i><span class="project-research-method"></span></p>
+                                                        <p class="text-dark-blue mb-2" title="Research Method"><i
+                                                                class="text-success fas fa-bullseye mr-2"></i><span
+                                                                class="project-research-method"></span></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -171,24 +258,29 @@
                                                     <div class="col-12">
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
-                                                        <p class="text-dark-blue mb-2"><i class="fas fa-clipboard-list text-success mr-2"></i><span>Proposals: <span class="">10</span></span></p>
-                                                        <p class="text-dark-blue mb-2"><i class="fas fa-clipboard-check text-success mr-2"></i><span>Total Hired: <span class="">2</span></span></p>
+                                                        <p class="text-dark-blue mb-2"><i
+                                                                class="fas fa-clipboard-list text-success mr-2"></i><span>Proposals:
+                                                                <span class="">10</span></span></p>
+                                                        <p class="text-dark-blue mb-2"><i
+                                                                class="fas fa-clipboard-check text-success mr-2"></i><span>Total
+                                                                Hired: <span class="">2</span></span></p>
                                                     </div>
                                                 </div>
                                                 <div class="row ">
                                                 </div>
                                             </div>
                                         </div>
-
-
                                     </div>
                                     <div class="col-lg-4 ">
                                         <div class="card rounded-sm">
                                             <div class="card-header p-3">
-                                                <a href="" class="btn btn-sm btn-primary btn-custom w-100 project-apply">Apply Now</a>
+                                                <a href=""
+                                                    class="btn btn-sm btn-primary btn-custom w-100 project-apply">Apply
+                                                    Now</a>
                                             </div>
                                             <div class="card-body">
-                                                <p class="text-success text-uppercase font-weight-500">Project Budget: $<span class="project-total-incentive"></span></p>
+                                                <p class="text-success text-uppercase font-weight-500">Project Budget:
+                                                    $<span class="project-total-incentive"></span></p>
                                                 <hr>
                                                 <div class="my-2 project-skills"></div>
                                                 <div class="my-2 project-industries"></div>
@@ -196,10 +288,8 @@
                                         </div>
                                     </div>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
     @endif
@@ -231,7 +321,6 @@
                 }
             }
 
-
             var minTime = $("#minTime");
             var maxTime = $("#maxTime");
 
@@ -255,24 +344,13 @@
             }
 
         });
-        function resetForm(){
-            $('#search').val('');
-            $('#radioB2B').removeAttr('checked');
-            $('#radioB2C').removeAttr('checked');
-            $('#inPerson').removeAttr('checked');
-            $('#remote').removeAttr('checked');
-            $('#minIncentive').val('');
-            $('#maxIncentive').val('');
-            $('#minTime').val('');
-            $('#maxTime').val('');
-        }
     </script>
 
 
     <script>
-        $('.show-details').on('click', function (){
-           let id = $(this).data('id');
-           let url = "{{ route('show.project.api', ':id') }}";
+        $('.show-details').on('click', function() {
+            let id = $(this).data('id');
+            let url = "{{ route('show.project.api', ':id') }}";
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -285,56 +363,74 @@
                     'id': id
                 },
                 dataType: 'JSON',
-                success: function (response){
+                success: function(response) {
                     console.log(response)
-                    if (response){
+                    if (response) {
                         $('.project-title').html(response.data.project_title);
-                        $(".project-apply").attr('href', '/dashboard/project/'+response.data.slug);
+                        $(".project-apply").attr('href', '/dashboard/project-apply/' + response.data.slug);
                         $('.project-full-details').html(response.data.project_details);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
                         var projectIndustriesDiv = $('.project-industries');
-                        if (response.skills){
+                        if (response.skills) {
                             var skills = response.skills;
                             projectSkillsDiv.html('');
-                            var skillTitle = "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Skills & Expertise</h6>";
+                            var skillTitle =
+                                "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Skills & Expertise</h6>";
                             projectSkillsDiv.append(skillTitle);
                             $.each(skills, function(index, skill) {
-                                var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(skill.skill_name);
+                                var badge = $(
+                                    '<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">'
+                                ).text(skill.skill_name);
                                 projectSkillsDiv.append(badge);
                             });
                             projectSkillsDiv.append("<hr>");
-                        }else{
+                        } else {
                             projectSkillsDiv.html('');
                         }
 
-                        if (response.industries){
+                        if (response.industries) {
                             var Industries = response.industries;
                             projectIndustriesDiv.html('');
-                            var industryTitle = "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Industries</h6>";
+                            var industryTitle =
+                                "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Industries</h6>";
                             projectIndustriesDiv.append(industryTitle);
                             $.each(Industries, function(index, industry) {
-                                var badge = $('<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">').text(industry);
+                                var badge = $(
+                                    '<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">'
+                                ).text(industry);
                                 projectIndustriesDiv.append(badge);
                             });
-                        }else{
+                        } else {
                             projectIndustriesDiv.html('');
                         }
 
                         $('.project-required-time').html(response.data.required_time);
                         $('.project-total-participants').html(response.data.target_participant);
-                        if (response.data.research_type === 'remote'){
+                        if (response.data.research_type === 'remote') {
                             $('.project-research-type').html('Remote');
-                        }else if(response.data.research_type === 'in-person'){
+                        } else if (response.data.research_type === 'in-person') {
                             $('.project-research-type').html('In Person');
                         }
-                        $('.project-research-method').html(response.data.research_method);
+                        if (response.data.research_method === 'one-on-one') {
+                            $('.project-research-method').html('One On One');
+                        } else if (response.data.research_method === 'focus-group') {
+                            $('.project-research-method').html('Focus Group');
+                        } else if (response.data.research_method === 'unmoderated-study') {
+                            $('.project-research-method').html('Unmoderated Study');
+                        } else if (response.data.research_method === 'survey') {
+                            $('.project-research-method').html('Survey');
+                        } else if (response.data.research_method === 'diary-study') {
+                            $('.project-research-method').html('Diary Study');
+                        }
+
 
                         let time = formatDate(response.data.created_at);
                         $('.project-posted-time').html(time);
                     }
                 }
             })
+
             function formatDate(dateString) {
                 var date = new Date(dateString);
                 var options = {

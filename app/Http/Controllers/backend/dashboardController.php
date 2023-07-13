@@ -19,38 +19,49 @@ class dashboardController extends Controller
      */
     public function index(Request $request)
     {
+
         $query = Projects::where('status', '=', 'publish');
 
-        if ($request->filled('search')){
-            $query->where('project_title', 'like', '%' . $request->search . '%')->orWhere('project_details', 'like', '%' . $request->search . '%');
-        }
-        if ($request->filled('audience')) {
-            $query->where('audience', $request->audience);
+        $filterValues = [
+            'audience' => $request->input('audience'),
+            'research_type' => $request->input('research_type'),
+            'min_incentive' => $request->input('min_incentive'),
+            'max_incentive' => $request->input('max_incentive'),
+            'min_time' => $request->input('min_time'),
+            'max_time' => $request->input('max_time'),
+        ];
+
+        foreach ($filterValues as $filter => $value) {
+            if (!empty($value)) {
+                if ($request->filled($filter)) {
+                    if ($filter === 'min_incentive') {
+                        $query->where('total_incentive', '>=', $value);
+                    } elseif ($filter === 'max_incentive') {
+                        $query->where('total_incentive', '<=', $value);
+                    } elseif ($filter === 'min_time') {
+                        $query->where('required_time', '>=', $value);
+                    } elseif ($filter === 'max_time') {
+                        $query->where('required_time', '<=', $value);
+                    } else {
+                        $query->where($filter, $value);
+                    }
+                }
+            }
         }
 
-        if ($request->filled('research_type')) {
-            $query->where('research_type', $request->research_type);
+        if ($request->filled('search')) {
+            $searchTerm = '%' . $request->search . '%';
+            $query->where(function ($q) use ($searchTerm) {
+                $q->where('project_title', 'like', $searchTerm)
+                    ->orWhere('project_details', 'like', $searchTerm);
+            });
         }
 
-        if ($request->filled('min_incentive')) {
-            $query->where('total_incentive', '>=', $request->min_incentive);
-        }
+        $projects = $query->orderBy('updated_at', 'desc')->paginate(2)->withQueryString();
+// Rest of the code...
 
-        if ($request->filled('max_incentive')) {
-            $query->where('total_incentive', '<=', $request->max_incentive);
-        }
+        return view('backend.pages.dashboard', compact('projects', 'filterValues'));
 
-        if ($request->filled('min_time')) {
-            $query->where('required_time', '>=', $request->min_time);
-        }
-
-        if ($request->filled('max_time')) {
-            $query->where('required_time', '<=', $request->max_time);
-        }
-
-        $projects = $query->orderBy('updated_at', 'desc')->paginate(2);
-
-        return view('backend.pages.dashboard', compact('projects'));
     }
     /**
      * Show the form for creating a new resource.
