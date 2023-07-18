@@ -26,10 +26,9 @@ class ProjectApplyController extends Controller
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
 
             if ($findQuestions) {
-                $json = json_decode($findQuestions->questions);
-                echo "<pre>";
-                echo json_encode($json);
-                echo "</pre>";
+                $questions = json_decode($findQuestions->questions);
+//                dd($questions);
+                return view('backend.pages.project-apply', compact('findProject', 'questions'));
             } else {
                 // No questions found for the project
             }
