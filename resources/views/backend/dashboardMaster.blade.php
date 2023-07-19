@@ -32,7 +32,8 @@
         <div id="content">
 
             <!-- Topbar -->
-            @include('backend.includes.topbar')
+{{--            @include('backend.includes.topbar')--}}
+            @include('backend.includes.nav')
             <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
@@ -54,10 +55,6 @@
 </div>
 <!-- End of Page Wrapper -->
 @include('backend.includes.footer')
-<!-- Scroll to Top Button-->
-<a class="scroll-to-top rounded" href="#page-top">
-    <i class="fas fa-angle-up"></i>
-</a>
 
 <!--All scripts  -->
 @include('backend.includes.scripts')

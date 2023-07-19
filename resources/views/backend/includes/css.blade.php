@@ -1,5 +1,7 @@
-<link href="{{ asset('backend') }}/css/bootstrap.min.css" rel="stylesheet">
-<link href="{{ asset('backend') }}/css/sb-admin-2.min.css" rel="stylesheet">
+{{--<link href="{{ asset('backend') }}/css/bootstrap.min.css" rel="stylesheet">--}}
+<link href="{{ asset('backend') }}/css/all.css" rel="stylesheet">
+<link href="{{ asset('backend') }}/css/bootstrap.css" rel="stylesheet">
+{{--<link href="{{ asset('backend') }}/css/sb-admin-2.min.css" rel="stylesheet">--}}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>
 <style>
     @font-face {
@@ -28,6 +30,5 @@
         src: url('{{ asset('/backend/fonts/CircularStd-Light.woff') }}') format('truetype');
         font-weight: 300;
     }
-
 </style>
 <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
