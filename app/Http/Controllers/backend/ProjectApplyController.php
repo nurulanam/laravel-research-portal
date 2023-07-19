@@ -54,9 +54,16 @@ class ProjectApplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $id)
     {
-        //
+        $findProject = Projects::where('id', $id)->first();
+        if ($findProject) {
+            $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
+            if ($findQuestions) {
+                $questions = json_decode($findQuestions->questions, true);
+
+            }
+        }
     }
 
     /**

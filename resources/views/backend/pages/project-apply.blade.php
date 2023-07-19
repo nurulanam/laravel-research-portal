@@ -42,7 +42,7 @@
             @endphp
             <div class="card mt-4">
                 <div class="card-body">
-                    <form action="" method="" class="question-form">
+                    <form action="{{ route('project-apply.store', $findProject->id) }}" method="POST" class="question-form">
                         @csrf
                         @foreach ($questions as $question)
                             @if ($question->question_type[0] == 'radio')
@@ -132,10 +132,10 @@
                                     <div class="form-group mt-3">
                                         <div class="d-md-flex">
                                             <input type="number" class="form-control w-50 my-2 my-md-0 mr-3"
-                                                name="{{ $question->question_type[0] }}[{{ $q }}][]"
+                                                name="{{ $question->question_type[0] }}[{{ $q }}][]" value="{{ $question->min_value[0] }}"
                                                 min="{{ $question->min_value[0] }}" max="{{ $question->max_value[0] }}"
                                                 placeholder="Total" readonly="readonly">
-                                            <input type="range" class="form-control-range"
+                                            <input type="range" class="form-control-range" value="{{ $question->min_value[0] }}"
                                                 min="{{ $question->min_value[0] }}" max="{{ $question->max_value[0] }}"
                                                 step="{{ $question->steps[0] }}">
                                         </div>

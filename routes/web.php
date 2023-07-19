@@ -42,6 +42,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::resource('/project', ProjectController::class);
     });
     Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');
+    Route::resource('/project-apply/', ProjectApplyController::class);
+    Route::post('/project-apply/{id}', [ProjectApplyController::class, 'store'])->name('project-apply.store');
+
     // Reset Password
     Route::resource('/change-password', ChangePasswordController::class);
 });

@@ -92,35 +92,35 @@
     </button>
     <div class="collapse navbar-collapse rounded " id="topNavDropdown" style="z-index: 99;">
         <ul class="navbar-nav font-15 mr-auto pl-2 pl-lg-0">
-            <li class="nav-item active">
-                <a class="nav-link text-dark" href="{{ route('dashboard.index') }}    ">
-                    <i class="fas fa-fw fa-tachometer-alt color-yellow mr-2"></i>
-                    <span>Dashboard</span></a>
-            </li>
+{{--            <li class="nav-item active">--}}
+{{--                <a class="nav-link text-dark" href="{{ route('dashboard.index') }}    ">--}}
+{{--                    <i class="fas fa-fw fa-tachometer-alt color-yellow mr-2"></i>--}}
+{{--                    <span>Dashboard</span></a>--}}
+{{--            </li>--}}
             <li class="nav-item">
                 <a class="nav-link text-dark" href="{{ route('project.index') }}" >
-                    <i class="fas fa-fw fa-folder mr-2"></i>
-                    <span>Projects</span>
+                    <i class="fas fa-fw fa-folder mr-1"></i>
+                    <span>My Projects</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a class="nav-link text-dark" href="#" >
-                    <i class="fas fa-fw fa-comments mr-2"></i>
-                    <span>Messages</span>
+                    <i class="fas fa-fw fa-comments mr-1"></i>
+                    <span>My Messages</span>
                 </a>
             </li>
             @if(Auth::user()->hasRole('researcher'))
                 <!-- Nav Item - Billing Menu -->
                 <li class="nav-item">
-                    <a class="nav-link text-dark" href="#" >
-                        <i class="fas fa-fw fa-credit-card mr-2"></i>
-                        <span>Billing</span>
+                    <a class="nav-link text-dark" href="{{ route('profile.index') }}" >
+                        <i class="fas fa-fw fa-user mr-1"></i>
+                        <span>My Account Manager</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link text-dark" href="#" >
-                        <i class="fas fa-fw fa-cogs mr-2"></i>
-                        <span>Manage Organization</span>
+                        <i class="fas fa-fw fa-credit-card mr-1"></i>
+                        <span>My Billing Center</span>
                     </a>
                 </li>
             @endif
