@@ -16,14 +16,14 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('internal_name');
-            $table->string('project_title');
-            $table->text('project_details');
-            $table->string('audience');
-            $table->string('research_type');
-            $table->string('research_method')->nullable();
-            $table->integer('required_time')->nullable();
-            $table->integer('incentive');
+            $table->string('my_project_name');
+            $table->string('study_title');
+            $table->text('study_description');
+            $table->string('target_audience');
+            $table->string('project_type');
+            $table->string('research_type')->nullable();
+            $table->integer('required_time');
+            $table->integer('participant_incentive');
             $table->string('target_participant');
             $table->integer('total_incentive');
             $table->integer('total_service_fee');

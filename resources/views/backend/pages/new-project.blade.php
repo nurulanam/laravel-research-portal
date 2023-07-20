@@ -5,23 +5,6 @@
 @section('title', 'Create New Project')
 @section('extraCss')
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
-    <style>
-        .form-section{
-            display: none;
-        }
-        .form-section.current{
-            display: inline;
-        }
-        .parsley-errors-list{
-            color:red;
-            font-size: 13px;
-            padding: 5px 10px;
-            margin: 0 !important;
-        }
-        .my-30{
-            margin: 30px 0;
-        }
-    </style>
 @endsection
 @section('mainContent')
     <div class="row mb-4">
@@ -33,73 +16,74 @@
                     <h5 class="text-light mb-0" id="main_title">Project Title</h5>
                 </div>
                 <div class="card-body">
-                    <div class="nav nav-fill my-2">
-                        <label class="nav-link shadow-sm step0 border rounded-pill mx-2">Details</label>
-                        <label class="nav-link shadow-sm step1 border rounded-pill mx-2">Audience</label>
-                        <label class="nav-link shadow-sm step2 border rounded-pill mx-2">Questions</label>
-                        <label class="nav-link shadow-sm step3 border rounded-pill mx-2">Summery</label>
+                    <div class="nav nav-fill mt-2 mb-3">
+                        <label class="nav-link shadow-sm step0 border rounded-pill mx-2 my-2 my-lg-0">My Project Details</label>
+                        <label class="nav-link shadow-sm step1 border rounded-pill mx-2 my-2 my-lg-0">Demographics</label>
+                        <label class="nav-link shadow-sm step2 border rounded-pill mx-2 my-2 my-lg-0">My Screener Questions</label>
+                        <label class="nav-link shadow-sm step3 border rounded-pill mx-2 my-2 my-lg-0">Project Overview</label>
                     </div>
+                    <hr class="my-30">
                     <div class="form-section">
-                            <div class="form-group">
+                            <div class="form-group my-3">
                                 <div class="row">
-                                    <div class="col-lg-3">
-                                        <lable class="label" title="required">Internal Project Name <span class="text-danger">*</span></lable>
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
+                                        <lable class="form-label " title="required">My Project Name <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="internal_name" id="internal_name" class="form-control" value="{{ old('internal_name') }}" placeholder="Internal Project Name" required>
-                                        @error('internal_name')
+                                        <input type="text" name="my_project_name" id="myProjectName" class="form-control" value="{{ old('my_project_name') }}" placeholder="My Project Name" required>
+                                        @error('my_project_name')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
-                            <hr class="my-30">
-                            <div class="form-group">
+                            <div class="form-group my-3">
                                 <div class="row">
-                                    <div class="col-lg-3">
-                                        <lable class="label" title="required">Project Title <span class="text-danger">*</span></lable>
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
+                                        <lable class="label" title="required">Study Title <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="project_title" value="{{ old('project_title') }}" class="form-control" placeholder="Project Title" required>
-                                        @error('project_title')
+                                        <input type="text" name="study_title" value="{{ old('study_title') }}" class="form-control" placeholder="Study Title" required>
+                                        @error('study_title')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group mt-3">
                                 <div class="row">
-                                    <div class="col-lg-3">
-                                        <lable class="label" title="required">Project Details <span class="text-danger">*</span></lable>
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
+                                        <lable class="label" title="required">Study Description <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <textarea name="project_details" class="form-control" placeholder="Project Full Details" rows="5" required>{{ old('project_details') }}</textarea>
-                                        @error('project_details')
+                                        <textarea name="study_description" class="form-control" placeholder="Study Description" rows="5" required>{{ old('study_description') }}</textarea>
+                                        @error('study_description')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
+                                        <hr class="my-30">
                                     </div>
                                 </div>
+
                             </div>
-                            <hr class="my-30">
-                            <div class="form-group">
+                            <div class="form-group mb-3">
                                 <div class="row">
-                                    <div class="col-lg-3">
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
                                         <lable class="label" title="required">Target Audience <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2b" @if (old('audience') == 'b2b') checked value="{{ old('audience') }}" @else value="b2b" @endif>
+                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2b" @if (old('target_audience') == 'b2b') checked value="{{ old('audience') }}" @else value="b2b" @endif>
                                             <span class="mx-2"><label for="targetB2b">Industry Professionals (B2B)</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="audience" class="target-audience" id="targetB2c" @if (old('audience') == 'b2c') checked value="{{ old('audience') }}" @else value="b2c" @endif required>
-                                            <span class="mx-2"><label for="targetB2c">Population (B2C)</label></span>
+                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2c" @if (old('target_audience') == 'b2c') checked value="{{ old('audience') }}" @else value="b2c" @endif required>
+                                            <span class="mx-2"><label for="targetB2c">Consumers (B2C)</label></span>
                                         </div>
-                                        @error('audience')
+                                        @error('target_audience')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                         <div id="projectTopic" style="display: none">
-                                            <p class="pt-2" title="Required">Project Topic <span class="text-danger">(Max:2) *</span></p>
+                                            <p class="pt-2 pb-2 pb-lg-0" title="Required" >Project Topic <span class="text-danger">(Max:2) *</span></p>
                                             <select name="project_topic[]" class="topic-select form-control" multiple disabled>
                                                 <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', old('project_topic', [])) ? 'selected' : '' }}>Arts & Entertainment</option>
                                                 <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', old('project_topic', [])) ? 'selected' : '' }}>Automobile & Vehicles</option>
@@ -132,51 +116,52 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group my-3">
                                 <div class="row">
-                                    <div class="col-lg-3">
-                                        <lable class="label" title="Required">Type of Research <span class="text-danger">*</span></lable>
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
+                                        <lable class="label" title="Required">Project Type <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="research_type" value="remote" @if(old('research_type') == 'remote') checked @endif id="typeRemote">
+                                            <input type="radio" name="project_type" value="remote" @if(old('project_type') == 'remote') checked @endif id="typeRemote">
                                             <span class="mx-2"><label for="typeRemote">Remote</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="research_type" value="in-person" @if(old('research_type') == 'in-person') checked @endif id="typeInPerson" required>
+                                            <input type="radio" name="project_type" value="in-person" @if(old('project_type') == 'in-person') checked @endif id="typeInPerson" required>
                                             <span class="mx-2"><label for="typeInPerson">In-Person</label></span>
                                         </div>
+                                        @error('project_type')
+                                        <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group mt-3">
+                                <div class="row">
+                                    <div class="col-lg-3 pb-2 pb-lg-0">
+                                        <lable class="label" title="Optional">Research Type (Optional)</lable>
+                                    </div>
+                                    <div class="col-lg-9">
+                                        <select name="research_type" class="form-control">
+                                            <option value="">Select Research Type</option>
+                                            <option value="one-on-one" @if(old('research_type') == 'one-on-one') selected @endif>One-on-One</option>
+                                            <option value="focus-group" @if(old('research_type') == 'focus-group') selected @endif>Focus Group</option>
+                                            <option value="unmoderated-study"@if(old('research_type') == 'unmoderated-study') selected @endif>Unmoderated Study</option>
+                                            <option value="survey"@if(old('research_type') == 'survey') selected @endif>Survey</option>
+                                            <option value="diary-study"@if(old('research_type') == 'diary-study') selected @endif>Diary Study</option>
+                                        </select>
                                         @error('research_type')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
+                                        <hr class="my-30">
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+
+                            <div class="form-group mb-3">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <lable class="label" title="Optional">Research Methodology (Optional)</lable>
-                                    </div>
-                                    <div class="col-lg-9">
-                                        <select name="research_method" class="form-control">
-                                            <option value="">Select Research Method</option>
-                                            <option value="one-on-one" @if(old('research_method') == 'one-on-one') selected @endif>One-on-One</option>
-                                            <option value="focus-group" @if(old('research_method') == 'focus-group') selected @endif>Focus Group</option>
-                                            <option value="unmoderated-study"@if(old('research_method') == 'unmoderated-study') selected @endif>Unmoderated Study</option>
-                                            <option value="survey"@if(old('research_method') == 'survey') selected @endif>Survey</option>
-                                            <option value="diary-study"@if(old('research_method') == 'diary-study') selected @endif>Diary Study</option>
-                                        </select>
-                                        @error('research_method')
-                                        <p class="text-danger">{{ $message }}</p>
-                                        @enderror
-                                    </div>
-                                </div>
-                            </div>
-                        <hr class="my-30">
-                            <div class="form-group">
-                                <div class="row">
-                                    <div class="col-lg-3">
-                                        <lable class="label" title="In Minutes">Time Required (Optional)</lable>
+                                        <lable class="label" title="Required In Minutes">Time Required <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
                                         <input type="number" name="required_time" class="form-control" @if(old('required_time')) value="{{ old('required_time') }}" @endif placeholder="Time Required in Minute(s)">
@@ -186,17 +171,17 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <div class="form-group my-3">
                                 <div class="row">
                                     <div class="col-lg-3">
-                                        <lable class="label" title="Required">Incentive (<span class="text-danger">Min: $5 - Max: $1000</span>)</lable>
+                                        <lable class="label" title="Required">Participant Incentive (<span class="text-danger">Min: $5 - Max: $1000</span>)</lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <div class="d-md-flex">
-                                            <input type="number" name="incentive" id="incentive" min="5" max="1000"  @if(old('incentive')) value="{{ old('incentive') }}" @else value="5" @endif class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
-                                            <input type="range" id="incentive_range" min="5" max="1000" step="5" @if(old('incentive')) value="{{ old('incentive') }}" @else value="5" @endif class="form-control-range">
+                                        <div class="d-md-flex justify-content-start">
+                                            <input type="number" name="participant_incentive" id="incentive" min="5" max="1000"  @if(old('participant_incentive')) value="{{ old('participant_incentive') }}" @else value="5" @endif class="form-control w-50 my-2 my-md-0 me-3" placeholder="Total Incentive" readonly="readonly">
+                                            <input type="range" id="incentive_range" min="5" max="1000" step="5" @if(old('participant_incentive')) value="{{ old('participant_incentive') }}" @else value="5" @endif class="form-control-range w-100">
                                         </div>
-                                        @error('incentive')
+                                        @error('participant_incentive')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
@@ -204,15 +189,15 @@
                             </div>
                         </div>
                     <div class="form-section">
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 pb-2 pb-lg-0">
                                     <lable class="label">Target number of participants <span class="text-danger">*</span></lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <div class="d-md-flex">
-                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control w-50 my-2 my-md-0 mr-3" placeholder="Total Incentive" readonly="readonly">
-                                        <input type="range" id="target_participant_range" min="1" max="50" step="1" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control-range" required>
+                                    <div class="d-md-flex justify-content-start">
+                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control w-50 my-2 my-md-0 me-3" placeholder="Total Incentive" readonly="readonly">
+                                        <input type="range" id="target_participant_range" min="1" max="50" step="1" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control-range w-100" required>
                                     </div>
                                     @error('target_participant')
                                     <p class="text-danger">{{ $message }}</p>
@@ -220,9 +205,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 pb-2 pb-lg-0">
                                     <lable class="label">Industries <span class="text-danger">(Max:5) *</span></lable>
                                 </div>
                                 <div class="col-lg-9">
@@ -237,9 +222,9 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
-                                <div class="col-lg-3">
+                                <div class="col-lg-3 pb-2 pb-lg-0">
                                     <lable class="label">Company Size (Optional)</lable>
                                 </div>
                                 <div class="col-lg-9">
@@ -286,10 +271,11 @@
                                     @error('company_size')
                                     <p class="text-danger">{{ $message }}</p>
                                     @enderror
+                                    <hr class="my-30">
                                 </div>
                             </div>
                         </div>
-                        <hr class="my-30">
+
                         <div class="form-group all-locations">
                             <div class="row">
                                 <div class="col-lg-3">
@@ -598,10 +584,10 @@
 
                     </div>
                     <div class="form-navigation mt-3">
-                        <button type="button" class="previous btn btn-primary btn-custom float-left"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
-                        <button type="button" class="next btn btn-primary btn-custom float-right">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
+                        <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
+                        <button type="button" class="next btn btn-primary btn-custom float-end">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
 
-                        <button type="submit" class="btn btn-success mx-1 publish-btn btn-custom float-right">Select Status</button>
+                        <button type="submit" class="btn btn-success mx-1 publish-btn btn-custom float-end">Select Status</button>
 
                     </div>
                 </div>
@@ -917,14 +903,14 @@
     </script>
     <script>
         $(document).ready(function() {
-            const audienceValue = $('input[name="audience"].target-audience:checked').val();
+            const audienceValue = $('input[name="target_audience"].target-audience:checked').val();
 
             if (audienceValue === 'b2c') {
                 $('#projectTopic').show();
                 $('select.topic-select').prop('required', true).prop('disabled', false);
             }
 
-            $('input[name="audience"].target-audience').on('click', function() {
+            $('input[name="target_audience"].target-audience').on('click', function() {
                 const currentValue = $(this).val();
                 if (currentValue === 'b2c') {
                     $('#projectTopic').show();

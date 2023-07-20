@@ -1,8 +1,3 @@
-{{--<link href="{{ asset('backend') }}/css/bootstrap.min.css" rel="stylesheet">--}}
-<link href="{{ asset('backend') }}/css/all.css" rel="stylesheet">
-<link href="{{ asset('backend') }}/css/bootstrap.css" rel="stylesheet">
-{{--<link href="{{ asset('backend') }}/css/sb-admin-2.min.css" rel="stylesheet">--}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>
 <style>
     @font-face {
         font-family: 'circularStd';
@@ -31,4 +26,12 @@
         font-weight: 300;
     }
 </style>
+{{-- font awesome css --}}
+<link href="{{ asset('backend') }}/css/all.css" rel="stylesheet">
+{{--bootstrap 5 css --}}
+<link href="{{ asset('backend') }}/css/bootstrap.css" rel="stylesheet">
+{{--toastr css --}}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>
+
+{{--main css--}}
 <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">

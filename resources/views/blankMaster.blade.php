@@ -14,7 +14,7 @@
 
 </head>
 
-<body class="bg-dark-blue">
+<body>
 
 <div class="container">
 @yield('mainContent')

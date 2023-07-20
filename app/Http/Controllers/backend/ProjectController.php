@@ -29,7 +29,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Projects::where('user_id', '=', Auth::id())->paginate(5);
+        $projects = Projects::where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
         return view('backend.pages.all-projects', compact('projects'));
     }
 
