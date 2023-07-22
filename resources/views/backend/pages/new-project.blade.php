@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
-    <div class="row mb-4">
+    <div class="row">
         <div class="col-12">
             <form action="{{ route('project.store') }}" method="post" class="new-project-form">
                 @csrf
@@ -30,7 +30,7 @@
                                         <lable class="form-label " title="required">My Project Name <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="my_project_name" id="myProjectName" class="form-control" value="{{ old('my_project_name') }}" placeholder="My Project Name" required>
+                                        <input type="text" name="my_project_name" id="myProjectName" class="form-control" value="{{ old('my_project_name') }}" placeholder="My Project Name" required data-parsley-error-message="Please Enter Your Project Name">
                                         @error('my_project_name')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -43,7 +43,7 @@
                                         <lable class="label" title="required">Study Title <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="text" name="study_title" value="{{ old('study_title') }}" class="form-control" placeholder="Study Title" required>
+                                        <input type="text" name="study_title" value="{{ old('study_title') }}" class="form-control" placeholder="Study Title" required data-parsley-error-message="Please Enter Your Study Title">
                                         @error('study_title')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -56,7 +56,7 @@
                                         <lable class="label" title="required">Study Description <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <textarea name="study_description" class="form-control" placeholder="Study Description" rows="5" required>{{ old('study_description') }}</textarea>
+                                        <textarea name="study_description" class="form-control" placeholder="Study Description" rows="5" required data-parsley-error-message="Please Enter Your Study Description">{{ old('study_description') }}</textarea>
                                         @error('study_description')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -72,11 +72,11 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2b" @if (old('target_audience') == 'b2b') checked value="{{ old('audience') }}" @else value="b2b" @endif>
+                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2b" @if (old('target_audience') == 'b2b') checked value="{{ old('target_audience') }}" @else value="b2b" @endif data-parsley-error-message="Please Select Target Audience">
                                             <span class="mx-2"><label for="targetB2b">Industry Professionals (B2B)</label></span>
                                         </div>
                                         <div class="">
-                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2c" @if (old('target_audience') == 'b2c') checked value="{{ old('audience') }}" @else value="b2c" @endif required>
+                                            <input type="radio" name="target_audience" class="target-audience" id="targetB2c" @if (old('target_audience') == 'b2c') checked value="{{ old('target_audience') }}" @else value="b2c" @endif required>
                                             <span class="mx-2"><label for="targetB2c">Consumers (B2C)</label></span>
                                         </div>
                                         @error('target_audience')
@@ -84,7 +84,7 @@
                                         @enderror
                                         <div id="projectTopic" style="display: none">
                                             <p class="pt-2 pb-2 pb-lg-0" title="Required" >Project Topic <span class="text-danger">(Max:2) *</span></p>
-                                            <select name="project_topic[]" class="topic-select form-control" multiple disabled>
+                                            <select name="project_topic[]" class="topic-select form-control" multiple disabled data-parsley-error-message="Please Select Project Topic">
                                                 <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', old('project_topic', [])) ? 'selected' : '' }}>Arts & Entertainment</option>
                                                 <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', old('project_topic', [])) ? 'selected' : '' }}>Automobile & Vehicles</option>
                                                 <option value="beauty" {{ in_array('beauty', old('project_topic', [])) ? 'selected' : '' }}>Beauty</option>
@@ -123,7 +123,7 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="">
-                                            <input type="radio" name="project_type" value="remote" @if(old('project_type') == 'remote') checked @endif id="typeRemote">
+                                            <input type="radio" name="project_type" value="remote" @if(old('project_type') == 'remote') checked @endif id="typeRemote" data-parsley-error-message="Please Select Project Type">
                                             <span class="mx-2"><label for="typeRemote">Remote</label></span>
                                         </div>
                                         <div class="">
@@ -139,10 +139,10 @@
                             <div class="form-group mt-3">
                                 <div class="row">
                                     <div class="col-lg-3 pb-2 pb-lg-0">
-                                        <lable class="label" title="Optional">Research Type (Optional)</lable>
+                                        <lable class="label" title="Required">Research Type <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <select name="research_type" class="form-control">
+                                        <select name="research_type" class="form-control" required data-parsley-error-message="Please Select Research Type">
                                             <option value="">Select Research Type</option>
                                             <option value="one-on-one" @if(old('research_type') == 'one-on-one') selected @endif>One-on-One</option>
                                             <option value="focus-group" @if(old('research_type') == 'focus-group') selected @endif>Focus Group</option>
@@ -164,7 +164,7 @@
                                         <lable class="label" title="Required In Minutes">Time Required <span class="text-danger">*</span></lable>
                                     </div>
                                     <div class="col-lg-9">
-                                        <input type="number" name="required_time" class="form-control" @if(old('required_time')) value="{{ old('required_time') }}" @endif placeholder="Time Required in Minute(s)">
+                                        <input type="number" name="required_time" class="form-control" @if(old('required_time')) value="{{ old('required_time') }}" @endif placeholder="Time Required in Minute(s)" required data-parsley-error-message="Please Enter Project Required Time">
                                         @error('required_time')
                                         <p class="text-danger">{{ $message }}</p>
                                         @enderror
@@ -178,7 +178,7 @@
                                     </div>
                                     <div class="col-lg-9">
                                         <div class="d-md-flex justify-content-start">
-                                            <input type="number" name="participant_incentive" id="incentive" min="5" max="1000"  @if(old('participant_incentive')) value="{{ old('participant_incentive') }}" @else value="5" @endif class="form-control w-50 my-2 my-md-0 me-3" placeholder="Total Incentive" readonly="readonly">
+                                            <input type="number" name="participant_incentive" id="incentive" min="5" max="1000"  @if(old('participant_incentive')) value="{{ old('participant_incentive') }}" @else value="5" @endif class="form-control w-50 my-2 my-md-0 me-3 d-inline-block" placeholder="Total Incentive" readonly="readonly" data-parsley-error-message="Please Enter Participant Incentive">
                                             <input type="range" id="incentive_range" min="5" max="1000" step="5" @if(old('participant_incentive')) value="{{ old('participant_incentive') }}" @else value="5" @endif class="form-control-range w-100">
                                         </div>
                                         @error('participant_incentive')
@@ -196,7 +196,7 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="d-md-flex justify-content-start">
-                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control w-50 my-2 my-md-0 me-3" placeholder="Total Incentive" readonly="readonly">
+                                        <input type="number" name="target_participant" id="target_participant" min="1" max="50" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control w-50 my-2 my-md-0 me-3" placeholder="Total Incentive" readonly="readonly" data-parsley-error-message="Please Select Target Number Of Participants">
                                         <input type="range" id="target_participant_range" min="1" max="50" step="1" @if(old('target_participant')) value="{{ old('target_participant') }}" @else value="1" @endif  class="form-control-range w-100" required>
                                     </div>
                                     @error('target_participant')
@@ -211,7 +211,7 @@
                                     <lable class="label">Industries <span class="text-danger">(Max:5) *</span></lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select name="industry[]" class="industry-select form-control" multiple required>
+                                    <select name="industry[]" class="industry-select form-control" multiple required data-parsley-error-message="Please Select Maximum 5 Industries">
                                         @foreach ($industries as $key => $industry)
                                             <option value="{{ $key }}" @if (is_array(old('industry')) && in_array($key, old('industry'))) selected @endif>{{ $industry }}</option>
                                         @endforeach
@@ -222,7 +222,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group my-3">
+                        <div class="form-group mt-3">
                             <div class="row">
                                 <div class="col-lg-3 pb-2 pb-lg-0">
                                     <lable class="label">Company Size (Optional)</lable>
@@ -276,27 +276,28 @@
                             </div>
                         </div>
 
-                        <div class="form-group all-locations">
+                        <div class="form-group all-locations mb-3">
                             <div class="row">
                                 <div class="col-lg-3">
-                                    <lable class="label">Location (Optional)</lable>
+                                    <lable class="label" title="Required">Location <span class="text-danger">*</span></lable>
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="location-container">
                                     </div>
                                     <button class="btn btn-primary my-2 add-location">Add City</button>
+                                    <hr class="my-30">
                                 </div>
                             </div>
                         </div>
-                        <hr class="my-30">
-                        <div class="form-group">
+
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lable class="label">Skills</lable>
                                 </div>
                                 <div class="col-lg-9">
                                     <p class="font-13">Select up to 25 skills, knowledge areas, tools and/or certifications you would like to target </p>
-                                    <select name="skills[]"  class="form-control w-100 skills-box" multiple="multiple">
+                                    <select name="skills[]" class="form-control w-100 skills-box" multiple="multiple">
 
                                     </select>
                                     @error('skills')
@@ -305,7 +306,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lablel class="label">Household Income (Optional)</lablel>
@@ -345,7 +346,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lablel class="label">Gender (Optional)</lablel>
@@ -377,7 +378,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lablel class="label">Education Level (Optional)</lablel>
@@ -425,7 +426,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lablel class="label">Ethnicity (Optional)</lablel>
@@ -473,7 +474,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group my-3">
                             <div class="row">
                                 <div class="col-lg-3">
                                     <lablel class="label">Age Range (Optional)</lablel>
@@ -511,24 +512,25 @@
                         </div>
                     </div>
                     <div class="form-section">
-                        <div id="questionsField">
-                            <div class="form-group border p-3 bg-gradient-light rounded full-question" data-qid="q1">
+                        <div class="d-flex justify-content-end mt-3">
+                            <button class="btn btn-primary rounded-pill text-white" id="addQuestion"><i class="fa-solid fa-plus me-2"></i>Question</button>
+                        </div>
+                        <div class="my-3" id="questionsField">
+                            <div class="form-group border p-3 my-3 bg-body-tertiary rounded full-question" data-qid="q1">
                                 <div class="row">
                                     <div class="col-6">
-                                        <h5>Q1</h5>
+                                        <h5>Screener Question: 1</h5>
                                     </div>
                                     <div class="col-6 text-right">
-{{--                                        <button class="btn"><i class="fas fa-trash-alt"></i></button>--}}
                                     </div>
                                 </div>
                                 <div class="question-title mb-3">
-                                    <textarea name="question_name[1][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>
+                                    <textarea name="question_name[1][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required data-parsley-error-message="Please Add Question Name"></textarea>
                                 </div>
                                 <div class="question-body">
                                     <div class="d-flex align-items-center">
-                                        <select name="question_type[1][]" class="form-control question_type" data-typeid="1" required>
+                                        <select name="question_type[1][]" class="form-control question_type" data-typeid="1" required data-parsley-error-message="Please Select Questestion Type">
                                             <option value="" id="">Select a Type</option>
-                                            <option value="radio">Radio (Singe Select)</option>
                                             <option value="checkbox">Checkbox (Multi select)</option>
                                             <option value="textarea">Multi-line text box</option>
                                             <option value="text">Single-line text box</option>
@@ -545,9 +547,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="d-flex justify-content-center">
-                            <button class="btn btn-success" id="addQuestion">Add Question</button>
-                        </div>
+
                     </div>
                     <div class="form-section" >
                         <div class="row">
@@ -584,8 +584,8 @@
 
                     </div>
                     <div class="form-navigation mt-3">
-                        <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
-                        <button type="button" class="next btn btn-primary btn-custom float-end">Next <span class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
+                        <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="me-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
+                        <button type="button" class="next btn btn-primary btn-custom float-end">Next <span class="ms-2"><i class="fas fa-chevron-right"></i></span></button>
 
                         <button type="submit" class="btn btn-success mx-1 publish-btn btn-custom float-end">Select Status</button>
 
@@ -830,10 +830,9 @@
         });
     </script>
     <script>
-        $(document).ready(function() {
+        $(document).ready( function() {
             let addLocation = $(".add-location");
             let locationContainer = $(".location-container");
-
 
             function populateStateOptions(selectElement) {
                 for (const state in usStateAndCity) {
@@ -842,7 +841,6 @@
                 }
             }
 
-            // Function to populate the city select options based on the selected state
             function populateCityOptions(selectElement, selectedState) {
                 const cities = usStateAndCity[selectedState];
 
@@ -860,13 +858,11 @@
                 }
             }
 
-            // Function to create a new location set
-            function createLocationSet() {
-                const locationDiv = $("<div class='location d-lg-flex justify-content-between my-2'></div>");
+            function createLocationSet(isInitial = false) {
+                const locationDiv = $("<div class='location d-lg-flex justify-content-between align-items-center my-2'></div>");
                 const country = $("<input class='form-control mx-1 my-2 my-lg-0' placeholder='US' disabled='disabled' readonly='readonly'>")
                 const stateSelect = $("<select class='states form-control mx-1 my-2 my-lg-0'></select>");
-                const citySelect = $("<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[]' required></select>");
-                const deleteButton = $("<button class='btn btn-danger deleteLocation ml-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");
+                const citySelect = $("<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[]' required data-parsley-error-message=\"Please Select City\"></select>");
 
                 // Populate state select options
                 populateStateOptions(stateSelect);
@@ -880,19 +876,34 @@
                 locationDiv.append(country);
                 locationDiv.append(stateSelect);
                 locationDiv.append(citySelect);
-                locationDiv.append(deleteButton);
+
+                // Add delete button dynamically for non-initial location sets
+                if (!isInitial) {
+                    const deleteButton = $("<button class='btn btn-danger deleteLocation ms-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");
+                    locationDiv.append(deleteButton);
+                } else {
+                    // For the initial location set, add a class to hide the delete button
+                    const disableDeleteButton = $("<button class='btn btn-danger disabled ms-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");
+                    locationDiv.append(disableDeleteButton);
+                }
+
                 locationContainer.append(locationDiv);
 
                 // Automatically select the first state and populate the city options
-
                 const firstState = stateSelect.find("option:first").val();
                 stateSelect.val(firstState).trigger("change");
+
+                citySelect.parsley().validate();
             }
+
+            // Add an initial location set on page load
+            createLocationSet(true);
 
             // Event handler for the "add location" button click
             addLocation.on("click", function() {
                 createLocationSet();
             });
+
             // Event delegation for the delete button click
             locationContainer.on("click", ".deleteLocation", function() {
                 $(this).closest(".location").remove();
@@ -923,26 +934,22 @@
         });
 
         $('#addQuestion').on('click', function (){
-            // var itemCount = $('#questionsField').children('.full-question').length;
-            // let qnum = ++itemCount;
-
-            let question = '<div class="form-group border p-3 bg-gradient-light rounded full-question" data-qid="q'+qnum+'">\
+            let question = '<div class="form-group border p-3 my-3 bg-body-tertiary rounded full-question" data-qid="q'+qnum+'">\
                 <div class="row">\
                 <div class="col-6">\
-                <h5>Q'+qnum+'</h5>\
-        </div>\
-            <div class="col-6 text-right">\
-                <button class="btn btn-delete-question"><i class="fas fa-trash-alt"></i></button>\
-            </div>\
+                    <h5>Screener Question: '+qnum+'</h5>\
+                </div>\
+                <div class="col-6 text-end">\
+                    <button class="btn btn-delete-question" onclick="confirm(\'Sure To Delete This Question?\')"><i class="fas fa-trash-alt"></i></button>\
+                </div>\
         </div>\
             <div class="question-title mb-3">\
-                <textarea name="question_name['+qnum+'][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required></textarea>\
+                <textarea name="question_name['+qnum+'][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required data-parsley-error-message=\"Please Add Question Name\"></textarea>\
             </div>\
             <div class="question-body">\
                 <div class="d-flex align-items-center">\
-                    <select name="question_type['+qnum+'][]" class="form-control question_type" data-typeid="'+qnum+'" required>\
+                    <select name="question_type['+qnum+'][]" class="form-control question_type" data-typeid="'+qnum+'" required data-parsley-error-message=\"Please Select Question Type\">\
                         <option value="" id="">Select a Type</option>\
-                        <option value="radio">Radio (Singe Select)</option>\
                         <option value="checkbox">Checkbox (Multi select)</option>\
                         <option value="textarea">Multi-line text box</option>\
                         <option value="text">Single-line text box</option>\
@@ -970,10 +977,7 @@
             let questionTypeId = $this.data('typeid');
             console.log( $this.val() );
 
-            if($this.val() == 'radio' ){
-                questionTypeRadio( questionTypeId );
-                $('#requiredCheck'+ questionTypeId).attr('checked', true);
-            }else if($this.val() == 'checkbox'){
+            if($this.val() == 'checkbox'){
                 questionTypeCheckbox( questionTypeId );
                 $('#requiredCheck'+ questionTypeId).attr('checked', true);
             }else if($this.val() == 'textarea'){
@@ -993,44 +997,6 @@
                 $('#requiredCheck'+ questionTypeId).attr('checked', false);
             }
         }
-        function questionTypeRadio( id ){
-            let show = '<div class="radio-answer pt-2" id="radioAnswer'+ id +'">\
-                <div class="row align-items-top py-2 radioAnswerItem'+id+'">\
-                <div class="col-1">\
-                <p class="serial_nom m-0">1</p>\
-                </div>\
-                    <div class="col-7">\
-                        <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
-                    </div>\
-                    <div class="col-3">\
-                        <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
-                            <option value="qualify" selected>Qualify</option>\
-                            <option value="disqualify">Disqualify</option>\
-                        </select>\
-                    </div>\
-                    <div class="col-1 text-right">\
-                    </div>\
-                </div>\
-                <div class="row align-items-top py-2 radioAnswerItem'+id+'">\
-                    <div class="col-1">\
-                        <p class="serial_nom m-0">2</p>\
-                    </div>\
-                    <div class="col-7">\
-                        <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
-                    </div>\
-                    <div class="col-3">\
-                        <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
-                            <option value="qualify" selected>Qualify</option>\
-                            <option value="disqualify">Disqualify</option>\
-                        </select>\
-                    </div>\
-                    <div class="col-1 text-right">\
-                    </div>\
-                </div>\
-            </div>\
-            <button class="btn btn-primary addRadioAnswer" data-id="'+ id +'"><i class="fas fa-plus mr-2"></i> Answer</button>';
-            $('#answer'+ id).html(show);
-        }
         function questionTypeCheckbox( id ){
             let show ='<div class="checkbox-answer pt-2" id="checkboxAnswer'+ id +'">\
                 <div class="row align-items-top py-2 checkboxAnsweItem="'+ id +'">\
@@ -1038,12 +1004,11 @@
                 <p class="serial_nom m-0">1</p>\
         </div>\
             <div class="col-7">\
-                <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
+                <input type="text" class="form-control checkbox-answer-item" name="answer['+id+'][]" placeholder="Answer" required>\
             </div>\
             <div class="col-3">\
                 <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
-                    <option value="may-select" selected>May Select</option>\
-                    <option value="must-select">Must Select</option>\
+                    <option value="qualify" selected>Qualify</option>\
                     <option value="disqualify">Disqualify</option>\
                 </select>\
             </div>\
@@ -1055,12 +1020,11 @@
                     <p class="serial_nom m-0">2</p>\
                 </div>\
                 <div class="col-7">\
-                    <input type="text" class="form-control" name="answer['+id+'][]" placeholder="Answer" required>\
+                    <input type="text" class="form-control checkbox-answer-item" name="answer['+id+'][]" placeholder="Answer" required>\
                 </div>\
                 <div class="col-3">\
                     <select name="answer_qualify['+ id +'][]" class="form-control" id="">\
-                        <option value="may-select" selected>May Select</option>\
-                        <option value="must-select">Must Select</option>\
+                        <option value="qualify" selected>Qualify</option>\
                         <option value="disqualify">Disqualify</option>\
                     </select>\
                 </div>\
@@ -1068,8 +1032,12 @@
                 </div>\
             </div>\
         </div>\
-        <button class="btn btn-primary" id="addCheckboxAnswer" data-id="'+ id +'"><i class="fas fa-plus mr-2"></i> Answer</button>';
+        <button class="btn btn-primary" id="addCheckboxAnswer" data-id="'+ id +'"><i class="fas fa-plus me-2"></i> Answer</button>';
             $('#answer'+ id).html(show);
+
+            const form = $('.new-project-form');
+            form.parsley().destroy();
+            form.parsley().validate();
         }
         function questionTypeSlide(id){
             let show  = '<div class="text-area-answer pt-2">\
@@ -1091,26 +1059,6 @@
             $('#answer'+ id).html(show);
         }
 
-        $('#questionsField').on('click', '.addRadioAnswer', function (){
-            let id = $(this).data('id');
-            let count = $('#radioAnswer'+ id).children().length;
-            $('#radioAnswer'+ id).append('<div class="row align-items-top py-2 radioAnswerItem'+id+'">\
-                <div class="col-1">\
-                    <p class="serial_nom m-0">'+ ++count +'</p>\
-                </div>\
-                <div class="col-7">\
-                    <input type="text" name="answer['+ id +'][]" class="form-control" placeholder="Answer" required>\
-                </div>\
-                <div class="col-3">\
-                    <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
-                        <option value="qualify" selected>Qualify</option>\
-                        <option value="disqualify">Disqualify</option>\
-                    </select>\
-                </div>\
-                <div class="col-1 text-right">\
-                </div>\
-            </div>');
-        });
         $('#questionsField').on('click', '#addCheckboxAnswer', function (){
             let id = $(this).data('id');
             let count = $('#checkboxAnswer'+ id).children().length;
@@ -1123,20 +1071,18 @@
             </div>\
             <div class="col-3">\
                 <select name="answer_qualify['+ id +'][]" class="form-control" id="" required>\
-                    <option value="may-select" selected>May Select</option>\
-                    <option value="must-select">Must Select</option>\
+                    <option value="qualify" selected>Qualify</option>\
                     <option value="disqualify">Disqualify</option>\
                 </select>\
             </div>\
             <div class="col-1 text-right">\
             </div>\
         </div>');
+            const container = $('#checkboxAnswer' + id);
+            container.find('.checkbox-answer-item').parsley().validate();
         });
-        $("#questionsField").on('click', '.radioAnswerRemove', function () {
-            let rowId = $(this).data('radioanswerid');
-            let fieldId = $(this).data('fieldid');
-            $(this).parents('.radioAnswerItem'+fieldId).remove();
-        });
+
+
 
         let qnum = 2;
         $('#questionsField').on('click', '.btn-delete-question', function (){

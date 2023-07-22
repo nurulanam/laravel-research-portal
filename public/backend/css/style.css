@@ -4,6 +4,7 @@ body{
     font-weight: 300;
     color: #000000;
     background-color: #FAF9F6;
+
 }
 h1, h2, h3, h4, h5, h6{
     font-family: 'circularStd', sans-serif !important;
@@ -172,6 +173,22 @@ textarea::placeholder, select option{
         color: #092D5F;
         font-weight: 400;
         border-top: 1px solid rgba(9, 45, 95, 0.1);
+    }
+    .navbar-nav .nav-item {
+        position: relative;
+    }
+    /* Style the ::after pseudo-element as a direct content */
+    .navbar-nav .nav-item::after {
+        content: url('../img/Fleur_de_lis.png'); /* Required for ::after pseudo-element */
+        position: absolute;
+        top: 25%;
+        right: -12px;
+        width: 5px;
+        height: 5px;
+        transform: translateY(-50%) scale(0.4);
+    }
+    .navbar-nav .nav-item:last-child::after{
+        content: '';
     }
     .shadow-lg-none{
         box-shadow: none !important;

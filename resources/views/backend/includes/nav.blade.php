@@ -18,22 +18,23 @@
             <h4 class="menu-reaserch-hub pt-3 mt-2">My Research Hub:</h4>
         </div>
 
-        <!-- Navigation Menu Items (Centered on larger screens) -->
+        <!-- Navigation Menu Items -->
         <div class="navbar-collapse collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav main-nav-list pt-3 pt-lg-0">
-                <li class="nav-item px-2">
+                <li class="nav-item px-2 me-lg-3">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('project.index') }}"><i class="fa-solid fa-folder-open text-dark-blue me-2"></i><span>My Projects</span></a>
                 </li>
-                <li class="nav-item px-2">
+                <li class="nav-item px-2 mx-lg-3">
                     <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-comments text-dark-blue me-2"></i><span>My Messages</span></a>
                 </li>
-                <li class="nav-item px-2">
+                <li class="nav-item px-2 mx-lg-3">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('profile.index') }}"><i class="fa-solid fa-user-gear text-dark-blue me-2"></i><span>My Account Manager</span></a>
                 </li>
-                <li class="nav-item px-2">
+                <li class="nav-item px-2 mx-lg-3">
                     <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-file-invoice-dollar text-dark-blue me-2"></i><span>My Billing Center</span></a>
                 </li>
             </ul>
         </div>
+
     </div>
 </nav>
