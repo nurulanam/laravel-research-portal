@@ -19,6 +19,7 @@ use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
+use Illuminate\Support\Carbon;
 
 class ProjectController extends Controller
 {
@@ -54,17 +55,18 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
+//        dd($request);
         $request->validate([
-           'internal_name' => 'required|string',
-           'project_title' => 'required|string',
-           'project_details' => 'required|string',
-           'audience' => 'required|string',
+           'my_project_name' => 'required|string',
+           'study_title' => 'required|string',
+           'study_description' => 'required|string',
+           'target_audience' => 'required|string',
            'project_topic' => 'nullable|array|max:2',
            'project_topic.*' => 'string',
-           'research_type' => 'required|string',
-           'research_method' => 'nullable|string',
+           'project_type' => 'required|string',
+           'research_type' => 'nullable|string',
            'required_time' => 'nullable|numeric',
-           'incentive' => 'required|numeric',
+           'participant_incentive' => 'required|numeric',
            'target_participant' => 'required',
            'industry' => 'required|array|max:5',
            'industry.*' => 'string',
@@ -86,38 +88,42 @@ class ProjectController extends Controller
            'age_range.*' => 'string',
            'status' => 'required',
         ]);
-        // User Info
+        // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
 
         // Project Cost Calculation
-        $total_incentive = $request->incentive * $request->target_participant;
-        $total_service_fee  = $total_incentive/2;
-        $total_cost  = $total_incentive + $total_service_fee;
+        $total_participant_incentive = $request->participant_incentive * $request->target_participant;
+        $total_service_fee  = $total_participant_incentive/2;
+        $total_cost  = $total_participant_incentive + $total_service_fee;
 
         // Creating New Project
         $project = new Projects();
 
         //Adjusting Project Fields
         $project->user_id = $user_id;
-        $project->internal_name = $request->internal_name;
-        $project->project_title = $request->project_title;
-        $project->project_details = $request->project_details;
-        $project->audience = $request->audience;
+        $project->my_project_name = $request->my_project_name;
+        $project->study_title = $request->study_title;
+        $project->study_description = $request->study_description;
+        $project->target_audience = $request->target_audience;
+        $project->project_type = $request->project_type;
         $project->research_type = $request->research_type;
-        $project->research_method = $request->research_method;
         $project->required_time = $request->required_time;
-        $project->incentive = $request->incentive;
+        $project->participant_incentive = $request->participant_incentive;
         $project->target_participant = $request->target_participant;
-        $project->total_incentive = $total_incentive;
+        $project->total_incentive = $total_participant_incentive;
         $project->total_service_fee = $total_service_fee;
         $project->total_coast = $total_cost;
-        $project->slug = $this->createSlug($request->project_title);
+        $project->slug = $this->createSlug($request->study_title);
 
         $project->status = $request->status;
+        if ($request->has('schedule_date')){
+            $project->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+        }
+
         $project->save();
 
         // Creating New Project Topics belongsToProject
-        if ($request->audience == 'b2c'){
+        if ($request->target_audience == 'b2c'){
             if ($request->project_topic !== null){
                 foreach ($request->project_topic as $topic){
                     $new_project_topic = new ProjectHasProjectTopic();

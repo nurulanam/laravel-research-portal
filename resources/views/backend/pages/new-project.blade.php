@@ -7,6 +7,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
+{{--    @dd($errors)--}}
+
     <div class="row">
         <div class="col-12">
             <form action="{{ route('project.store') }}" method="post" class="new-project-form">
@@ -211,7 +213,7 @@
                                     <lable class="label">Industries <span class="text-danger">(Max:5) *</span></lable>
                                 </div>
                                 <div class="col-lg-9">
-                                    <select name="industry[]" class="industry-select form-control" multiple required data-parsley-error-message="Please Select Maximum 5 Industries">
+                                    <select name="industry[]" class="industry-select form-control" multiple required data-parsley-error-message="Please Select Minimum 1 & Maximum 5 Industries">
                                         @foreach ($industries as $key => $industry)
                                             <option value="{{ $key }}" @if (is_array(old('industry')) && in_array($key, old('industry'))) selected @endif>{{ $industry }}</option>
                                         @endforeach
@@ -554,13 +556,13 @@
                             <div class="col-12 col-lg-8 offset-lg-2 shadow rounded p-4 my-3">
                                 <div class="row">
                                     <div class="col-md-4"><b>Total Incentive</b></div>
-                                    <div class="col-md-8 text-right">
+                                    <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalIncentive"></span> USD</p>
                                     </div>
                                 </div>
                                 <div class="row">
                                     <div class="col-md-4"><b>Total Service Fees</b></div>
-                                    <div class="col-md-8 text-right">
+                                    <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalServiceFrees"></span> USD</p>
                                     </div>
                                 </div>
@@ -568,19 +570,24 @@
                                 <hr class="py-30">
                                 <div class="row">
                                     <div class="col-md-4"><h4><b>Total Cost</b></h4></div>
-                                    <div class="col-md-8 text-right">
+                                    <div class="col-md-8 text-end">
                                         <h4 class="m-0"><b>$<span id="totalCost"></span> USD</b></h4>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-center">
-                                    <select name="status" class="form-control w-25 publish-status rounded-pill" required>
+                                <div class="d-block d-lg-flex justify-content-between align-items-center">
+                                    <select name="status" class="form-control w-25 publish-status" required>
                                         <option value="" class="bg-success text-light" selected>Please Select Status</option>
-                                        <option value="draft">Draft</option>
                                         <option value="publish">Publish</option>
+                                        <option value="schedule">Schedule</option>
+                                        <option value="draft">Draft</option>
                                     </select>
+                                    <div class="schedule-box ms-lg-2">
+
+                                    </div>
                                 </div>
                             </div>
                         </div>
+
 
                     </div>
                     <div class="form-navigation mt-3">
@@ -743,7 +750,9 @@
                     });
                 }
             }, 1000); // Delay of 1000 milliseconds (1 second)
+
         });
+
 
         $(function(){
             var $sections=$('.form-section');
@@ -775,10 +784,12 @@
             });
 
             $('.form-navigation .next').click(function(){
+                $('.new-project-form').parsley().refresh();
                 $('.new-project-form').parsley().whenValidate({
                     group:'block-'+curIndex()
                 }).done(function(){
                     navigateTo(curIndex()+1);
+                    $('.new-project-form').parsley().refresh();
                 });
                 if (curIndex() == 3){
                     let incentive =  $('#incentive_range').val();
@@ -793,15 +804,39 @@
                     $("#totalCost").html(totalCost);
 
 
-                    $('.publish-status').on('change', function (){
-                        let status = $(this).val();
-                        console.log(status);
-                        if (status == 'draft'){
-                            $('.publish-btn').html('Draft');
-                        }else if (status == 'publish'){
-                            $('.publish-btn').html('Publish');
+                    $(document).ready(function (){
+                        let status = $('.publish-status').val();
+                        if (status == 'publish'){
+                            $('.publish-btn').html('publish');
+                            $('.schedule-box').html('');
+                        }else if (status == 'schedule'){
+                            $('.publish-btn').html('Schedule');
+                            $('.schedule-box').html('<input type="datetime-local" name="schedule_date" class="form-control schedule-date" value="{{ old("schedule_date") }}" required>')
+                            $('.schedule-date').parsley().validate();
+                        }else if (status == 'draft'){
+                            $('.publish-btn').html('draft');
+                            $('.schedule-box').html('');
                         }else if(status == ""){
                             $('.publish-btn').html('Select Status');
+                            $('.schedule-box').html('');
+                        }
+                    });
+                    $('.publish-status').on('change', function (){
+                        let status = $(this).val();
+
+                        if (status == 'publish'){
+                            $('.publish-btn').html('publish');
+                            $('.schedule-box').html('');
+                        }else if (status == 'schedule'){
+                            $('.publish-btn').html('Schedule');
+                            $('.schedule-box').html('<input type="datetime-local" name="schedule_date" class="form-control schedule-date" value="{{ old("schedule_date") }}" required>')
+                            $('.schedule-date').parsley().validate();
+                        }else if (status == 'draft'){
+                            $('.publish-btn').html('draft');
+                            $('.schedule-box').html('');
+                        }else if(status == ""){
+                            $('.publish-btn').html('Select Status');
+                            $('.schedule-box').html('');
                         }
                     });
                 }
@@ -894,6 +929,8 @@
                 stateSelect.val(firstState).trigger("change");
 
                 citySelect.parsley().validate();
+
+
             }
 
             // Add an initial location set on page load

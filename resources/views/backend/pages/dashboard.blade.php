@@ -25,13 +25,13 @@
                                     placeholder="Search Projects By Keyword">
                                 <div class="hidden">
                                     <input type="radio" class="d-none audience-b2b" name="audience" value="b2b"
-                                        {{ request('audience') === 'b2b' ? 'checked' : '' }}>
+                                        {{ request('target_audience') === 'b2b' ? 'checked' : '' }}>
                                     <input type="radio" class="d-none audience-b2c" name="audience" value="b2c"
-                                        {{ request('audience') === 'b2c' ? 'checked' : '' }}>
+                                        {{ request('target_audience') === 'b2c' ? 'checked' : '' }}>
                                     <input type="radio" class="d-none research-type-in-person" name="research_type"
-                                        value="in-person" {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
+                                        value="in-person" {{ request('project_type') === 'in-person' ? 'checked' : '' }}>
                                     <input type="radio" class="d-none research-type-remote" name="research_type"
-                                        value="remote" {{ request('research_type') === 'remote' ? 'checked' : '' }}>
+                                        value="remote" {{ request('project_type') === 'remote' ? 'checked' : '' }}>
                                     <input type="number" class="d-none incentive-min" name="min_incentive" min="0"
                                         @if (request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
                                     <input type="number" class="d-none incentive-max" name="max_incentive" min="1"
@@ -64,12 +64,12 @@
                                 <p class="text-dark font-weight-bold pb-3">Audience</p>
                                 <div class="d-flex align-items-center">
                                     <input type="radio" class="form-radio audience-b2b mr-2" name="audience"
-                                        value="b2b" id="radioB2B" {{ request('audience') === 'b2b' ? 'checked' : '' }}>
+                                        value="b2b" id="radioB2B" {{ request('target_audience') === 'b2b' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2B">Industry professional</label>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <input type="radio" class="form-radio audience-b2c mr-2" name="audience"
-                                        value="b2c" id="radioB2C" {{ request('audience') === 'b2c' ? 'checked' : '' }}>
+                                        value="b2c" id="radioB2C" {{ request('target_audience') === 'b2c' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2C">General population</label>
                                 </div>
                             </div>
@@ -78,13 +78,13 @@
                                 <div class="d-flex align-items-center">
                                     <input type="radio" class="form-radio research-type-in-person mr-2"
                                         name="research_type" value="in-person" id="inPerson"
-                                        {{ request('research_type') === 'in-person' ? 'checked' : '' }}>
+                                        {{ request('project_type') === 'in-person' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="inPerson">In-Person</label>
                                 </div>
                                 <div class="d-flex align-items-center">
                                     <input type="radio" class="form-radio research-type-remote mr-2" name="research_type"
                                         value="remote" id="remote"
-                                        {{ request('research_type') === 'remote' ? 'checked' : '' }}>
+                                        {{ request('project_type') === 'remote' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="remote">Remote</label>
                                 </div>
                             </div>
@@ -132,7 +132,7 @@
                                     data-target=".project-details-modal"
                                     class="text-primary show-details text-capitalize text-decoration-none modal-project-title">
                                     <h4>
-                                        {{ $project->project_title }}</h4>
+                                        {{ $project->study_title }}</h4>
                                 </a>
                                 <div class="d-flex">
                                     <div class="dropdown mr-1">
@@ -159,29 +159,29 @@
                                 @endif
 
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                @if($project->research_type == 'remote')
+                                @if($project->project_type == 'remote')
                                     <p class="text-dark-blue mb-0 text-capitalize">Remote</p>
-                                @elseif($project->research_type == 'in-person')
+                                @elseif($project->project_type == 'in-person')
                                     <p class="text-dark-blue mb-0 text-capitalize">In Person</p>
                                 @endif
-                                @if($project->research_method)
+                                @if($project->research_type)
                                     <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                    @if($project->research_method == 'one-on-one')
+                                    @if($project->research_type == 'one-on-one')
                                         <p class="text-dark-blue mb-0 text-capitalize">One-on-One</p>
-                                    @elseif($project->research_method == 'focus-group')
+                                    @elseif($project->research_type == 'focus-group')
                                         <p class="text-dark-blue mb-0 text-capitalize">Focus Group</p>
-                                    @elseif($project->research_method == 'unmoderated-study')
+                                    @elseif($project->research_type == 'unmoderated-study')
                                         <p class="text-dark-blue mb-0 text-capitalize">Unmoderated Study</p>
-                                    @elseif($project->research_method == 'survey')
+                                    @elseif($project->research_type == 'survey')
                                         <p class="text-dark-blue mb-0 text-capitalize">Survey</p>
-                                    @elseif($project->research_method == 'diary-study')
+                                    @elseif($project->research_type == 'diary-study')
                                         <p class="text-dark-blue mb-0 text-capitalize">Diary Study</p>
                                     @endif
                                 @endif
 
 
                             </div>
-                            <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->project_details, 300) }} <a
+                            <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->study_description, 300) }} <a
                                     href="#" type="button" class="btn btn-sm text-primary show-details"
                                     data-toggle="modal" data-id="{{ $project->id }}"
                                     data-target=".project-details-modal">[ See Details ]</a></p>
@@ -366,9 +366,9 @@
                 success: function(response) {
                     console.log(response)
                     if (response) {
-                        $('.project-title').html(response.data.project_title);
+                        $('.project-title').html(response.data.study_title);
                         $(".project-apply").attr('href', '/dashboard/project-apply/' + response.data.slug);
-                        $('.project-full-details').html(response.data.project_details);
+                        $('.project-full-details').html(response.data.study_description);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
                         var projectIndustriesDiv = $('.project-industries');
@@ -407,20 +407,20 @@
 
                         $('.project-required-time').html(response.data.required_time);
                         $('.project-total-participants').html(response.data.target_participant);
-                        if (response.data.research_type === 'remote') {
+                        if (response.data.project_type === 'remote') {
                             $('.project-research-type').html('Remote');
-                        } else if (response.data.research_type === 'in-person') {
+                        } else if (response.data.project_type === 'in-person') {
                             $('.project-research-type').html('In Person');
                         }
-                        if (response.data.research_method === 'one-on-one') {
+                        if (response.data.research_type === 'one-on-one') {
                             $('.project-research-method').html('One On One');
-                        } else if (response.data.research_method === 'focus-group') {
+                        } else if (response.data.research_type === 'focus-group') {
                             $('.project-research-method').html('Focus Group');
-                        } else if (response.data.research_method === 'unmoderated-study') {
+                        } else if (response.data.research_type === 'unmoderated-study') {
                             $('.project-research-method').html('Unmoderated Study');
-                        } else if (response.data.research_method === 'survey') {
+                        } else if (response.data.research_type === 'survey') {
                             $('.project-research-method').html('Survey');
-                        } else if (response.data.research_method === 'diary-study') {
+                        } else if (response.data.research_type === 'diary-study') {
                             $('.project-research-method').html('Diary Study');
                         }
 

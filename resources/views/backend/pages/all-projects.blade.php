@@ -39,17 +39,19 @@
                                 $serialNumber = ($projects->currentPage() - 1) * $projects->perPage() + $key + 1;
                             @endphp
                             <tr>
-                                <td class="align-middle">{{ $project->internal_name }}</td>
+                                <td class="align-middle">{{ $project->my_project_name }}</td>
                                 <td class="align-middle">0</td>
-                                <td class="align-middle">{{ $project->research_type }}</td>
+                                <td class="align-middle">{{ $project->project_type }}</td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle">
                                     @if($project->status == "publish")
                                         <a class="badge bg-success text-decoration-none">Publish</a>
                                     @elseif($project->status == "draft")
-                                        <a class="text-decoration-none">Draft</a>
+                                        <a class="badge bg-secondary text-decoration-none">Draft</a>
+                                    @elseif($project->status == "schedule")
+                                        <a class="badge bg-warning text-decoration-none">Schedule</a>
                                     @elseif($project->status == "closed")
-                                        <a class="text-decoration-none">Closed</a>
+                                        <a class="badge bg-danger text-decoration-none">Closed</a>
                                     @endif
                                 </td>
                                 <td class="align-middle">
@@ -66,7 +68,7 @@
                                             <div class="modal-content">
                                                 <div class="modal-body py-4">
                                                     <h5 class="modal-title text-dark" id="deleteModalLabel">Sure, To Delete
-                                                        <span class="text-decoration-underline text-danger">{{ $project->internal_name }}</span>?</h5>
+                                                        <span class="text-decoration-underline text-danger">{{ $project->my_project_name }}</span>?</h5>
                                                 </div>
                                                 <div class="modal-footer py-2">
                                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancle</button>

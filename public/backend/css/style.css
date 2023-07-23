@@ -94,7 +94,6 @@ textarea::placeholder, select option{
 .parsley-errors-list{
     color:red;
     font-size: 13px;
-    padding: 5px 10px;
     margin: 0 !important;
 }
 /*.nav-link.dropdown-toggle.no-arrow::after{*/

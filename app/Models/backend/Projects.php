@@ -11,19 +11,20 @@ class Projects extends Model
     use HasFactory;
     protected $fillable =[
         'user_id',
-        'internal_name',
-        'project_title',
-        'project_details',
-        'audience',
+        'my_project_name',
+        'study_title',
+        'study_description',
+        'target_audience',
+        'project_type',
         'research_type',
-        'research_method',
         'required_time',
-        'incentive',
+        'participant_incentive',
         'target_participant',
         'total_incentive',
         'total_service_fee',
         'total_coast',
         'status',
+        'published_at'
     ];
 
     public function projectHasCities(){
