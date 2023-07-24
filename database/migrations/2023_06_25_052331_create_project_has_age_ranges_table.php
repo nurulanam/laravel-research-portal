@@ -16,7 +16,7 @@ class CreateProjectHasAgeRangesTable extends Migration
         Schema::create('project_has_age_ranges', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('age_range');
+            $table->json('age_range');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

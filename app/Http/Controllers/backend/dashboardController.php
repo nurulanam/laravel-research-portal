@@ -19,6 +19,8 @@ class dashboardController extends Controller
      */
     public function index(Request $request)
     {
+//        dd(now());
+        $this->updateProjectStatus();
 
         $query = Projects::where('status', '=', 'publish');
 
@@ -127,5 +129,13 @@ class dashboardController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateProjectStatus()
+    {
+        // Fetch all projects from the database
+        Projects::whereNotNull('published_at')
+            ->where('published_at', '<=', now())
+            ->update(['status' => 'publish']);
     }
 }

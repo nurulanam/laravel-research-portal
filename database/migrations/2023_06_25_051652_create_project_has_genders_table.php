@@ -16,7 +16,7 @@ class CreateProjectHasGendersTable extends Migration
         Schema::create('project_has_genders', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('gender');
+            $table->json('gender');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

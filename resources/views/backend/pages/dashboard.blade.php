@@ -60,38 +60,38 @@
                     <div class="card-body">
                         <form action="{{ route('dashboard.index') }}" method="GET" id="filterForm">
                             @csrf
-                            <div class="form-group">
-                                <p class="text-dark font-weight-bold pb-3">Audience</p>
+                            <div class="form-group mb-3">
+                                <p class="text-dark font-weight-500 pb-3">Audience</p>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio audience-b2b mr-2" name="audience"
+                                    <input type="radio" class="form-radio audience-b2b me-2" name="audience"
                                         value="b2b" id="radioB2B" {{ request('target_audience') === 'b2b' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2B">Industry professional</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio audience-b2c mr-2" name="audience"
+                                    <input type="radio" class="form-radio audience-b2c me-2" name="audience"
                                         value="b2c" id="radioB2C" {{ request('target_audience') === 'b2c' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2C">General population</label>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <p class="text-dark font-weight-bold pb-3">Project Type</p>
+                            <div class="form-group mb-3">
+                                <p class="text-dark font-weight-500 pb-3">Project Type</p>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio research-type-in-person mr-2"
+                                    <input type="radio" class="form-radio research-type-in-person me-2"
                                         name="research_type" value="in-person" id="inPerson"
                                         {{ request('project_type') === 'in-person' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="inPerson">In-Person</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio research-type-remote mr-2" name="research_type"
+                                    <input type="radio" class="form-radio research-type-remote me-2" name="research_type"
                                         value="remote" id="remote"
                                         {{ request('project_type') === 'remote' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="remote">Remote</label>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <p class="text-dark font-weight-bold pb-3">Compensation</p>
+                            <div class="form-group mb-3">
+                                <p class="text-dark font-weight-500 pb-3">Compensation</p>
                                 <div class="d-flex align-items-center">
-                                    <input type="number" class="form-control rounded-pill incentive-min mr-2" name="min_incentive"
+                                    <input type="number" class="form-control rounded-pill incentive-min me-2" name="min_incentive"
                                         min="0" placeholder="Min" id="minIncentive"
                                         @if (request('min_incentive')) value="{{ request('min_incentive') }}" @endif>
                                     <input type="number" class="form-control rounded-pill incentive-max" name="max_incentive"
@@ -99,10 +99,10 @@
                                         @if (request('max_incentive')) value="{{ request('max_incentive') }}" @endif>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <p class="text-dark font-weight-bold pb-3">Time (minutes)</p>
+                            <div class="form-group mb-3">
+                                <p class="text-dark font-weight-500 pb-3">Time (minutes)</p>
                                 <div class="d-flex align-items-center">
-                                    <input type="number" class="form-control rounded-pill time-min mr-2" name="min_time"
+                                    <input type="number" class="form-control rounded-pill time-min me-2" name="min_time"
                                         id="minTime" min="0" placeholder="Min"
                                         @if (request('min_time')) value="{{ request('min_time') }}" @endif>
                                     <input type="number" class="form-control rounded-pill time-max" name="max_time"
@@ -116,7 +116,7 @@
 
                             </div>
                             <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-primary rounded-pill w-100 mr-2">Apply</button>
+                                <button class="btn btn-primary rounded-pill w-100 me-2">Apply</button>
                                 <a href="{{ route('dashboard.index') }}" class="btn btn-danger rounded-pill w-100">Clear</a>
                             </div>
                         </form>
@@ -128,8 +128,8 @@
                     @foreach ($projects as $key => $project)
                         <div class="card p-4 mb-3">
                             <div class="d-flex justify-content-between">
-                                <a href="#" type="button" data-toggle="modal" data-id="{{ $project->id }}"
-                                    data-target=".project-details-modal"
+                                <a href="#" type="button" data-bs-toggle="modal" data-id="{{ $project->id }}"
+                                   data-bs-target=".project-details-modal"
                                     class="text-primary show-details text-capitalize text-decoration-none modal-project-title">
                                     <h4>
                                         {{ $project->study_title }}</h4>
@@ -152,7 +152,7 @@
                             <div class="d-flex justify-content-start align-items-center">
                                 <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                <p class="text-dark-blue mb-0">{{ $project->updated_at->diffForHumans() }} </p>
+                                <p class="text-dark-blue mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
                                 @if($project->required_time)
                                     <i class="fas fa-grip-lines-vertical mx-2"></i>
                                     <p class="text-dark-blue mb-0">{{ $project->required_time }} Minutes</p>
@@ -196,28 +196,25 @@
 
                 <div class="modal fade project-details-modal" tabindex="-1" role="dialog"
                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                    <div class="modal-dialog modal-xl float-lg-right w-100 mr-lg-3">
+                    <div class="modal-dialog modal-xl float-lg-end w-100 me-lg-3">
                         <div class="modal-content">
                             <div class="modal-header border-0">
-                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                </button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <div class="modal-body px-lg-5" style="min-height: 86vh; min-width: 100%">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <div class="card">
+                                        <div class="card mb-3">
                                             <div class="card-body">
                                                 <h3 class="project-title text-capitalize text-dark"></h3>
                                                 <p class="mb-2"><i
-                                                        class="fas fa-calendar-alt text-success mr-2"></i><span
+                                                        class="fas fa-calendar-alt text-success me-2"></i><span
                                                         class="project-posted-time text-dark-blue"></span></p>
                                                 <hr>
                                                 <p class="project-full-details text-dark-blue text-justify"></p>
                                             </div>
                                         </div>
-                                        <hr>
-                                        <div class="card">
+                                        <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
@@ -228,30 +225,29 @@
                                                 <div class="row ">
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark-blue mb-2" title="Required Time"><i
-                                                                class="text-success fas fa-clock mr-2" ></i><span
+                                                                class="text-success fas fa-clock me-2" ></i><span
                                                                 class="project-required-time"></span> Minutes</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark-blue mb-2" title="Target Participants"><i
-                                                                class="text-success fas fa-users mr-2"></i><span
+                                                                class="text-success fas fa-users me-2"></i><span
                                                                 class="project-total-participants"></span> Target
                                                             Participants</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark-blue mb-2" title="Research Type"><i
-                                                                class="text-success fas fa-user-shield mr-2"></i><span
+                                                                class="text-success fas fa-user-shield me-2"></i><span
                                                                 class="project-research-type"></span></p>
 
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark-blue mb-2" title="Research Method"><i
-                                                                class="text-success fas fa-bullseye mr-2"></i><span
+                                                                class="text-success fas fa-bullseye me-2"></i><span
                                                                 class="project-research-method"></span></p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <hr>
                                         <div class="card">
                                             <div class="card-body">
                                                 <div class="row">
@@ -259,10 +255,10 @@
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
                                                         <p class="text-dark-blue mb-2"><i
-                                                                class="fas fa-clipboard-list text-success mr-2"></i><span>Proposals:
+                                                                class="fas fa-clipboard-list text-success me-2"></i><span>Proposals:
                                                                 <span class="">10</span></span></p>
                                                         <p class="text-dark-blue mb-2"><i
-                                                                class="fas fa-clipboard-check text-success mr-2"></i><span>Total
+                                                                class="fas fa-clipboard-check text-success me-2"></i><span>Total
                                                                 Hired: <span class="">2</span></span></p>
                                                     </div>
                                                 </div>
@@ -380,7 +376,7 @@
                             projectSkillsDiv.append(skillTitle);
                             $.each(skills, function(index, skill) {
                                 var badge = $(
-                                    '<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">'
+                                    '<span class="badge bg-success rounded-pill px-3 py-2 me-2 mb-2">'
                                 ).text(skill.skill_name);
                                 projectSkillsDiv.append(badge);
                             });
@@ -397,7 +393,7 @@
                             projectIndustriesDiv.append(industryTitle);
                             $.each(Industries, function(index, industry) {
                                 var badge = $(
-                                    '<span class="badge badge-success badge-pill px-3 py-2 mr-2 mb-2">'
+                                    '<span class="badge bg-success rounded-pill px-3 py-2 me-2 mb-2">'
                                 ).text(industry);
                                 projectIndustriesDiv.append(badge);
                             });
@@ -424,9 +420,13 @@
                             $('.project-research-method').html('Diary Study');
                         }
 
-
-                        let time = formatDate(response.data.created_at);
-                        $('.project-posted-time').html(time);
+                        if (response.data.published_at){
+                            let time = formatDate(response.data.published_at);
+                            $('.project-posted-time').html(time);
+                        }else{
+                            let time = formatDate(response.data.updated_at);
+                            $('.project-posted-time').html(time);
+                        }
                     }
                 }
             })

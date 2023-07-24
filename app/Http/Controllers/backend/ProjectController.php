@@ -41,6 +41,9 @@ class ProjectController extends Controller
      */
     public function create()
     {
+
+
+
         $us_states = config('app.us_states');
         $industries = config('app.industries');
 
@@ -71,22 +74,16 @@ class ProjectController extends Controller
            'industry' => 'required|array|max:5',
            'industry.*' => 'string',
            'company_size' => 'nullable|array',
-           'company_size.*' => 'string',
            'cities' => 'nullable|array',
            'cities.*' => 'string',
            'skills' => 'nullable|array|max:25',
            'skills.*' => 'string',
            'household_income' => 'nullable|array',
-           'household_income.*' => 'string',
            'gender' => 'nullable|array',
-           'gender.*' => 'string',
            'education_level' => 'nullable|array',
-           'education_level.*' => 'string',
            'ethnicity' => 'nullable|array',
-           'ethnicity.*' => 'string',
            'age_range' => 'nullable|array',
-           'age_range.*' => 'string',
-           'status' => 'required',
+           'status' => 'required'
         ]);
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
@@ -143,16 +140,22 @@ class ProjectController extends Controller
         }
 
         // Creating New Company Size belongsToProject
-        if ($request->company_size !== null){
-            foreach ($request->company_size as $company_size){
-                $new_company_size = new ProjectHasCompanySize();
-                $new_company_size->project_id = $project->id;
-                $new_company_size->company_size = $company_size;
-                $new_company_size->save();
-            }
+
+        // Check if each element in the $request->company_size array is a string
+        if (is_array($request->company_size)) {
+            $filtered_company_sizes = array_filter($request->company_size, 'is_string');
+
+            // Convert the array to JSON
+            $company_sizes_json = json_encode($filtered_company_sizes);
+
+            // Save the JSON data in the database using the model
+            $new_company_size = new ProjectHasCompanySize();
+            $new_company_size->project_id = $project->id;
+            $new_company_size->company_size = $company_sizes_json;
+            $new_company_size->save();
         }
 
-        // Creating New Company Size belongsToProject
+        // Creating New Cities Size belongsToProject
         if ($request->cities !== null){
             foreach ($request->cities as $city){
                 $new_cities = new ProjectHasCity();
@@ -180,54 +183,80 @@ class ProjectController extends Controller
         }
 
         // Creating New Household Income belongsToProject
-        if ($request->household_income !== null){
-            foreach ($request->household_income as $household_income){
-                $new_household_income = new ProjectHasHouseholdIncome();
-                $new_household_income->project_id = $project->id;
-                $new_household_income->household_income = $household_income;
-                $new_household_income->save();
-            }
+        // Check if each element in the $request->household_income array is a string
+        if (is_array($request->household_income)) {
+            $filtered_household_incomes = array_filter($request->household_income, 'is_string');
+
+            // Convert the array to JSON
+            $household_income_json = json_encode($filtered_household_incomes);
+
+            // Save the JSON data in the database using the model
+            $new_household_income = new ProjectHasHouseholdIncome();
+            $new_household_income->project_id = $project->id;
+            $new_household_income->household_income = $household_income_json;
+            $new_household_income->save();
         }
 
         // Creating New Gender belongsToProject
-        if ($request->gender !== null){
-            foreach ($request->gender as $gender){
-                $new_gender = new ProjectHasGender();
-                $new_gender->project_id = $project->id;
-                $new_gender->gender = $gender;
-                $new_gender->save();
-            }
+        // Check if each element in the $request->gender array is a string
+        if (is_array($request->gender)) {
+            $filtered_genders = array_filter($request->gender, 'is_string');
+
+            // Convert the array to JSON
+            $gender_json = json_encode($filtered_genders);
+
+            // Save the JSON data in the database using the model
+            $new_gender = new ProjectHasGender();
+            $new_gender->project_id = $project->id;
+            $new_gender->gender = $gender_json;
+            $new_gender->save();
         }
 
         // Creating New Education Level belongsToProject
-        if ($request->education_level !== null){
-            foreach ($request->education_level as $education_level){
-                $new_education_level = new ProjectHasEducationLevel();
-                $new_education_level->project_id = $project->id;
-                $new_education_level->education_level = $education_level;
-                $new_education_level->save();
-            }
+        // Check if each element in the $request->education_level array is a string
+        if (is_array($request->education_level)) {
+            $filtered_education_levels = array_filter($request->education_level, 'is_string');
+
+            // Convert the array to JSON
+            $education_level_json = json_encode($filtered_education_levels);
+
+            // Save the JSON data in the database using the model
+            $new_education_level = new ProjectHasEducationLevel();
+            $new_education_level->project_id = $project->id;
+            $new_education_level->education_level = $education_level_json;
+            $new_education_level->save();
         }
 
         // Creating New Ethnicity belongsToProject
-        if ($request->ethnicity !== null){
-            foreach ($request->ethnicity as $ethnicity){
-                $new_ethnicity = new ProjectHasEthnicity();
-                $new_ethnicity->project_id = $project->id;
-                $new_ethnicity->ethnicity = $ethnicity;
-                $new_ethnicity->save();
-            }
+        // Check if each element in the $request->ethnicity array is a string
+        if (is_array($request->ethnicity)) {
+            $filtered_ethnicities = array_filter($request->ethnicity, 'is_string');
+
+            // Convert the array to JSON
+            $ethnicity_json = json_encode($filtered_ethnicities);
+
+            // Save the JSON data in the database using the model
+            $new_ethnicity = new ProjectHasEthnicity();
+            $new_ethnicity->project_id = $project->id;
+            $new_ethnicity->ethnicity = $ethnicity_json;
+            $new_ethnicity->save();
         }
 
         // Creating New Age Range belongsToProject
-        if ($request->age_range !== null){
-            foreach ($request->age_range as $age_range){
-                $new_age_range = new ProjectHasAgeRange();
-                $new_age_range->project_id = $project->id;
-                $new_age_range->age_range = $age_range;
-                $new_age_range->save();
-            }
+        // Check if each element in the $request->age_range array is a string
+        if (is_array($request->age_range)) {
+            $filtered_age_ranges = array_filter($request->age_range, 'is_string');
+
+            // Convert the array to JSON
+            $age_range_json = json_encode($filtered_age_ranges);
+
+            // Save the JSON data in the database using the model
+            $new_age_range = new ProjectHasAgeRange();
+            $new_age_range->project_id = $project->id;
+            $new_age_range->age_range = $age_range_json;
+            $new_age_range->save();
         }
+
         // Creating New Questions belongsToProject
         if ($request->has('question_name')){
             $new_project_question = new ProjectHasQuestion();
@@ -263,7 +292,6 @@ class ProjectController extends Controller
         }
 
         return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
-
 
     }
 

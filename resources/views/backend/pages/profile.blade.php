@@ -11,37 +11,50 @@
 
 
     <div class="row">
-        <div class="col-12 col-md-6">
-            <div class="d-flex justify-content-start align-items-center">
-                @if (!empty($profileInfo))
-                    @if ($profileInfo->user_avatar == null)
+        <div class="col-12">
+            <div class="d-flex justify-content-lg-between align-items-center">
+                <div class="d-flex justify-content-start align-items-center">
+                    @if (!empty($profileInfo))
+                        @if ($profileInfo->user_avatar == null)
+                            <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile"
+                                alt="profile-picture">
+                        @elseif($profileInfo->user_avatar !== null)
+                            <img src="{{ asset('backend/img/profile/' . $profileInfo->user_avatar) }}" class="img-80"
+                                id="preview_profile" alt="profile-picture">
+                        @endif
+                    @elseif(empty($profileInfo))
                         <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile"
                             alt="profile-picture">
-                    @elseif($profileInfo->user_avatar !== null)
-                        <img src="{{ asset('backend/img/profile/' . $profileInfo->user_avatar) }}" class="img-80"
-                            id="preview_profile" alt="profile-picture">
                     @endif
-                @elseif(empty($profileInfo))
-                    <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile"
-                        alt="profile-picture">
-                @endif
 
-                <div class="ml-3 font">
-                    <h4 class="font-weight-bold mb-0">Hey {{ Auth::user()->first_name }} !</h4>
-                    <form action="{{ route('profile.avatar') }}" method="POST" class="user mt-1"
-                        enctype="multipart/form-data">
+                    <div class="ml-3 font">
+                        <h4 class="font-weight-bold mb-0">Hey {{ Auth::user()->first_name }} !</h4>
+                        <form action="{{ route('profile.avatar') }}" method="POST" class="user mt-1"
+                            enctype="multipart/form-data">
+                            @csrf
+                            <label for="user_avatar" class="btn p-0  m-0 text-primary">Change Picture</label>
+                            <input name="user_avatar" id="user_avatar" style="display: none;" type="file">
+                            @error('user_avatar')
+                                <p class="text-danger font-13 py-2">{{ $message }}</p>
+                            @enderror
+                            <button class="btn btn-primary btn-sm btn-user px-4 mx-4 btn-profile-save">Save Changes</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="float-end">
+                    <form method="POST" action="{{ route('logout') }}">
                         @csrf
-                        <label for="user_avatar" class="btn p-0  m-0 text-primary">Change Picture</label>
-                        <input name="user_avatar" id="user_avatar" style="display: none;" type="file">
-                        @error('user_avatar')
-                            <p class="text-danger font-13 py-2">{{ $message }}</p>
-                        @enderror
-                        <button class="btn btn-primary btn-sm btn-user px-4 mx-4 btn-profile-save">Save Changes</button>
+                        <button class="btn btn-danger">
+                            <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                            Logout
+                        </button>
                     </form>
                 </div>
-            </div>
-        </div>
 
+            </div>
+
+        </div>
     </div>
     <div class="row my-2">
         <div class="col-12 col-md-6 col-lg-6 my-3">

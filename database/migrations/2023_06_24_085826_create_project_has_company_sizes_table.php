@@ -16,7 +16,7 @@ class CreateProjectHasCompanySizesTable extends Migration
         Schema::create('project_has_company_sizes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('company_size');
+            $table->json('company_size');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

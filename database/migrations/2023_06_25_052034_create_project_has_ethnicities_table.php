@@ -16,7 +16,7 @@ class CreateProjectHasEthnicitiesTable extends Migration
         Schema::create('project_has_ethnicities', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('ethnicity');
+            $table->json('ethnicity');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

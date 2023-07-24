@@ -16,7 +16,7 @@ class CreateProjectHasHouseholdIncomesTable extends Migration
         Schema::create('project_has_household_incomes', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('household_income');
+            $table->json('household_income');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

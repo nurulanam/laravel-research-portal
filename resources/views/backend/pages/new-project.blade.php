@@ -7,7 +7,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
-{{--    @dd($errors)--}}
+    <pre>
+    {{ $errors }}
+        </pre>
 
     <div class="row">
         <div class="col-12">
