@@ -288,9 +288,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
     @endif
-
-
 @endsection
 @section('extraJs')
     <script>

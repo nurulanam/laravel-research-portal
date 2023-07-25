@@ -65,6 +65,9 @@ textarea::placeholder, select option{
      background-color: #092D5F;
  }
 
+input.small::placeholder{
+    font-size: 0.875em;
+}
 
 /* main navigation */
 .main-nav{

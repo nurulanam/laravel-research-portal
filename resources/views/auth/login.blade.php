@@ -2,11 +2,11 @@
 @section('title', 'login')
 @section('mainContent')
     <!-- Outer Row -->
-    <div class="row min-vh-100 justify-content-center align-items-center">
+    <div class="row min-vh-100 justify-content-center align-items-center login">
 
         <div class="col-xl-10 col-lg-12 col-md-9">
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card border-4 border-primary overflow-hidden shadow-lg my-5 rounded-4">
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
@@ -19,38 +19,38 @@
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
                                     <form action="{{ route('login') }}" method="POST" class="user">
                                         @csrf
-                                        <div class="form-group">
-                                            <input type="email" name="email" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="email" name="email" class="form-control small rounded-pill py-2"
                                                    id="email" aria-describedby="emailHelp"
                                                    placeholder="Enter Email Address...">
                                             @error('email')
                                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="password" name="password" class="form-control small rounded-pill py-2"
                                                    id="password" placeholder="Password">
                                             @error('password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group d-block d-lg-flex justify-content-between align-items-center">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" name="remember" class="custom-control-input" id="remember_me">
-                                                <label class="custom-control-label" for="remember_me">Remember
+                                        <div class="form-group d-block d-lg-flex justify-content-between align-items-center mb-3">
+                                            <div class="form-check small">
+                                                <input type="checkbox" name="remember" class="form-check-input" id="remember_me">
+                                                <label class="form-check-label" for="remember_me">Remember
                                                     Me</label>
                                             </div>
                                             @if (Route::has('password.request'))
-                                                <a href="{{ route('password.request') }}" class="text-primary small">Forgot Your Password?</a>
+                                                <a href="{{ route('password.request') }}" class="text-primary small font-weight-500 text-decoration-none ">Forgot Your Password?</a>
                                             @endif
                                         </div>
-                                        <button class="btn btn-primary btn-user btn-block">
+                                        <button class="btn btn-primary w-100 py-2 rounded-pill">
                                             Login
                                         </button>
                                     </form>
-                                    <div class="d-flex justify-content-between pt-4 small">
-                                        <p>Don't have an account?</p>
-                                        <a href="{{ route('register') }}">Register Here</a>
+                                    <div class="d-flex justify-content-between pt-4">
+                                        <p class="small">Don't have an account?</p>
+                                        <a href="{{ route('register') }}" class="font-weight-500 small text-decoration-none">Register Here</a>
                                     </div>
                                 </div>
                             </div>

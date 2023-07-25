@@ -12,7 +12,7 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="d-flex justify-content-lg-between align-items-center">
+            <div class="bg-dark-blue bg-gradient rounded-4 shadow-md p-4 d-flex justify-content-lg-between align-items-center">
                 <div class="d-flex justify-content-start align-items-center">
                     @if (!empty($profileInfo))
                         @if ($profileInfo->user_avatar == null)
@@ -27,17 +27,17 @@
                             alt="profile-picture">
                     @endif
 
-                    <div class="ml-3 font">
-                        <h4 class="font-weight-bold mb-0">Hey {{ Auth::user()->first_name }} !</h4>
+                    <div class="ms-3 font">
+                        <h4 class="font-weight-bold text-white mb-0">Hey {{ Auth::user()->first_name }} !</h4>
                         <form action="{{ route('profile.avatar') }}" method="POST" class="user mt-1"
                             enctype="multipart/form-data">
                             @csrf
-                            <label for="user_avatar" class="btn p-0  m-0 text-primary">Change Picture</label>
-                            <input name="user_avatar" id="user_avatar" style="display: none;" type="file">
+                            <label for="user_avatar" class="btn p-0 m-0 text-warning">Change Picture</label>
+                            <input name="user_avatar" id="user_avatar" style="display: none;" type="file" accept=".jpg, .jpeg, .png">
                             @error('user_avatar')
                                 <p class="text-danger font-13 py-2">{{ $message }}</p>
                             @enderror
-                            <button class="btn btn-primary btn-sm btn-user px-4 mx-4 btn-profile-save">Save Changes</button>
+                            <button class="btn btn-primary btn-sm rounded-pill btn-profile-save" title="Click To Save"><i class="fa-solid fa-check-circle"></i><span class="ms-2">Save</span></button>
                         </form>
                     </div>
                 </div>
@@ -56,6 +56,52 @@
 
         </div>
     </div>
+
+    <div class="row my-4">
+        <div class="col-12 col-md-4">
+            <div class="card rounded-4 shadow-md">
+                <div class="card-body">
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="col-4">
+                            <p class="font-weight-500">First Name </p>
+                        </div>
+                        <div class="col-8">
+                            <p>{{ Auth::user()->first_name }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="col-4">
+                            <p class="font-weight-500">Last Name </p>
+                        </div>
+                        <div class="col-8">
+                            <p>{{ Auth::user()->last_name }}</p>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <div class="col-4">
+                            <p class="font-weight-500">Email @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="Verified"><i class="fa-regular fa-circle-check text-primary"></i></span> @endif </p>
+                        </div>
+                        <div class="col-8">
+                            <p>{{ Auth::user()->email }}</p>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-between">
+                        <p class="font-weight-500">Skills</p>
+                        <button class="btn"><i class="fa-solid fa-pen text-secondary"></i></button>
+                    </div>
+                    <div>
+                        @if(!empty($userSkills))
+                            @foreach($userSkills as $skill)
+                                <span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2 text-capitalize">{{ $skill->skill_name }}</span>
+                            @endforeach
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row my-2">
         <div class="col-12 col-md-6 col-lg-6 my-3">
             <div class="card shadow p-2">
@@ -805,7 +851,7 @@
             @if (Auth::user()->hasRole('participant'))
                 <div class="col-12 mb-3 d-flex align-items-stretch">
                     <button type="button" class="btn btn-primary text-left bg-dark-blue p-2 px-lg-5 py-lg-4 w-100"
-                            data-toggle="modal" data-target="#skills">
+                            data-bs-toggle="modal" data-bs-target="#skills">
             <span class="d-flex justify-content-start align-items-center">
                 <i class="fas fa-wrench fa-2x mr-3"></i>
                 <span class="font-weight-bold font-18">Skills</span>
@@ -818,7 +864,7 @@
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <h5 class="modal-title font-weight-bold" id="exampleModalLabel">Skills</h5>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
                                         <span aria-hidden="true">&times;</span>
                                     </button>
                                 </div>

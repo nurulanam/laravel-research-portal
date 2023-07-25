@@ -16,45 +16,25 @@
 
 </head>
 
-<body id="page-top">
-
-<!-- Page Wrapper -->
-<div id="wrapper">
-
-    <!-- Sidebar -->
-{{--    @include('backend.includes.sidebar')--}}
-    <!-- End of Sidebar -->
-
-    <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column">
+<body>
 
         <!-- Main Content -->
-        <div id="content">
-
-            <!-- Topbar -->
-{{--            @include('backend.includes.topbar')--}}
+        <div class="container">
+{{--            nab bar --}}
             @include('backend.includes.nav')
-            <!-- End of Topbar -->
 
             <!-- Begin Page Content -->
-            <div class="container" style="padding-top: 200px; padding-bottom: 30px; min-height: 93vh; overflow-x: hidden;">
+            <div class="content" style="padding-top: 200px; padding-bottom: 30px; min-height: 93vh; overflow-x: hidden;">
                 @yield('mainContent')
             </div>
             <!-- /.container-fluid -->
 
         </div>
         <!-- End of Main Content -->
+        <div class="">
+            @include('backend.includes.footer')
+        </div>
 
-        <!-- Footer -->
-
-        <!-- End of Footer -->
-
-    </div>
-    <!-- End of Content Wrapper -->
-
-</div>
-<!-- End of Page Wrapper -->
-@include('backend.includes.footer')
 
 <!--All scripts  -->
 @include('backend.includes.scripts')

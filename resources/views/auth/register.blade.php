@@ -6,7 +6,7 @@
 
         <div class="col-xl-10 col-lg-12 col-md-9">
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card overflow-hidden border-4 border-primary  shadow-lg my-5 rounded-4">
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
@@ -19,65 +19,65 @@
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
                                     <form action="{{ route('register') }}" method="POST" class="user">
                                         @csrf
-                                        <div class="form-group">
-                                            <input type="text" name="first_name" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="text" name="first_name" class="form-control small rounded-pill py-2"
                                                    id="first_name" aria-describedby="first_name"
                                                    placeholder="Enter Your First Name">
                                             @error('first_name')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="text" name="last_name" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="text" name="last_name" class="form-control small rounded-pill py-2"
                                                    id="last_name" aria-describedby="last_name"
                                                    placeholder="Enter Your Last Name">
                                             @error('last_name')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="email" name="email" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="email" name="email" class="form-control small rounded-pill py-2"
                                                    id="email" aria-describedby="emailHelp"
                                                    placeholder="Enter Email Address...">
                                             @error('email')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="password" name="password" class="form-control small rounded-pill py-2"
                                                    id="password" placeholder="Password" required>
                                             @error('password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <input type="password" name="password_confirmation" class="form-control form-control-user"
+                                        <div class="form-group mb-3">
+                                            <input type="password" name="password_confirmation" class="form-control small rounded-pill py-2"
                                                    id="password_confirmation" aria-describedby="password_confirmation"
                                                    placeholder="Confirm Password" required>
                                             @error('password_confirmation')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-radio small d-flex justify-content-start align-items-center">
-                                                <input type="radio" name="role" value="researcher" class="custom-control-input" id="researcher">
-                                                <label class="custom-control-label radio-label" for="researcher">I'm Researcher</label>
+                                        <div class="form-group mb-3">
+                                            <div class="form-check small d-flex justify-content-start align-items-center">
+                                                <input type="radio" name="role" value="researcher" class="form-check-input" id="researcher">
+                                                <label class="form-check-label pt-1 ms-2" for="researcher">I'm Researcher</label>
                                             </div>
-                                            <div class="custom-control custom-radio small d-flex align-items-center">
-                                                <input type="radio" name="role" value="participant" class="custom-control-input" id="participant">
-                                                <label class="custom-control-label radio-label" for="participant">I'm Participant</label>
+                                            <div class="form-check small d-flex align-items-center">
+                                                <input type="radio" name="role" value="participant" class="form-check-input" id="participant">
+                                                <label class="form-check-label pt-1 ms-2" for="participant">I'm Participant</label>
                                             </div>
                                             @error('role')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <button class="btn btn-primary btn-user btn-block">
+                                        <button class="btn btn-primary rounded-pill py-2 w-100">
                                             Register
                                         </button>
                                     </form>
                                     <div class="d-flex justify-content-between pt-4 small">
                                         <p>Already have an account?</p>
-                                        <a href="{{ route('login') }}">Login</a>
+                                        <a href="{{ route('login') }}" class="font-weight-500 text-decoration-none">Login</a>
                                     </div>
                                 </div>
                             </div>

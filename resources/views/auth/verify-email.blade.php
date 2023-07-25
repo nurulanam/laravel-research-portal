@@ -6,7 +6,7 @@
 
         <div class="col-xl-10 col-lg-12 col-md-9">
 
-            <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card overflow-hidden border-4 border-primary shadow-lg my-5 rounded-4">
                 <div class="card-body p-0">
                     <!-- Nested Row within Card Body -->
                     <div class="row">
@@ -16,7 +16,7 @@
                                 <div class="text-center">
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
                                     <h1 class="h4 text-gray-900 my-4">Please Verify Your E-Mail</h1>
-                                    <p>Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.</p>
+                                    <p class="mb-3">Thanks for signing up! Before getting started, could you verify your email address by clicking on the link we just emailed to you? If you didn't receive the email, we will gladly send you another.</p>
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
                                     @if (session('status') == 'verification-link-sent')
                                         <p class="text-danger">A new verification link has been sent to the email address you provided during registration.</p>
@@ -24,13 +24,13 @@
                                     <div class="d-flex justify-content-center">
                                         <form action="{{ route('verification.send') }}" method="POST" class="user mx-2">
                                             @csrf
-                                            <button class="btn btn-primary btn-user btn-block px-3">
+                                            <button class="btn btn-primary btn-user w-100 px-4 py-2 rounded-pill">
                                                 Resend Verification Email
                                             </button>
                                         </form>
                                         <form method="POST" action="{{ route('logout') }}" class="user mx-2">
                                             @csrf
-                                            <button class="btn btn-danger btn-user btn-block px-3">
+                                            <button class="btn btn-danger btn-user w-100 px-4 py-2 rounded-pill">
                                                 Log Out
                                             </button>
                                         </form>
