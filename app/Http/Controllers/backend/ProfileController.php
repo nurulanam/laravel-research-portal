@@ -15,6 +15,14 @@ use Intervention\Image\Facades\Image;
 class ProfileController extends Controller
 {
 
+    public $us_states = [];
+    public $industries = [];
+    public function __construct()
+    {
+        $this->us_states = config('app.us_states');
+        $this->industries = config('app.industries');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -24,8 +32,8 @@ class ProfileController extends Controller
 
     public function index()
     {
-        $us_states = config('app.us_states');
-        $industries = config('app.industries');
+        $us_states = $this->us_states;
+        $industries = $this->industries;
 
         $user_id = Auth::id();
 
@@ -52,8 +60,7 @@ class ProfileController extends Controller
     }
     public static function showAvatar(){
         $user_id = Auth::id();
-        $avatar = Profile::where('user_id', '=' , $user_id)->first();
-        return $avatar;
+        return Profile::where('user_id', '=' , $user_id)->first();
     }
     /**
      * Show the form for creating a new resource.
@@ -63,6 +70,34 @@ class ProfileController extends Controller
     public function create()
     {
         //
+    }
+    public function editContact(){
+
+        $us_states = $this->us_states;
+        $industries = $this->industries;
+
+        $user_id = Auth::id();
+
+        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
+        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+
+
+        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-contact', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
+        }elseif(!empty($findProfileIndustry)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            return view('backend.pages.profile-edit-contact', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        }elseif(!empty($findUserSkills)){
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-contact', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+        }else{
+            return view('backend.pages.profile-edit-contact', compact('us_states', 'industries', 'profileInfo'));
+        }
     }
 
     /**
@@ -140,7 +175,7 @@ class ProfileController extends Controller
                 $find_profile->city = $request->city;
                 $find_profile->zip_code = $request->zip_code;
                 $find_profile->update();
-                return redirect()->back()->with('success', 'Contact Information Updated');
+                return redirect()->route('profile.index')->with('success', 'Contact Information Updated');
 
             }elseif ($find_profile == null){
                 $profile = new Profile();
@@ -153,7 +188,7 @@ class ProfileController extends Controller
                 $profile->city = $request->city;
                 $profile->zip_code = $request->zip_code;
                 $profile->save();
-                return redirect()->back()->with('success', 'Contact Information Saved');
+                return redirect()->route('profile.index')->with('success', 'Contact Information Saved');
             }
         }elseif(Auth::user()->hasRole('researcher')){
             $request->validate([
@@ -162,13 +197,13 @@ class ProfileController extends Controller
             if ($find_profile !== null){
                 $find_profile->phone = $request->phone;
                 $find_profile->update();
-                return redirect()->back()->with('success', 'Contact Information Updated');
+                return redirect()->route('profile.index')->with('success', 'Contact Information Updated');
             }elseif ($find_profile == null){
                 $profile = new Profile();
                 $profile->user_id = $user_id;
                 $profile->phone = $request->phone;
                 $profile->save();
-                return redirect()->back()->with('success', 'Contact Information Saved');
+                return redirect()->route('profile.index')->with('success', 'Contact Information Saved');
             }
         }
     }

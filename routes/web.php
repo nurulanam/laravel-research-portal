@@ -30,6 +30,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     //Profile
     Route::resource('/profile', ProfileController::class);
     Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
+    Route::get('/profile/edit/contact/', [ProfileController::class, 'editContact'])->name('profile.edit.contact');
     Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
     Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
