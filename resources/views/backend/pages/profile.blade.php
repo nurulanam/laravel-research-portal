@@ -4,7 +4,6 @@
 @endsection
 @section('title', 'Profile')
 @section('extraCss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.4.2/chosen.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
@@ -118,7 +117,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->phone))
                                                 {{ $profileInfo->phone }}
+                                                @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -129,7 +130,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->paypal_email))
                                                 {{ $profileInfo->paypal_email }}
+                                                @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                             </div>
@@ -148,7 +151,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->state))
                                                 {{ $profileInfo->state }}
+                                                @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                             </div>
@@ -161,7 +166,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->city))
                                                 {{ $profileInfo->city }}
+                                                @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -172,7 +179,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->zip_code))
                                                 {{ $profileInfo->zip_code }}
+                                                @else Update
                                             @endif
+                                        @else Update
                                         @endif
                                     </p>
                                 </div>
@@ -187,7 +196,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Demographics</p>
-                                <button class="btn"><i class="fa-solid fa-pen text-secondary"></i></button>
+                                <a href="{{ route('profile.edit.demographics') }}" class="btn"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -196,24 +205,24 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if(!empty($profileInfo->gender))
-                                                @switch($profileInfo->gender)
-                                                    @case('male')
-                                                        Male
-                                                        @break
-                                                    @case('female')
-                                                        Female
-                                                        @break
-                                                    @case('non-binary')
-                                                        Non Binary
-                                                        @break
-                                                    @case('prefer-not-to-say')
-                                                        Prefer Not To Say
-                                                        @break
-                                                @endswitch
-                                            @else
-                                                Please Update Gender
-                                            @endif
+                                            @switch($profileInfo->gender)
+                                                @case('male')
+                                                    Male
+                                                    @break
+                                                @case('female')
+                                                    Female
+                                                    @break
+                                                @case('non-binary')
+                                                    Non Binary
+                                                    @break
+                                                @case('prefer-not-to-say')
+                                                    Prefer Not To Say
+                                                    @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else
+                                            Update
                                         @endif
 
                                     </p>
@@ -226,7 +235,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->date_of_birth))
                                                 {{ $profileInfo->date_of_birth }}
+                                            @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                             </div>
@@ -237,15 +248,38 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'american-indian-or-alaska-native') American Indian / Alaskan Native @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'asian') Asian @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'white-caucasian') White/Caucasian @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'pacific-islander') Pacific Islander @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'african-american') African American @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'hispanic') Hispanic @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'multiracial') Multiracial @endif
-                                            @if (!empty($profileInfo->ethnicity) && $profileInfo->ethnicity == 'other') Other @endif
+                                            @switch($profileInfo->ethnicity)
+                                                @case('american-indian-or-alaska-native')
+                                                    American Indian / Alaskan Native
+                                                    @break
+                                                @case('asian')
+                                                    Asian
+                                                    @break
+                                                @case('white-caucasian')
+                                                    White/Caucasian
+                                                    @break
+                                                @case('pacific-islander')
+                                                    Pacific Islander
+                                                    @break
+                                                @case('african-american')
+                                                    African American
+                                                    @break
+                                                @case('hispanic')
+                                                    Hispanic
+                                                    @break
+                                                @case('multiracial')
+                                                    Multiracial
+                                                    @break
+                                                @case('other')
+                                                    Other
+                                                    @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else
+                                            Update
                                         @endif
+
                                     </p>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -254,14 +288,36 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'less-than-a-high-school-diploma') Less Than a High School Diploma @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'high-school-diploma-or-equivalent') High School Diploma or Equivalent @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'some-college-no-degree') Some College No Degree @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'associate-degree') Associate Degree @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'bachelors-degree') Bachelor's Degree @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'masters-degree') Master's Degree @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'professional-degree') Professional Degree @endif
-                                            @if (!empty($profileInfo->education_level) && $profileInfo->education_level == 'doctorate') Doctorate @endif
+                                            @switch($profileInfo->education_level)
+                                                @case('less-than-a-high-school-diploma')
+                                                    Less Than a High School Diploma
+                                                    @break
+                                                @case('high-school-diploma-or-equivalent')
+                                                    High School Diploma or Equivalent
+                                                    @break
+                                                @case('some-college-no-degree')
+                                                    Some College No Degree
+                                                    @break
+                                                @case('associate-degree')
+                                                    Associate Degree
+                                                    @break
+                                                @case('bachelors-degree')
+                                                    Bachelor's Degree
+                                                    @break
+                                                @case('masters-degree')
+                                                    Master's Degree
+                                                    @break
+                                                @case('professional-degree')
+                                                    Professional Degree
+                                                    @break
+                                                @case('doctorate')
+                                                    Doctorate
+                                                    @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else
+                                            Update
                                         @endif
                                     </p>
                                 </div>
@@ -273,18 +329,17 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if (!empty($profileInfo->household_income))
-                                                @switch($profileInfo->household_income)
-                                                    @case('less20000') Less than $20,000 @break
-                                                    @case('20000to34999') $20,000 – $34,999 @break
-                                                    @case('35000to49999') $35,000– $49,999 @break
-                                                    @case('50000to74999') $50,000 – $74,999 @break
-                                                    @case('75000to99999') $75,000 - $99,999 @break
-                                                    @case('100000plus') $100,000 + @break
-                                                @endswitch
-                                            @else
-                                                Please Update Household Income
-                                            @endif
+                                            @switch($profileInfo->household_income)
+                                                @case('less20000') Less than $20,000 @break
+                                                @case('20000to34999') $20,000 – $34,999 @break
+                                                @case('35000to49999') $35,000– $49,999 @break
+                                                @case('50000to74999') $50,000 – $74,999 @break
+                                                @case('75000to99999') $75,000 - $99,999 @break
+                                                @case('100000plus') $100,000 + @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else Update
                                         @endif
 
                                     </p>
@@ -295,17 +350,38 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if (!empty($profileInfo->marital_status))
-                                                @switch($profileInfo->marital_status)
-                                                    @case('single') Single @break
-                                                    @case('married') Married @break
-                                                    @case('divorced') Divorced @break
-                                                    @case('widowed') Widowed @break
-                                                    @case('living-with-significant-other') Living with Significant Other @break
+                                            @switch($profileInfo->marital_status)
+                                                @case('single') Single @break
+                                                @case('married') Married @break
+                                                @case('divorced') Divorced @break
+                                                @case('widowed') Widowed @break
+                                                @case('living-with-significant-other') Living with Significant Other @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else Update
+                                        @endif
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
+                                    <p class="fw-medium">Number of children living in your household?</p>
+                                </div>
+                                <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                    <p class="fw-medium text-secondary">
+                                        @if (!empty($profileInfo))
+                                                @switch($profileInfo->children_in_living)
+                                                    @case('0') 0 @break
+                                                    @case('1') 1 @break
+                                                    @case('2') 2 @break
+                                                    @case('3') 3 @break
+                                                    @case('4') 4 @break
+                                                    @case('5-plus') 5+ @break
+                                                    @default
+                                                        Update
                                                 @endswitch
-                                            @else
-                                                Please Update Marital Status
-                                            @endif
+                                        @else Update
                                         @endif
                                     </p>
                                 </div>
@@ -318,9 +394,9 @@
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Employment</p>
-                                <button class="btn"><i class="fa-solid fa-pen text-secondary"></i></button>
+                                <a href="{{ route('profile.edit.employment') }}" class="btn"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -329,36 +405,35 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if(!empty($profileInfo->employment_status))
-                                                @switch($profileInfo->employment_status)
-                                                    @case('self-employed')
-                                                        Self employed
-                                                        @break
-                                                    @case('homemaker')
-                                                        Homemaker
-                                                        @break
-                                                    @case('employed-part-time')
-                                                        Employed part time
-                                                        @break
-                                                    @case('employed-full-time')
-                                                        Employed full time
-                                                        @break
-                                                    @case('not-employed-looking-for-work')
-                                                        Not employed - Looking for work
-                                                        @break
-                                                    @case('not-employed-not-looking-for-work')
-                                                        Not employed - not looking for work
-                                                        @break
-                                                    @case('retired')
-                                                        Retired
-                                                        @break
-                                                    @case('unable-to-work')
-                                                        Unable to work
-                                                        @break
-                                                @endswitch
-                                            @else
-                                                Please Update Employment Status
-                                            @endif
+                                            @switch($profileInfo->employment_status)
+                                                @case('self-employed')
+                                                    Self employed
+                                                    @break
+                                                @case('homemaker')
+                                                    Homemaker
+                                                    @break
+                                                @case('employed-part-time')
+                                                    Employed part time
+                                                    @break
+                                                @case('employed-full-time')
+                                                    Employed full time
+                                                    @break
+                                                @case('not-employed-looking-for-work')
+                                                    Not employed - Looking for work
+                                                    @break
+                                                @case('not-employed-not-looking-for-work')
+                                                    Not employed - not looking for work
+                                                    @break
+                                                @case('retired')
+                                                    Retired
+                                                    @break
+                                                @case('unable-to-work')
+                                                    Unable to work
+                                                    @break
+                                                @default
+                                                    Update
+                                            @endswitch
+                                        @else Update
                                         @endif
 
                                     </p>
@@ -372,9 +447,9 @@
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->company_name))
                                                 {{ $profileInfo->company_name }}
-                                                @else
-                                                Please Update Company Name
+                                            @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                             </div>
@@ -385,7 +460,6 @@
                                 <div class="col-12 col-md-6 col-lg-3 mb-3">
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
-                                            @if(!empty($profileInfo->company_size))
                                                 @switch($profileInfo->company_size)
                                                     @case('self-employed')
                                                         Self employed
@@ -414,10 +488,10 @@
                                                     @case('10000plus')
                                                         10,000+
                                                         @break
+                                                @default
+                                                    Update
                                                 @endswitch
-                                            @else
-                                                Please Update Company Size
-                                            @endif
+                                        @else Update
                                         @endif
 
                                     </p>
@@ -429,10 +503,10 @@
                                     <p class="fw-medium text-secondary">
                                         @if (!empty($profileInfo))
                                             @if (!empty($profileInfo->job_title))
-                                                {{ $profileInfo->company_name }}
-                                                @else
-                                                Please Update Job Title
+                                                {{ $profileInfo->job_title }}
+                                            @else Update
                                             @endif
+                                        @else Update
                                         @endif</p>
                                 </div>
                             </div>
@@ -448,8 +522,7 @@
                                                     <span  class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2 text-capitalize">{{ $industry }}</span>
                                                 @endif
                                             @endforeach
-                                        @else
-                                            Please Add Industries
+                                        @else Update
                                         @endif
 
                                     </p>

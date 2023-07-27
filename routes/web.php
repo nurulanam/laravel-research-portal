@@ -32,7 +32,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
     Route::get('/profile/edit/contact/', [ProfileController::class, 'editContact'])->name('profile.edit.contact');
     Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
+    Route::get('/profile/edit/demographics/', [ProfileController::class, 'editDemographics'])->name('profile.edit.demographics');
     Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
+    Route::get('/profile/edit/employment/', [ProfileController::class, 'editEmployment'])->name('profile.edit.employment');
     Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
 
     // Skills

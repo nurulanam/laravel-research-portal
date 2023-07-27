@@ -1,11 +1,12 @@
 <!-- Bootstrap core JavaScript-->
-<script src="{{ asset('backend') }}/vendor/jquery/jquery.min.js"></script>
-{{--<script src="{{ asset('backend') }}/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>--}}
+<script src="{{ asset('backend') }}/js/jquery.min.js"></script>
 <script src="{{ asset('backend') }}/js/bootstrap.bundle.js"></script>
-
-<!-- Core plugin JavaScript-->
-{{--<script src="{{ asset('backend') }}/vendor/jquery-easing/jquery.easing.min.js"></script>--}}
 <!--toastrjs -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<!-- Custom scripts for all pages-->
-{{--<script src="{{ asset('backend') }}/js/sb-admin-2.min.js"></script>--}}
+<script>
+    $(document).ready(() => {
+        $(function () {
+            $('[data-toggle="tooltip"]').tooltip()
+        });
+    })
+</script>

@@ -99,6 +99,61 @@ class ProfileController extends Controller
             return view('backend.pages.profile-edit-contact', compact('us_states', 'industries', 'profileInfo'));
         }
     }
+    public function editDemographics(){
+
+        $us_states = $this->us_states;
+        $industries = $this->industries;
+
+        $user_id = Auth::id();
+
+        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
+        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+
+
+        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
+        }elseif(!empty($findProfileIndustry)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        }elseif(!empty($findUserSkills)){
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+        }else{
+            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo'));
+        }
+    }
+    public function editEmployment(){
+        $us_states = $this->us_states;
+        $industries = $this->industries;
+
+        $user_id = Auth::id();
+
+        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
+        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+
+
+        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-employment', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
+        }elseif(!empty($findProfileIndustry)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            return view('backend.pages.profile-edit-employment', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        }elseif(!empty($findUserSkills)){
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-employment', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+        }else{
+            return view('backend.pages.profile-edit-employment', compact('us_states', 'industries', 'profileInfo'));
+        }
+    }
 
     /**
      * Store a newly created resource in storage.
@@ -114,46 +169,38 @@ class ProfileController extends Controller
         $request->validate([
             'user_avatar' => 'required|mimes:jpg,jpeg,png|max:2048',
         ]);
+
         if ($request->hasFile('user_avatar')) {
-            $file = $request->user_avatar;
+            $file = $request->file('user_avatar');
             $ext = $file->getClientOriginalExtension();
-            $fileName = hexdec(uniqid()).'.'.$ext;
+            $fileName = hexdec(uniqid()) . '.' . $ext;
             $img_host_path = public_path('backend/img/profile/');
 
-            //check user exist or not
             $user_id = Auth::id();
-            $find_profile = Profile::where('user_id', '=' , $user_id)->first();
-            if ($find_profile !== null){
-                $existing_profile_avatar = $img_host_path .$find_profile->user_avatar;
-                if (File::exists($existing_profile_avatar)){
+            $find_profile = Profile::where('user_id', '=', $user_id)->first();
+
+            if (!$find_profile) {
+                $find_profile = new Profile();
+                $find_profile->user_id = $user_id;
+                $message = 'Profile Picture Saved';
+            } else {
+                $existing_profile_avatar = $img_host_path . $find_profile->user_avatar;
+                if (File::exists($existing_profile_avatar)) {
                     File::delete($existing_profile_avatar);
                 }
-
-                $avatar = Image::make($file);
-                $avatar->resize(400,400, function ($image){
-                    $image->aspectRatio();
-                })->save($img_host_path.$fileName);
-
-                $find_profile->user_avatar = $fileName;
-                $find_profile->update();
-                return redirect()->back()->with('success', 'Profile Picture Updated');
-
-            }elseif($find_profile == null) {
-                $profile = new Profile();
-                $profile->user_id = $user_id;
-                $profile->user_avatar = $fileName;
-                $profile->save();
-
-                $avatar = Image::make($file);
-                $avatar->resize(400,400, function ($image){
-                    $image->aspectRatio();
-                })->save($img_host_path.$fileName);
-
-                return redirect()->back()->with('success', 'Profile Picture Saved');
+                $message = 'Profile Picture Updated';
             }
+
+            $avatar = Image::make($file);
+            $avatar->resize(400, 400, function ($image) {
+                $image->aspectRatio();
+            })->save($img_host_path . $fileName);
+
+            $find_profile->user_avatar = $fileName;
+            $find_profile->save();
+
+            return redirect()->back()->with('success', $message);
         }
-
-
     }
     public function contactDetails(Request $request){
         $user_id = Auth::id();
@@ -211,20 +258,21 @@ class ProfileController extends Controller
     {
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=', $user_id)->first();
+        $request->validate([
+            'gender' => 'required|string',
+            'date_of_birth' => 'required|date|before:18 years ago',
+            'ethnicity' => 'required|string',
+            'education_level' => 'required|string',
+            'household_income' => 'required|string',
+            'marital_status' => 'required|string',
+            'children_in_living' => 'required|string',
+        ],
+            [
+                'before' => 'You must be at least 18 years old',
+            ]);
+
         if ($find_profile !== null) {
             if (Auth::user()->hasRole('participant')) {
-                $request->validate([
-                    'gender' => 'required|string',
-                    'date_of_birth' => 'required|date|before:18 years ago',
-                    'ethnicity' => 'required|string',
-                    'education_level' => 'required|string',
-                    'household_income' => 'required|string',
-                    'marital_status' => 'required|string',
-                    'children_in_living' => 'required|string',
-                ],
-                    [
-                        'before' => 'You must be at least 18 years old',
-                    ]);
                 if ($find_profile->status == 'active') {
                     $find_profile->gender = $request->gender;
                     $find_profile->date_of_birth = $request->date_of_birth;
@@ -235,24 +283,12 @@ class ProfileController extends Controller
                     $find_profile->children_in_living = $request->children_in_living;
                     $find_profile->status = 'deactivate';
                     $find_profile->update();
-                    return redirect()->back()->with('success', 'Your Demographics Updated');
+                    return redirect()->route('profile.index')->with('success', 'Your Demographics Updated');
                 }elseif($find_profile->status == 'deactivate'){
-                    return redirect()->back()->with('error', 'You Can\'t Change Demographics Please Contact With Our Support Team');
+                    return redirect()->route('profile.index')->with('error', 'You Can\'t Change Demographics Please Contact With Our Support Team');
                 }
             }
         }elseif($find_profile == null){
-            $request->validate([
-                'gender' => 'required|string',
-                'date_of_birth' => 'required|date|before:18 years ago',
-                'ethnicity' => 'required|string',
-                'education_level' => 'required|string',
-                'household_income' => 'required|string',
-                'marital_status' => 'required|string',
-                'children_in_living' => 'required|string',
-            ],
-                [
-                    'before' => 'You must be at least 18 years old',
-                ]);
             $profile = new Profile();
             $profile->user_id = $user_id;
             $profile->gender = $request->gender;
@@ -264,71 +300,57 @@ class ProfileController extends Controller
             $profile->children_in_living = $request->children_in_living;
             $profile->status = 'deactivate';
             $profile->save();
-            return redirect()->back()->with('success', 'Your Demographics Saved');
+            return redirect()->route('profile.index')->with('success', 'Your Demographics Saved');
         }
     }
     public function employment(Request $request){
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();
-        if (Auth::user()->hasRole('participant')){
+
+        $request->validate([
+            'company_name' => 'required|string',
+            'company_size' => 'required|string',
+            'job_title' => 'required|string',
+        ]);
+
+        if (Auth::user()->hasRole('participant')) {
             $request->validate([
                 'employment_status' => 'required|string',
-                'company_name' => 'required|string',
-                'company_size' => 'required|string',
-                'job_title' => 'required|string',
                 'industry' => 'required|array|max:5',
                 'industry.*' => 'required|string',
             ]);
-        }elseif(Auth::user()->hasRole('researcher')){
+        } elseif (Auth::user()->hasRole('researcher')) {
             $request->validate([
-                'company_name' => 'required|string',
-                'company_size' => 'required|string',
-                'job_title' => 'required|string',
                 'industry' => 'required|string',
             ]);
         }
-        if ($find_profile !== null){
-            $find_profile->company_name = $request->company_name;
-            $find_profile->company_size = $request->company_size;
-            $find_profile->job_title = $request->job_title;
-            if (Auth::user()->hasRole('participant')){
-                $find_profile->employment_status = $request->employment_status;
-            }
-            $find_industry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-            if ($find_industry !== null){
-                $find_industry->delete();
-
-                $industry = new UserHasIndustry();
-                $industry->user_id = $user_id;
-                $industry->industry = json_encode($request->industry);
-                $industry->save();
-            }elseif($find_industry == null){
-                $industry = new UserHasIndustry();
-                $industry->user_id = $user_id;
-                $industry->industry = json_encode($request->industry);
-                $industry->save();
-            }
-            $find_profile->update();
-            return redirect()->back()->with('success', 'Employment Information Updated');
-
-        }elseif ($find_profile == null){
-            $profile = new Profile();
-            $profile->user_id = $user_id;
-            $profile->company_name = $request->company_name;
-            $profile->company_size = $request->company_size;
-            $profile->job_title = $request->job_title;
-
-            if (Auth::user()->hasRole('participant')){
-                $find_profile->employment_status = $request->employment_status;
-            }
-            $industry = new UserHasIndustry();
-            $industry->user_id = $user_id;
-            $industry->industry = json_encode($request->industry);
-            $industry->save();
-
-            $profile->save();
-            return redirect()->back()->with('success', 'Employment Information Saved');
+        if (!$find_profile) {
+            $find_profile = new Profile();
+            $find_profile->user_id = $user_id;
+            $message = 'Employment Information Saved';
+        } else {
+            $message = 'Employment Information Updated';
         }
+        $find_profile->company_name = $request->company_name;
+        $find_profile->company_size = $request->company_size;
+        $find_profile->job_title = $request->job_title;
+
+        if (Auth::user()->hasRole('participant')) {
+            $find_profile->employment_status = $request->employment_status;
+        }
+
+        $find_profile->save();
+
+        $find_industry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        if (!$find_industry) {
+            $find_industry = new UserHasIndustry();
+            $find_industry->user_id = $user_id;
+        }
+
+        $find_industry->industry = json_encode($request->industry);
+        $find_industry->save();
+
+        return redirect()->route('profile.index')->with('success', $message);
     }
     /**
      * Display the specified resource.
