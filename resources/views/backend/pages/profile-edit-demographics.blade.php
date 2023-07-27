@@ -191,6 +191,7 @@
                     </div>
 
             </div>
+
             <div class="row my-4">
                 <div class="col-12">
                     @if (!empty($profileInfo))
@@ -206,10 +207,16 @@
                     <div class="card py-3 px-2 rounded-4 shadow-md">
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
-                                <p><span class="font-22 fw-bold">Demographics</span>@if (!empty($profileInfo) && $profileInfo->status == 'deactivate')
-                                        <span class="ms-2">Need to make changes? Contact us at <a
-                                                href="mailto:support@research.com">support@research.com</a></span>
-                                    @endif</p>
+                                <p><span class="font-22 fw-bold">Demographics</span>@if (!empty($profileInfo))
+                                    @if ($profileInfo->status == 'deactivate')
+                                            <span class="ms-2">Need to make changes? Contact us at <a
+                                                    href="mailto:support@research.com">support@research.com</a></span>
+                                    @elseif($profileInfo->status == 'active')
+                                            <span class="ms-2">Be alert; once you change, you are unable to change back.</span>
+                                            @endif
+                                            @elseif(empty($profileInfo))
+                                                <span class="ms-2">Be alert; once you change, you are unable to change back.</span>
+                                                    @endif</p>
 
                                 <div class="d-flex">
                                     <a href="{{ route('profile.index') }}" class="btn btn-danger btn-sm me-2" @if (!empty($profileInfo))
@@ -498,6 +505,7 @@
                     @endif
                 </div>
             </div>
+
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">

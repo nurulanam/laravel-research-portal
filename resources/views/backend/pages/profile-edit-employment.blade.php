@@ -191,6 +191,7 @@
                 </div>
 
             </div>
+            @if (Auth::user()->hasRole('participant'))
             <div class="row my-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
@@ -391,6 +392,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
@@ -407,6 +409,7 @@
                                 </div>
                             </div>
                             <div class="row">
+                                @if(Auth::user()->hasRole('participant'))
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Employment Status</p>
                                 </div>
@@ -458,6 +461,28 @@
                                     <p class="text-danger font-13 py-2">{{ $message }}</p>
                                     @enderror
                                 </div>
+                                @elseif(Auth::user()->hasRole('researcher'))
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
+                                        <p class="fw-medium">Industry</p>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                        <select name="industry" class="form-control">
+                                            <option value="">Select Your Industry</option>
+                                            @foreach ($industries as $key => $industry)
+                                                <option value="{{ $key }}"
+                                                        @if (!empty($profileIndustry))
+                                                            @if ($profileIndustry == $key)
+                                                                selected="selected"
+                                                    @endif
+                                                    @endif
+                                                >{{ $industry }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('industry')
+                                        <p class="text-danger font-13 py-2">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                @endif
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Company Name
                                     </p>
@@ -541,11 +566,12 @@
                                 </div>
                             </div>
                             <div class="row">
+                                @if (Auth::user()->hasRole('participant'))
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Industry</p>
                                 </div>
                                 <div class="col-12 col-md-6 col-lg-9 mb-3">
-                                    @if (Auth::user()->hasRole('participant'))
+
                                         <select name="industry[]"  class="form-control w-100 industry-box" multiple="multiple">
                                             @foreach ($industries as $key => $industry)
                                                 <option value="{{ $key }}"
@@ -559,24 +585,10 @@
                                                 >{{ $industry }}</option>
                                             @endforeach
                                         </select>
-                                    @endif
-                                    @if (Auth::user()->hasRole('researcher'))
-                                        <select name="industry" class="form-control">
-                                            <option value="">Select Your Industry</option>
-                                            @foreach ($industries as $key => $industry)
-                                                <option value="{{ $key }}"
-                                                        @if (!empty($profileIndustry))
-                                                            @if ($profileIndustry == $key)
-                                                                selected="selected"
-                                                    @endif
-                                                    @endif
-                                                >{{ $industry }}</option>
-                                            @endforeach
-                                        </select>
-                                    @endif
                                     @error('industry')
                                     <p class="text-danger font-13 py-2">{{ $message }}</p>
                                     @enderror
+                                    @endif
                                 </div>
                             </div>
                         </div>

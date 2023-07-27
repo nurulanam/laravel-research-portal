@@ -210,6 +210,7 @@
                 </div>
                 </form>
             </div>
+            @if (Auth::user()->hasRole('participant'))
             <div class="row my-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
@@ -411,6 +412,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">

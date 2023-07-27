@@ -190,6 +190,7 @@
                     </div>
                 </div>
             </div>
+            @if (Auth::user()->hasRole('participant'))
             <div class="row my-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
@@ -390,6 +391,7 @@
                     </div>
                 </div>
             </div>
+            @endif
             <div class="row mt-4">
                 <div class="col-12">
                     <div class="card py-3 px-2 rounded-4 shadow-md">
@@ -399,6 +401,7 @@
                                 <a href="{{ route('profile.edit.employment') }}" class="btn"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
+                                @if(Auth::user()->hasRole('participant'))
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Employment Status</p>
                                 </div>
@@ -438,6 +441,20 @@
 
                                     </p>
                                 </div>
+                                    @elseif(Auth::user()->hasRole('researcher'))
+                                    <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
+                                        <p class="fw-medium">Industry</p>
+                                    </div>
+                                    <div class="col-12 col-md-6 col-lg-3 mb-3">
+                                        <p class="fw-medium text-secondary">
+                                            @if (!empty($profileIndustry) && isset($industries[$profileIndustry]))
+                                                <span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2 text-capitalize">{{ $industries[$profileIndustry] }}</span>
+                                            @else
+                                                Update
+                                            @endif
+                                        </p>
+                                    </div>
+                                @endif
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Company Name
                                     </p>
@@ -510,6 +527,7 @@
                                         @endif</p>
                                 </div>
                             </div>
+                            @if(Auth::user()->hasRole('participant'))
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
                                     <p class="fw-medium">Industry</p>
@@ -528,6 +546,8 @@
                                     </p>
                                 </div>
                             </div>
+                            @endif
+
                         </div>
                     </div>
                 </div>

@@ -100,32 +100,37 @@ class ProfileController extends Controller
         }
     }
     public function editDemographics(){
+        if (Auth::user()->hasRole('participant')) {
+            $us_states = $this->us_states;
+            $industries = $this->industries;
 
-        $us_states = $this->us_states;
-        $industries = $this->industries;
+            $user_id = Auth::id();
 
-        $user_id = Auth::id();
-
-        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
-        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+            $profileInfo = Profile::where('user_id', '=', $user_id)->first();
+            $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+            $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
 
 
-        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
-            $profileIndustry = json_decode($findProfileIndustry['industry']);
-            $userHasSkills = json_decode($findUserSkills['skills']);
-            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
-            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
-        }elseif(!empty($findProfileIndustry)){
-            $profileIndustry = json_decode($findProfileIndustry['industry']);
-            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
-        }elseif(!empty($findUserSkills)){
-            $userHasSkills = json_decode($findUserSkills['skills']);
-            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
-            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+            if (!empty($findProfileIndustry) && !empty($findUserSkills)) {
+                $profileIndustry = json_decode($findProfileIndustry['industry']);
+                $userHasSkills = json_decode($findUserSkills['skills']);
+                $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+                return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
+            } elseif (!empty($findProfileIndustry)) {
+                $profileIndustry = json_decode($findProfileIndustry['industry']);
+                return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+            } elseif (!empty($findUserSkills)) {
+                $userHasSkills = json_decode($findUserSkills['skills']);
+                $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+                return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+            } else {
+                return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo'));
+            }
         }else{
-            return view('backend.pages.profile-edit-demographics', compact('us_states', 'industries', 'profileInfo'));
+            return redirect()->route('profile.index')->with('error', 'Your Don\'t Have Permission');
         }
+
+
     }
     public function editEmployment(){
         $us_states = $this->us_states;
@@ -256,6 +261,7 @@ class ProfileController extends Controller
     }
     public function demographics(Request $request)
     {
+        if (Auth::user()->hasRole('participant')) {
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=', $user_id)->first();
         $request->validate([
@@ -301,6 +307,9 @@ class ProfileController extends Controller
             $profile->status = 'deactivate';
             $profile->save();
             return redirect()->route('profile.index')->with('success', 'Your Demographics Saved');
+        }
+        }else{
+            return redirect()->route('profile.index')->with('error', 'Your Don\'t Have Permission');
         }
     }
     public function employment(Request $request){
