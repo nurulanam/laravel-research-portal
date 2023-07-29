@@ -11,8 +11,8 @@
 
     <div class="row">
         <div class="col-12">
-            <div class="bg-dark-blue bg-gradient rounded-4 shadow-md p-4 d-flex justify-content-between align-items-center">
-                <div class="d-flex justify-content-start align-items-center">
+            <div class="bg-dark-blue bg-gradient text-center text-md-start rounded-4 shadow-md p-4 d-md-flex justify-content-md-between align-items-center">
+                <div class="d-md-flex justify-content-md-start align-items-center">
                     @if (!empty($profileInfo))
                         @if ($profileInfo->user_avatar == null)
                             <img src="{{ asset('backend/img/profile/undraw_profile.svg') }}" class="img-80" id="preview_profile"
@@ -26,7 +26,7 @@
                              alt="profile-picture">
                     @endif
 
-                    <div class="ms-3 font">
+                    <div class="ms-md-3 font">
                         <h4 class="font-weight-bold text-white mb-0">Hey {{ Auth::user()->first_name }} !</h4>
                         <form action="{{ route('profile.avatar') }}" method="POST" class="user mt-1"
                               enctype="multipart/form-data">
@@ -41,7 +41,7 @@
                     </div>
                 </div>
 
-                <div class="float-end">
+                <div class="mt-3 mt-md-0 float-md-end">
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button class="btn btn-danger">
@@ -87,7 +87,7 @@
 
                     <div class="d-flex justify-content-between">
                         <p class="fw-medium">Skills</p>
-                        <button class="btn"><i class="fa-solid fa-pen text-secondary"></i></button>
+                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
                     </div>
                     <div>
                         @if(!empty($userSkills))
@@ -206,7 +206,7 @@
                     @endif
                     <div class="card py-3 px-2 rounded-4 shadow-md">
                         <div class="card-body">
-                            <div class="d-flex justify-content-between mb-3">
+                            <div class="d-md-flex justify-content-md-between mb-3">
                                 <p><span class="font-22 fw-bold">Demographics</span>@if (!empty($profileInfo))
                                     @if ($profileInfo->status == 'deactivate')
                                             <span class="ms-2">Need to make changes? Contact us at <a

@@ -3,7 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\backend\dashboardController;
 use App\Http\Controllers\backend\ProfileController;
-use App\Http\Controllers\backend\SkillController;
 use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
 use App\Http\Controllers\backend\ProjectApplyController;
@@ -27,18 +26,18 @@ Route::get('/', function () {
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
     Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
 
-    //Profile
-    Route::resource('/profile', ProfileController::class);
-    Route::post('/profile-avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
-    Route::get('/profile/edit/contact/', [ProfileController::class, 'editContact'])->name('profile.edit.contact');
-    Route::post('/profile-contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
-    Route::get('/profile/edit/demographics/', [ProfileController::class, 'editDemographics'])->name('profile.edit.demographics');
-    Route::post('/profile-demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
-    Route::get('/profile/edit/employment/', [ProfileController::class, 'editEmployment'])->name('profile.edit.employment');
-    Route::post('/profile-employment', [ProfileController::class, 'employment'])->name('profile.employment');
-
-    // Skills
-    Route::resource('/skills', SkillController::class);
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
+        Route::post('/avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
+        Route::get('/edit/contact', [ProfileController::class, 'editContact'])->name('profile.edit.contact');
+        Route::post('/contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
+        Route::get('/edit/demographics', [ProfileController::class, 'editDemographics'])->name('profile.edit.demographics');
+        Route::post('/demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
+        Route::get('/edit/employment', [ProfileController::class, 'editEmployment'])->name('profile.edit.employment');
+        Route::post('/employment', [ProfileController::class, 'employment'])->name('profile.employment');
+        Route::get('/edit/skill', [ProfileController::class, 'editSkill'])->name('profile.edit.skill');
+        Route::post('/store/skill', [ProfileController::class, 'storeSkill'])->name('profile.store.skill');
+    });
 
     Route::middleware('role:researcher')->group(function (){
         // Project

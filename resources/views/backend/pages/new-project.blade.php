@@ -1101,7 +1101,7 @@
         $('#questionsField').on('click', '#addCheckboxAnswer', function (){
             let id = $(this).data('id');
             let count = $('#checkboxAnswer'+ id).children().length;
-            $('#checkboxAnswer'+ id).append('<div class="row align-items-top py-2 checkboxAnsweItem="'+ id +'">\
+            $('#checkboxAnswer'+ id).append('<div class="row align-items-top checkAns py-2 checkboxAnsweItem="'+ id +'">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">'+ ++count +'</p>\
         </div>\
@@ -1115,17 +1115,20 @@
                 </select>\
             </div>\
             <div class="col-1 text-right">\
+            <button class="btn btn-danger deleteCheckAns"><i class="fa-solid fa-trash-alt"></i></button>\
             </div>\
         </div>');
             const container = $('#checkboxAnswer' + id);
             container.find('.checkbox-answer-item').parsley().validate();
         });
 
-
-
         let qnum = 2;
+
         $('#questionsField').on('click', '.btn-delete-question', function (){
             $(this).closest(".full-question").remove();
+        })
+        $('#questionsField').on('click', '.deleteCheckAns', function (){
+            $(this).closest(".checkAns").remove();
         })
     </script>
 

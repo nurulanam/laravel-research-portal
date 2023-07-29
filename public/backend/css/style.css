@@ -1,7 +1,6 @@
 /* base */
 body{
     font-family: 'circularStd', sans-serif !important;
-    font-weight: 300;
     color: #000000;
     background-color: #FAF9F6;
 
@@ -52,6 +51,9 @@ textarea::placeholder, select option{
 .font-22{
      font-size: 22px;
  }
+.font-25{
+    font-size: 25px;
+}
 .img-32{
     width: 32px !important;
     height: 32px !important;

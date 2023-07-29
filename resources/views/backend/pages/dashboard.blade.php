@@ -15,7 +15,7 @@
     @if (Auth::user()->hasRole('participant'))
         <div class="row">
             <div class="col-12">
-                <div class="card  bg-transparent">
+                <div class="card bg-transparent">
                     <div class="d-flex justify-content-start align-items-center w-100 mr-2">
                         <form action="{{ route('dashboard.index') }}" method="get" class="w-100" id="searchForm">
                             @csrf
@@ -42,9 +42,7 @@
                                         @if (request('max_time')) value="{{ request('max_time') }}" @endif>
                                 </div>
 
-                                <div class="input-group-append">
-                                    <button class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i></button>
-                                </div>
+                                <button class="btn btn-primary btn-sm px-3"><i class="fas fa-search"></i> Search</button>
                             </div>
                         </form>
                     </div>
@@ -53,8 +51,8 @@
         </div>
         <div class="row my-4">
             <div class="col-12 col-lg-3">
-                <div class="card">
-                    <div class="card-header bg-dark-blue">
+                <div class="card rounded-4 shadow-md">
+                    <div class="card-header rounded-top-4 bg-dark-blue py-3">
                         <h5 class="text-light mb-0">Filter Projects</h5>
                     </div>
                     <div class="card-body">
@@ -63,12 +61,12 @@
                             <div class="form-group mb-3">
                                 <p class="text-dark font-weight-500 pb-3">Audience</p>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio audience-b2b me-2" name="audience"
+                                    <input type="radio" class="form-radio audience-b2b me-2" name="target_audience"
                                         value="b2b" id="radioB2B" {{ request('target_audience') === 'b2b' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2B">Industry professional</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio audience-b2c me-2" name="audience"
+                                    <input type="radio" class="form-radio audience-b2c me-2" name="target_audience"
                                         value="b2c" id="radioB2C" {{ request('target_audience') === 'b2c' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="radioB2C">General population</label>
                                 </div>
@@ -77,12 +75,12 @@
                                 <p class="text-dark font-weight-500 pb-3">Project Type</p>
                                 <div class="d-flex align-items-center">
                                     <input type="radio" class="form-radio research-type-in-person me-2"
-                                        name="research_type" value="in-person" id="inPerson"
+                                        name="project_type" value="in-person" id="inPerson"
                                         {{ request('project_type') === 'in-person' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="inPerson">In-Person</label>
                                 </div>
                                 <div class="d-flex align-items-center">
-                                    <input type="radio" class="form-radio research-type-remote me-2" name="research_type"
+                                    <input type="radio" class="form-radio research-type-remote me-2" name="project_type"
                                         value="remote" id="remote"
                                         {{ request('project_type') === 'remote' ? 'checked' : '' }}>
                                     <label class="radio-label mb-0" for="remote">Remote</label>
@@ -116,7 +114,7 @@
 
                             </div>
                             <div class="d-flex justify-content-between mt-4">
-                                <button class="btn btn-primary rounded-pill w-100 me-2">Apply</button>
+                                <button class="btn btn-primary rounded-pill w-100 me-2">Filter</button>
                                 <a href="{{ route('dashboard.index') }}" class="btn btn-danger rounded-pill w-100">Clear</a>
                             </div>
                         </form>
@@ -126,7 +124,7 @@
             <div class="col-12 col-lg-9 ">
                 @if ($projects->count() > 0)
                     @foreach ($projects as $key => $project)
-                        <div class="card p-4 mb-3">
+                        <div class="card p-4 mb-3 rounded-4 shadow-md">
                             <div class="d-flex justify-content-between">
                                 <a href="#" type="button" data-bs-toggle="modal" data-id="{{ $project->id }}"
                                    data-bs-target=".project-details-modal"
@@ -152,39 +150,39 @@
                             <div class="d-flex justify-content-start align-items-center">
                                 <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                <p class="text-dark-blue mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
+                                <p class="text-dark mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
                                 @if($project->required_time)
                                     <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                    <p class="text-dark-blue mb-0">{{ $project->required_time }} Minutes</p>
+                                    <p class="text-dark mb-0">{{ $project->required_time }} Minutes</p>
                                 @endif
 
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
                                 @if($project->project_type == 'remote')
-                                    <p class="text-dark-blue mb-0 text-capitalize">Remote</p>
+                                    <p class="text-dark mb-0 text-capitalize">Remote</p>
                                 @elseif($project->project_type == 'in-person')
-                                    <p class="text-dark-blue mb-0 text-capitalize">In Person</p>
+                                    <p class="text-dark mb-0 text-capitalize">In Person</p>
                                 @endif
                                 @if($project->research_type)
                                     <i class="fas fa-grip-lines-vertical mx-2"></i>
                                     @if($project->research_type == 'one-on-one')
-                                        <p class="text-dark-blue mb-0 text-capitalize">One-on-One</p>
+                                        <p class="text-dark mb-0 text-capitalize">One-on-One</p>
                                     @elseif($project->research_type == 'focus-group')
-                                        <p class="text-dark-blue mb-0 text-capitalize">Focus Group</p>
+                                        <p class="text-dark mb-0 text-capitalize">Focus Group</p>
                                     @elseif($project->research_type == 'unmoderated-study')
-                                        <p class="text-dark-blue mb-0 text-capitalize">Unmoderated Study</p>
+                                        <p class="text-dark mb-0 text-capitalize">Unmoderated Study</p>
                                     @elseif($project->research_type == 'survey')
-                                        <p class="text-dark-blue mb-0 text-capitalize">Survey</p>
+                                        <p class="text-dark mb-0 text-capitalize">Survey</p>
                                     @elseif($project->research_type == 'diary-study')
-                                        <p class="text-dark-blue mb-0 text-capitalize">Diary Study</p>
+                                        <p class="text-dark mb-0 text-capitalize">Diary Study</p>
                                     @endif
                                 @endif
 
 
                             </div>
-                            <p class="text-dark-blue mt-2 mb-0">{{ Str::limit($project->study_description, 300) }} <a
+                            <p class="text-dark mt-2 mb-0">{{ Str::limit($project->study_description, 300) }} <a
                                     href="#" type="button" class="btn btn-sm text-primary show-details"
-                                    data-toggle="modal" data-id="{{ $project->id }}"
-                                    data-target=".project-details-modal">[ See Details ]</a></p>
+                                    data-bs-toggle="modal" data-id="{{ $project->id }}"
+                                    data-bs-target=".project-details-modal">[ See Details ]</a></p>
                         </div>
                     @endforeach
                 @else
@@ -197,21 +195,21 @@
                 <div class="modal fade project-details-modal" tabindex="-1" role="dialog"
                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl float-lg-end w-100 me-lg-3">
-                        <div class="modal-content">
+                        <div class="modal-content rounded-4">
                             <div class="modal-header border-0">
                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
-                            <div class="modal-body px-lg-5" style="min-height: 86vh; min-width: 100%">
+                            <div class="modal-body px-lg-5 " style="min-height: 86vh; min-width: 100%">
                                 <div class="row">
                                     <div class="col-lg-8">
-                                        <div class="card mb-3">
+                                        <div class="card mb-4">
                                             <div class="card-body">
                                                 <h3 class="project-title text-capitalize text-dark"></h3>
                                                 <p class="mb-2"><i
                                                         class="fas fa-calendar-alt text-success me-2"></i><span
-                                                        class="project-posted-time text-dark-blue"></span></p>
+                                                        class="project-posted-time text-dark"></span></p>
                                                 <hr>
-                                                <p class="project-full-details text-dark-blue text-justify"></p>
+                                                <p class="project-full-details text-dark text-justify"></p>
                                             </div>
                                         </div>
                                         <div class="card mb-4">
@@ -224,45 +222,43 @@
                                                 </div>
                                                 <div class="row ">
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2" title="Required Time"><i
+                                                        <p class="text-dark mb-2" title="Required Time"><i
                                                                 class="text-success fas fa-clock me-2" ></i><span
                                                                 class="project-required-time"></span> Minutes</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2" title="Target Participants"><i
+                                                        <p class="text-dark mb-2" title="Target Participants"><i
                                                                 class="text-success fas fa-users me-2"></i><span
                                                                 class="project-total-participants"></span> Target
                                                             Participants</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2" title="Research Type"><i
+                                                        <p class="text-dark mb-2" title="Research Type"><i
                                                                 class="text-success fas fa-user-shield me-2"></i><span
                                                                 class="project-research-type"></span></p>
 
                                                     </div>
                                                     <div class="col-12 col-md-6">
-                                                        <p class="text-dark-blue mb-2" title="Research Method"><i
+                                                        <p class="text-dark mb-2" title="Research Method"><i
                                                                 class="text-success fas fa-bullseye me-2"></i><span
                                                                 class="project-research-method"></span></p>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="card">
+                                        <div class="card mb-4">
                                             <div class="card-body">
                                                 <div class="row">
                                                     <div class="col-12">
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
-                                                        <p class="text-dark-blue mb-2"><i
+                                                        <p class="text-dark mb-2"><i
                                                                 class="fas fa-clipboard-list text-success me-2"></i><span>Proposals:
                                                                 <span class="">10</span></span></p>
-                                                        <p class="text-dark-blue mb-2"><i
+                                                        <p class="text-dark mb-2"><i
                                                                 class="fas fa-clipboard-check text-success me-2"></i><span>Total
                                                                 Hired: <span class="">2</span></span></p>
                                                     </div>
-                                                </div>
-                                                <div class="row ">
                                                 </div>
                                             </div>
                                         </div>

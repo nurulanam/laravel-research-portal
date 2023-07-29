@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\Industry;
+use App\Models\backend\ProjectHasIndustry;
 use App\Models\backend\Projects;
 use App\Models\backend\UserHasIndustry;
 use App\Models\User;
@@ -19,14 +20,16 @@ class dashboardController extends Controller
      */
     public function index(Request $request)
     {
-//        dd(now());
         $this->updateProjectStatus();
 
+        $this->industries = config('app.industries');
+
+        $userIndustries = UserHasIndustry::where('user_id', '=', Auth::id())->first();
         $query = Projects::where('status', '=', 'publish');
 
         $filterValues = [
-            'audience' => $request->input('audience'),
-            'research_type' => $request->input('research_type'),
+            'target_audience' => $request->input('target_audience'),
+            'project_type' => $request->input('project_type'),
             'min_incentive' => $request->input('min_incentive'),
             'max_incentive' => $request->input('max_incentive'),
             'min_time' => $request->input('min_time'),
@@ -54,12 +57,31 @@ class dashboardController extends Controller
         if ($request->filled('search')) {
             $searchTerm = '%' . $request->search . '%';
             $query->where(function ($q) use ($searchTerm) {
-                $q->where('project_title', 'like', $searchTerm)
-                    ->orWhere('project_details', 'like', $searchTerm);
+                $q->where('study_title', 'like', $searchTerm)
+                    ->orWhere('study_description', 'like', $searchTerm);
             });
         }
 
-        $projects = $query->orderBy('updated_at', 'desc')->paginate(2)->withQueryString();
+        $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
+
+        if ($userIndustries) {
+            $userIndustryKeys = json_decode($userIndustries->industry, true);
+
+            if (!empty($userIndustryKeys)) {
+                $projectIds = ProjectHasIndustry::select('project_id')
+                    ->where(function ($query) use ($userIndustryKeys) {
+                        foreach ($userIndustryKeys as $value) {
+                            $query->orWhereJsonContains('industries', $value);
+                        }
+                    })
+                    ->pluck('project_id');
+                $query->whereIn('id', $projectIds);
+            }
+        }
+        $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
+
+
+
 // Rest of the code...
 
         return view('backend.pages.dashboard', compact('projects', 'filterValues'));
@@ -136,6 +158,7 @@ class dashboardController extends Controller
         // Fetch all projects from the database
         Projects::whereNotNull('published_at')
             ->where('published_at', '<=', now())
+            ->where('status', 'schedule')
             ->update(['status' => 'publish']);
     }
 }

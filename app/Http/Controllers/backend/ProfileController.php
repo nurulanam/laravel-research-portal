@@ -159,6 +159,74 @@ class ProfileController extends Controller
             return view('backend.pages.profile-edit-employment', compact('us_states', 'industries', 'profileInfo'));
         }
     }
+    public function editSkill(){
+        $us_states = $this->us_states;
+        $industries = $this->industries;
+
+        $user_id = Auth::id();
+
+        $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
+        $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
+        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
+
+
+        if (!empty($findProfileIndustry) && !empty($findUserSkills)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-skill', compact('us_states', 'industries', 'profileInfo', 'profileIndustry', 'userSkills'));
+        }elseif(!empty($findProfileIndustry)){
+            $profileIndustry = json_decode($findProfileIndustry['industry']);
+            return view('backend.pages.profile-edit-skill', compact('us_states', 'industries', 'profileInfo', 'profileIndustry'));
+        }elseif(!empty($findUserSkills)){
+            $userHasSkills = json_decode($findUserSkills['skills']);
+            $userSkills = Skill::whereIn('id', $userHasSkills)->get();
+            return view('backend.pages.profile-edit-skill', compact('us_states', 'industries', 'profileInfo', 'userSkills'));
+        }else{
+            return view('backend.pages.profile-edit-skill', compact('us_states', 'industries', 'profileInfo'));
+        }
+    }
+    public function storeSkill(Request $request){
+        $request->validate([
+            'skills' => 'required | array',
+            'skills.*' => 'string | min:2'
+        ]);
+
+        $user_id = Auth::id();
+        $requestSkills = $request->skills;
+        $skillIds = [];
+
+        foreach ($requestSkills as $skillName) {
+            $skill = Skill::where('skill_name', $skillName)->first();
+
+            if ($skill) {
+                $skillIds[] = $skill->id;
+            } else {
+                $newSkill = new Skill();
+                $newSkill->skill_name = $skillName;
+                $newSkill->save();
+
+                if ($newSkill) {
+                    $skillIds[] = $newSkill->id;
+                }
+            }
+        }
+
+        $json = json_encode($skillIds);
+        $findUserSkill = userHasSkills::where('user_id', '=', $user_id)->first();
+
+        if ($findUserSkill !== null){
+            $findUserSkill->skills = $json;
+            $findUserSkill->update();
+            return redirect()->route('profile.index')->with('success', 'Your Skills Updated');
+        }elseif ($findUserSkill == null){
+            $newUserSkill = new userHasSkills();
+            $newUserSkill->user_id = $user_id;
+            $newUserSkill->skills = $json;
+            $newUserSkill->save();
+            return redirect()->route('profile.index')->with('success', 'Your Skills Saved Successfully');
+        }
+    }
 
     /**
      * Store a newly created resource in storage.

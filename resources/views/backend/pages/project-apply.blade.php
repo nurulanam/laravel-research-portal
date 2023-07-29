@@ -25,23 +25,33 @@
     </style>
 @endsection
 @section('mainContent')
-    <div class="row align-items-center">
+    <div class="row mb-3 mb-md-5 shadow-md">
         <div class="col-12">
-            <div class="d-flex justify-content-between align-items-center">
-                <h1 class="text-dark-blue">{{ $findProject->project_title }}</h1>
-                @php $totalQuestion = count($questions) @endphp<p class="font-18 text-dark">Total Questions: {{ $totalQuestion }} </p>
+            <div class="card bg-dark-blue bg-gradient rounded-4">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-12 col-md-9">
+                            <h1 class="text-white font-25">{{ $findProject->study_title }}</h1>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            @php $totalQuestion = count($questions) @endphp
+                            <p class="font-18 text-white float-md-end">Total Questions: {{ $totalQuestion }} </p>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <hr>
         </div>
     </div>
+
+
+
     <div class="row">
         <div class="col-12 col-lg-8 offset-lg-2">
             @php
                 $q = 0;
             @endphp
-            <div class="card mt-4">
-                <div class="card-body">
+            <div class="card rounded-4 shadow-md mt-4">
+                <div class="card-body p-4">
                     <form action="{{ route('project-apply.store', $findProject->id) }}" method="POST" class="question-form">
                         @csrf
                         @foreach ($questions as $question)
@@ -148,13 +158,13 @@
                         @endforeach
 
                         <div class="form-navigation mt-4">
-                            <button type="button" class="previous btn btn-primary btn-custom float-left"><span
+                            <button type="button" class="previous btn btn-primary btn-custom float-start"><span
                                     class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
-                            <button type="button" class="next btn btn-primary btn-custom float-right">Next <span
+                            <button type="button" class="next btn btn-primary btn-custom float-end">Next <span
                                     class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
 
                             <button type="submit"
-                                class="btn btn-success mx-1 publish-btn btn-custom float-right">Submit</button>
+                                class="btn btn-success mx-1 publish-btn btn-custom float-end">Submit</button>
 
                         </div>
                     </form>
