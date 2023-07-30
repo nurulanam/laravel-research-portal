@@ -22,69 +22,71 @@ class dashboardController extends Controller
     {
         $this->updateProjectStatus();
 
-        $this->industries = config('app.industries');
+        if (Auth::user()->hasRole('participant')){
+            $this->industries = config('app.industries');
 
-        $userIndustries = UserHasIndustry::where('user_id', '=', Auth::id())->first();
-        $query = Projects::where('status', '=', 'publish');
+            $userIndustries = UserHasIndustry::where('user_id', '=', Auth::id())->first();
+            $query = Projects::where('status', '=', 'publish');
 
-        $filterValues = [
-            'target_audience' => $request->input('target_audience'),
-            'project_type' => $request->input('project_type'),
-            'min_incentive' => $request->input('min_incentive'),
-            'max_incentive' => $request->input('max_incentive'),
-            'min_time' => $request->input('min_time'),
-            'max_time' => $request->input('max_time'),
-        ];
+            $filterValues = [
+                'target_audience' => $request->input('target_audience'),
+                'project_type' => $request->input('project_type'),
+                'min_incentive' => $request->input('min_incentive'),
+                'max_incentive' => $request->input('max_incentive'),
+                'min_time' => $request->input('min_time'),
+                'max_time' => $request->input('max_time'),
+            ];
 
-        foreach ($filterValues as $filter => $value) {
-            if (!empty($value)) {
-                if ($request->filled($filter)) {
-                    if ($filter === 'min_incentive') {
-                        $query->where('total_incentive', '>=', $value);
-                    } elseif ($filter === 'max_incentive') {
-                        $query->where('total_incentive', '<=', $value);
-                    } elseif ($filter === 'min_time') {
-                        $query->where('required_time', '>=', $value);
-                    } elseif ($filter === 'max_time') {
-                        $query->where('required_time', '<=', $value);
-                    } else {
-                        $query->where($filter, $value);
+            foreach ($filterValues as $filter => $value) {
+                if (!empty($value)) {
+                    if ($request->filled($filter)) {
+                        if ($filter === 'min_incentive') {
+                            $query->where('total_incentive', '>=', $value);
+                        } elseif ($filter === 'max_incentive') {
+                            $query->where('total_incentive', '<=', $value);
+                        } elseif ($filter === 'min_time') {
+                            $query->where('required_time', '>=', $value);
+                        } elseif ($filter === 'max_time') {
+                            $query->where('required_time', '<=', $value);
+                        } else {
+                            $query->where($filter, $value);
+                        }
                     }
                 }
             }
-        }
 
-        if ($request->filled('search')) {
-            $searchTerm = '%' . $request->search . '%';
-            $query->where(function ($q) use ($searchTerm) {
-                $q->where('study_title', 'like', $searchTerm)
-                    ->orWhere('study_description', 'like', $searchTerm);
-            });
-        }
-
-        $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
-
-        if ($userIndustries) {
-            $userIndustryKeys = json_decode($userIndustries->industry, true);
-
-            if (!empty($userIndustryKeys)) {
-                $projectIds = ProjectHasIndustry::select('project_id')
-                    ->where(function ($query) use ($userIndustryKeys) {
-                        foreach ($userIndustryKeys as $value) {
-                            $query->orWhereJsonContains('industries', $value);
-                        }
-                    })
-                    ->pluck('project_id');
-                $query->whereIn('id', $projectIds);
+            if ($request->filled('search')) {
+                $searchTerm = '%' . $request->search . '%';
+                $query->where(function ($q) use ($searchTerm) {
+                    $q->where('study_title', 'like', $searchTerm)
+                        ->orWhere('study_description', 'like', $searchTerm);
+                });
             }
-        }
-        $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
 
+            $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
 
+            if ($userIndustries) {
+                $userIndustryKeys = json_decode($userIndustries->industry, true);
 
-// Rest of the code...
+                if (!empty($userIndustryKeys)) {
+                    $projectIds = ProjectHasIndustry::select('project_id')
+                        ->where(function ($query) use ($userIndustryKeys) {
+                            foreach ($userIndustryKeys as $value) {
+                                $query->orWhereJsonContains('industries', $value);
+                            }
+                        })
+                        ->pluck('project_id');
+                    $query->whereIn('id', $projectIds);
+                }
+            }
+            $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
 
         return view('backend.pages.dashboard', compact('projects', 'filterValues'));
+
+        }elseif (Auth::user()->hasRole('researcher')){
+            return view('backend.pages.dashboard');
+        }
+
 
     }
     /**

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\Projects;
 use Illuminate\Http\Request;
+use App\Models\backend\ProjectHasResponse;
 
 class ProjectApplyController extends Controller
 {
@@ -27,7 +28,6 @@ class ProjectApplyController extends Controller
 
             if ($findQuestions) {
                 $questions = json_decode($findQuestions->questions);
-//                dd($questions);
                 return view('backend.pages.project-apply', compact('findProject', 'questions'));
             } else {
                 // No questions found for the project
@@ -54,13 +54,59 @@ class ProjectApplyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, $id)
+    public function store(Request $request, $slug)
     {
-        $findProject = Projects::where('id', $id)->first();
+        $findProject = Projects::where('slug', $slug)->first();
         if ($findProject) {
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
             if ($findQuestions) {
                 $questions = json_decode($findQuestions->questions, true);
+                $userResponses = [];
+                $overallQualification = 'qualify';
+                foreach ($questions as $q => $question) {
+                    $questionType = $question['question_type'][0];
+                    $userResponse = $request->input($questionType . '.' . $q, []);
+
+                    if (!is_array($userResponse)) {
+                        $userResponse = [$userResponse];
+                    }
+
+                    $qualification = 'qualify'; // Default qualification
+
+                    if ($questionType === 'checkbox' && isset($question['answer_qualify'])) {
+                        $expectedAnswers = $question['answer_qualify'];
+
+                        if (!empty($expectedAnswers)) {
+                            // Check if any expected answer is set to 'disqualify' and present in the userResponse
+                            foreach ($expectedAnswers as $index => $expectedAnswer) {
+                                if ($expectedAnswer === 'disqualify' && in_array($question['answer'][$index], $userResponse)) {
+                                    $qualification = 'disqualify';
+                                    $overallQualification = 'disqualify';
+                                    break;
+                                }
+                            }
+                        }
+                    }
+
+                    $userResponses[] = [
+                        'question' => $question['question_name'][0],
+                        'question_type' => $questionType,
+                        'response' => $userResponse,
+                    ];
+
+                    // If the overall qualification is already 'disqualify', no need to check further
+                    if ($overallQualification === 'disqualify') {
+                        break;
+                    }
+                }
+                $userResponseModel = new ProjectHasResponse();
+                $userResponseModel->project_id = $findProject->id;
+                $userResponseModel->user_id = auth()->user()->id; // Assuming you have authenticated users
+                $userResponseModel->user_response = json_encode($userResponses);
+                $userResponseModel->qualification = $overallQualification; // Set the 'qualification' directly in $userResponseModel
+
+                $userResponseModel->save();
+                return back()->with('success', 'response saved');
 
             }
         }

@@ -43,8 +43,6 @@
         </div>
     </div>
 
-
-
     <div class="row">
         <div class="col-12 col-lg-8 offset-lg-2">
             @php
@@ -52,40 +50,21 @@
             @endphp
             <div class="card rounded-4 shadow-md mt-4">
                 <div class="card-body p-4">
-                    <form action="{{ route('project-apply.store', $findProject->id) }}" method="POST" class="question-form">
+                    <form action="{{ route('project-apply.store', $findProject->slug) }}" method="POST" class="question-form">
                         @csrf
                         @foreach ($questions as $question)
-                            @if ($question->question_type[0] == 'radio')
-                                <div class="form-section">
-                                    <h2 class="font-22"><span>Q{{ $q + 1 }}. </span>{{ $question->question_name[0] }}
-                                    </h2>
-                                    <div class="form-group mt-3">
-                                        @foreach ($question->answer as $answer)
-                                            <div class="">
-                                                <input type="radio"
-                                                    name="{{ $question->question_type[0] }}[{{ $q }}][]"
-                                                    value="{{ $answer }}" id="{{ $answer . '-' . $q }}"
-                                                    @if ($question->required[0]) required @endif>
-                                                <span class="mx-2"><label class="form-check-label font-18"
-                                                        for="{{ $answer . '-' . $q }}">{{ $answer }}</label></span>
-                                            </div>
-                                        @endforeach
-                                    </div>
-                                </div>
-                                @php
-                                    $q++;
-                                @endphp
-                            @elseif($question->question_type[0] == 'checkbox')
+                            @if($question->question_type[0] == 'checkbox')
                                 <div class="form-section">
                                     <h2 class="font-22"><span>Q{{ $q + 1 }}.
                                         </span>{{ $question->question_name[0] }}</h2>
                                     <div class="form-group mt-3">
-                                        @foreach ($question->answer as $answer)
+                                        @foreach ($question->answer as $index => $answer)
+
                                             <div class="">
                                                 <input type="checkbox"
-                                                    name="{{ $question->question_type[0] }}[{{ $q }}][]"
+                                                    name="{{ $question->question_type[0] }}[{{ $q }}][{{ $index }}]"
                                                     value="{{ $answer }}" id="{{ $answer . '-' . $q }}"
-                                                    @if ($question->required[0]) required @endif>
+                                                    >
                                                 <span class="mx-2"><label class="form-check-label"
                                                         for="{{ $answer . '-' . $q }}">{{ $answer }}</label></span>
                                             </div>
