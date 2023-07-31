@@ -613,6 +613,13 @@
                     },
                     cache: false,
                 }
+            }).on('change', function(e) {
+                var selectedOptions = $(this).val() || [];
+                if (selectedOptions.length > 25) {
+                    // Remove extra selections
+                    selectedOptions.splice(2);
+                    $(this).val(selectedOptions).trigger('change');
+                }
             });
         });
         $('#state').on('change', function() {

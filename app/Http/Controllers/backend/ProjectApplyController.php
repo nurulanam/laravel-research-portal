@@ -7,6 +7,7 @@ use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\Projects;
 use Illuminate\Http\Request;
 use App\Models\backend\ProjectHasResponse;
+use Illuminate\Support\Facades\Auth;
 
 class ProjectApplyController extends Controller
 {
@@ -22,6 +23,11 @@ class ProjectApplyController extends Controller
 
     public function projectScreener($slug){
         $findProject = Projects::where('slug', $slug)->first();
+
+        $findParticipant = ProjectHasResponse::where('project_id', '=', $findProject->id)->where('user_id', '=', Auth::id())->first();
+        if ($findParticipant){
+            return redirect()->route('dashboard.index')->with('error', 'Already Participated');
+        }
         if ($findProject) {
             // The project with the given slug exists
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
@@ -53,52 +59,58 @@ class ProjectApplyController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
+     *
      */
     public function store(Request $request, $slug)
     {
         $findProject = Projects::where('slug', $slug)->first();
+
+
         if ($findProject) {
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
             if ($findQuestions) {
                 $questions = json_decode($findQuestions->questions, true);
                 $userResponses = [];
-                $overallQualification = 'qualify';
-                foreach ($questions as $q => $question) {
+                $disqualifyFlag = false; // Flag to track if any response disqualifies the user
+
+                foreach ($questions as $key => $question) {
                     $questionType = $question['question_type'][0];
-                    $userResponse = $request->input($questionType . '.' . $q, []);
+                    $userResponse = null;
+                    $userResponse = $request->input($questionType . '.' . $key, []);
 
                     if (!is_array($userResponse)) {
                         $userResponse = [$userResponse];
                     }
 
-                    $qualification = 'qualify'; // Default qualification
-
                     if ($questionType === 'checkbox' && isset($question['answer_qualify'])) {
                         $expectedAnswers = $question['answer_qualify'];
+                        $selectedIndexes = [];
 
                         if (!empty($expectedAnswers)) {
-                            // Check if any expected answer is set to 'disqualify' and present in the userResponse
-                            foreach ($expectedAnswers as $index => $expectedAnswer) {
-                                if ($expectedAnswer === 'disqualify' && in_array($question['answer'][$index], $userResponse)) {
-                                    $qualification = 'disqualify';
-                                    $overallQualification = 'disqualify';
-                                    break;
+                            foreach ($userResponse as $index => $value) {
+                                if (isset($expectedAnswers[$index]) && $expectedAnswers[$index] === 'disqualify') {
+                                    $disqualifyFlag = true;
+                                }
+
+                                if (isset($question['answer'][$index])) {
+                                    $selectedIndexes[] = $index;
                                 }
                             }
                         }
+                        $userResponse = $selectedIndexes;
+
+                    } elseif ($questionType === 'textarea' || $questionType === 'text' || $questionType === 'number' || $questionType === 'slider') {
+                        $userResponse = $request->input($questionType . '.' . $key, null);
                     }
 
                     $userResponses[] = [
-                        'question' => $question['question_name'][0],
-                        'question_type' => $questionType,
                         'response' => $userResponse,
                     ];
-
-                    // If the overall qualification is already 'disqualify', no need to check further
-                    if ($overallQualification === 'disqualify') {
-                        break;
-                    }
                 }
+
+                // Set the overall qualification to 'disqualify' if any disqualification occurs
+                $overallQualification = $disqualifyFlag ? 'disqualify' : 'qualify';
+
                 $userResponseModel = new ProjectHasResponse();
                 $userResponseModel->project_id = $findProject->id;
                 $userResponseModel->user_id = auth()->user()->id; // Assuming you have authenticated users
@@ -106,11 +118,11 @@ class ProjectApplyController extends Controller
                 $userResponseModel->qualification = $overallQualification; // Set the 'qualification' directly in $userResponseModel
 
                 $userResponseModel->save();
-                return back()->with('success', 'response saved');
-
+                return redirect()->route('dashboard.index')->with('success', 'response saved');
             }
         }
     }
+
 
     /**
      * Display the specified resource.

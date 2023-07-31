@@ -612,7 +612,14 @@
             $('.industry-box').select2({
                 tags: false,
                 maximumSelectionLength: 5,
-            })
+            }).on('change', function(e) {
+                var selectedOptions = $(this).val() || [];
+                if (selectedOptions.length > 5) {
+                    // Remove extra selections
+                    selectedOptions.splice(2);
+                    $(this).val(selectedOptions).trigger('change');
+                }
+            });
         })
     </script>
 @endsection

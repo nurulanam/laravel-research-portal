@@ -5,6 +5,7 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\backend\Industry;
 use App\Models\backend\ProjectHasIndustry;
+use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;
 use App\Models\backend\UserHasIndustry;
 use App\Models\User;
@@ -26,6 +27,7 @@ class dashboardController extends Controller
             $this->industries = config('app.industries');
 
             $userIndustries = UserHasIndustry::where('user_id', '=', Auth::id())->first();
+
             $query = Projects::where('status', '=', 'publish');
 
             $filterValues = [
@@ -81,7 +83,7 @@ class dashboardController extends Controller
             }
             $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
 
-        return view('backend.pages.dashboard', compact('projects', 'filterValues'));
+        return view('backend.pages.dashboard', compact('projects', 'filterValues', 'userIndustries'));
 
         }elseif (Auth::user()->hasRole('researcher')){
             return view('backend.pages.dashboard');

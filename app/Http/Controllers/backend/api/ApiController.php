@@ -4,13 +4,17 @@ namespace App\Http\Controllers\backend\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasIndustry;
+use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use App\Models\backend\Skill;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {
+
     public function skillsApi(Request $request){
         $search = $request->search;
         $skills = Skill::orderby('skill_name', 'asc')->select('id', 'skill_name')->where('skill_name', 'like', '%' . $search . '%')->get()->toArray();
@@ -20,14 +24,19 @@ class ApiController extends Controller
         ]);
     }
 
-    public function projectShowApi($id)
+    public function projectShowApi($projectId , $userId)
     {
-        $projectInfo = Projects::find($id);
+
+        $projectInfo = Projects::find($projectId);
         $industries = config('app.industries');
+
 
         if ($projectInfo) {
             $findProjectSkills = ProjectHasSkill::where('project_id', $projectInfo->id)->first();
             $findProjectIndustries = ProjectHasIndustry::where('project_id', $projectInfo->id)->first();
+
+            $findResponse = ProjectHasResponse::where('project_id', '=', $projectInfo->id)->get();
+            $findParticipant = ProjectHasResponse::where('project_id', '=', $projectInfo->id)->where('user_id', '=', $userId)->first();
 
             $response = [
                 'data' => $projectInfo,
@@ -50,6 +59,12 @@ class ApiController extends Controller
                     $projectSkills = Skill::whereIn('id', $projectSkillIds)->get();
                     $response['skills'] = $projectSkills;
                 }
+            }
+            if ($findResponse){
+                $response['totalResponse'] = count($findResponse);
+            }
+            if ($findParticipant){
+                $response['applied'] = $findParticipant;
             }
 
             return response()->json($response);

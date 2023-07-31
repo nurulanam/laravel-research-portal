@@ -122,7 +122,11 @@
                 </div>
             </div>
             <div class="col-12 col-lg-9 ">
-                @if ($projects->count() > 0)
+                @if(empty($userIndustries))
+                    <div class="alert alert-info rounded-4 shadow-md" role="alert">
+                        Please update your profile to see projects that match your industry preferences.
+                    </div>
+                @elseif ($projects->count() > 0)
                     @foreach ($projects as $key => $project)
                         <div class="card p-4 mb-3 rounded-4 shadow-md">
                             <div class="d-flex justify-content-between">
@@ -186,11 +190,16 @@
                         </div>
                     @endforeach
                 @else
-                    <p class="text-center font-weight-500">Opps... No Projects Found.</p>
+                    <div class="alert alert-danger rounded-4" role="alert">
+                        Opps... No Projects Found.
+                    </div>
                 @endif
-                <div class="d-flex justify-content-center justify-content-lg-start">
-                    {{ $projects->links() }}
-                </div>
+                @if(empty($userIndustries)) @else
+                        <div class="d-flex justify-content-center justify-content-lg-start">
+                            {{ $projects->links() }}
+                        </div>
+                @endif
+
 
                 <div class="modal fade project-details-modal" tabindex="-1" role="dialog"
                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -254,10 +263,10 @@
                                                         <hr>
                                                         <p class="text-dark mb-2"><i
                                                                 class="fas fa-clipboard-list text-success me-2"></i><span>Proposals:
-                                                                <span class="">10</span></span></p>
+                                                                <span class="total-response">0</span></span></p>
                                                         <p class="text-dark mb-2"><i
                                                                 class="fas fa-clipboard-check text-success me-2"></i><span>Total
-                                                                Hired: <span class="">2</span></span></p>
+                                                                Hired: <span class="">0</span></span></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -338,11 +347,15 @@
         });
     </script>
 
-
     <script>
         $('.show-details').on('click', function() {
-            let id = $(this).data('id');
-            let url = "{{ route('show.project.api', ':id') }}";
+            let projectId = $(this).data('id'); // 'data-id' attribute contains the projectId
+            let userId = "{{ Auth::id() }}"; // Assuming you have a way to get the authenticated user's ID
+
+            // URL with placeholders ':projectId' and ':id' replaced by variables
+            let url = "{{ route('show.project.api', [':projectId', ':id']) }}";
+            url = url.replace(':projectId', projectId).replace(':id', userId);
+
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -350,16 +363,24 @@
             });
             $.ajax({
                 method: 'POST',
-                url: url.replace(':id', id),
+                url: url,
                 data: {
-                    'id': id
+                    'id': userId
                 },
                 dataType: 'JSON',
                 success: function(response) {
                     console.log(response)
+
                     if (response) {
                         $('.project-title').html(response.data.study_title);
-                        $(".project-apply").attr('href', '/dashboard/project-apply/' + response.data.slug);
+
+                        if (response.applied){
+                            $(".project-apply").attr('href', '#');
+                            $(".project-apply").html('Submitted').addClass('disabled');
+                        }else{
+                            $(".project-apply").html('Apply Now').removeClass('disabled');
+                            $(".project-apply").attr('href', '/dashboard/project-apply/' + response.data.slug);
+                        }
                         $('.project-full-details').html(response.data.study_description);
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
@@ -423,7 +444,17 @@
                             let time = formatDate(response.data.updated_at);
                             $('.project-posted-time').html(time);
                         }
+                        if (response.totalResponse){
+                            $('.total-response').html(response.totalResponse);
+                        }else{
+                            $('.total-response').html('0');
+
+                        }
                     }
+                },
+                error: function(xhr, status, error) {
+                    // Handle errors if any
+                    console.log(xhr, status, error)
                 }
             })
 
