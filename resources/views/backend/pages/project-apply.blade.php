@@ -119,12 +119,12 @@
                                     <h2 class="font-22"><span>Q{{ $q + 1 }}.
                                         </span>{{ $question->question_name[0] }}</h2>
                                     <div class="form-group mt-3">
-                                        <div class="d-md-flex">
+                                        <div class="d-md-flex align-items-center">
                                             <input type="number" class="form-control w-50 my-2 my-md-0 mr-3"
                                                 name="{{ $question->question_type[0] }}[{{ $q }}][]" value="{{ $question->min_value[0] }}"
                                                 min="{{ $question->min_value[0] }}" max="{{ $question->max_value[0] }}"
                                                 placeholder="Total" readonly="readonly">
-                                            <input type="range" class="form-control-range" value="{{ $question->min_value[0] }}"
+                                            <input type="range" class="form-range ms-md-2" value="{{ $question->min_value[0] }}"
                                                 min="{{ $question->min_value[0] }}" max="{{ $question->max_value[0] }}"
                                                 step="{{ $question->steps[0] }}">
                                         </div>

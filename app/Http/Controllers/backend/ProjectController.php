@@ -13,6 +13,7 @@ use App\Models\backend\ProjectHasHouseholdIncome;
 use App\Models\backend\ProjectHasIndustry;
 use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasQuestion;
+use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use App\Models\backend\Skill;
@@ -30,8 +31,22 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        $projects = Projects::where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
-        return view('backend.pages.all-projects', compact('projects'));
+
+        app()->call([dashboardController::class, 'updateProjectStatus']);
+
+        if (Auth::user()->hasRole('researcher')) {
+            $projects = Projects::where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
+            return view('backend.pages.researcher-projects', compact('projects'));
+
+        }elseif (Auth::user()->hasRole('participant')){
+            $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->get();
+            if ($findProjectHasResponse){
+                $projectIds = $findProjectHasResponse->pluck('project_id')->toArray();
+                $projects = Projects::whereIn('id', $projectIds)->paginate(10); // Change '10' to the number of items per page you want to display
+
+            }
+            return view('backend.pages.participant-projects', compact('projects'));
+        }
     }
 
     /**
@@ -41,9 +56,6 @@ class ProjectController extends Controller
      */
     public function create()
     {
-
-
-
         $us_states = config('app.us_states');
         $industries = config('app.industries');
 
@@ -338,7 +350,15 @@ class ProjectController extends Controller
      */
     public function edit($id)
     {
-        //
+        $us_states = config('app.us_states');
+        $industries = config('app.industries');
+        $project = Projects::where('id', '=', $id)->first();
+
+        if (!$project){
+            return back()->with('error', 'Project Not Found');
+        }
+
+        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries'));
     }
 
     /**

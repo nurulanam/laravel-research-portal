@@ -12,4 +12,8 @@ class ProjectHasIndustry extends Model
         'project_id',
         'industries'
     ];
+    public function project()
+    {
+        return $this->belongsTo(Projects::class, 'project_id', 'id');
+    }
 }

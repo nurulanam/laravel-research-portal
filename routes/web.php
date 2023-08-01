@@ -39,9 +39,14 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::post('/store/skill', [ProfileController::class, 'storeSkill'])->name('profile.store.skill');
     });
 
+
+    Route::middleware('role:researcher|participant')->group(function (){
+        // Project
+        Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
+    });
     Route::middleware('role:researcher')->group(function (){
         // Project
-        Route::resource('/project', ProjectController::class);
+        Route::resource('/project', ProjectController::class)->except('index');
     });
 
     Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');

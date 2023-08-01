@@ -2,7 +2,7 @@
     $avatar = App\Http\Controllers\backend\ProfileController::showAvatar();
 @endphp
 {{--main navigation start--}}
-<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-md fixed-top main-nav">
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-md fixed-top main-nav" style="z-index: 1061">
     <div class="container-fluid d-lg-block justify-content-lg-center mx-lg-auto">
         <!-- Centered Logo -->
         <div class="navbar-brand text-lg-center">

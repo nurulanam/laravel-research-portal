@@ -4,6 +4,7 @@ namespace App\Models\backend;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\backend\Projects;
 
 class ProjectHasResponse extends Model
 {
@@ -14,4 +15,8 @@ class ProjectHasResponse extends Model
         'user_response',
         'qualification'
     ];
+    public function project()
+    {
+        return $this->belongsTo(Projects::class, 'project_id', 'id');
+    }
 }
