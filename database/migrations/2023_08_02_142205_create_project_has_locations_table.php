@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProjectHasCitiesTable extends Migration
+class CreateProjectHasLocationsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,10 @@ class CreateProjectHasCitiesTable extends Migration
      */
     public function up()
     {
-        Schema::create('project_has_cities', function (Blueprint $table) {
+        Schema::create('project_has_locations', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('city_name');
+            $table->json('locations');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();
@@ -30,6 +30,6 @@ class CreateProjectHasCitiesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('project_has_cities');
+        Schema::dropIfExists('project_has_locations');
     }
 }

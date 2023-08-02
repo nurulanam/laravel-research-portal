@@ -8,6 +8,8 @@ use App\Models\backend\ProjectHasCity;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasIndustry;
+use App\Models\backend\ProjectHasHouseholdIncome;
+use App\Models\backend\ProjectHasSkill;
 
 class Projects extends Model
 {
@@ -49,4 +51,30 @@ class Projects extends Model
     {
         return $this->hasOne(ProjectHasCompanySize::class, 'project_id', 'id');
     }
+    public function householdIncomes()
+    {
+        return $this->hasOne(ProjectHasHouseholdIncome::class, 'project_id', 'id');
+    }
+    public function projectGenders()
+    {
+        return $this->hasOne(ProjectHasGender::class, 'project_id', 'id');
+    }
+    public function educationLevels()
+    {
+        return $this->hasOne(ProjectHasEducationLevel::class, 'project_id', 'id');
+    }
+    public function projectEthnicities()
+    {
+        return $this->hasOne(ProjectHasEthnicity::class, 'project_id', 'id');
+    }
+    public function projectAgeRanges()
+    {
+        return $this->hasOne(ProjectHasAgeRange::class, 'project_id', 'id');
+    }
+    public function projectSkills(){
+        return $this->hasOne(ProjectHasSkill::class, 'project_id', 'id');
+    }
+//    public function projectCities(){
+//        return $this->hasOne(ProjectHasCity::class, 'project_id', 'id');
+//    }
 }

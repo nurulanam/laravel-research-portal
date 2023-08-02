@@ -15,8 +15,8 @@
         <div class="col-12">
             <form action="{{ route('project.update', $project->id) }}" method="post" class="new-project-form">
                 @csrf
-                <div class="card shadow p-2">
-                <div class="card-header bg-dark-blue">
+                <div class="card rounded-4 shadow p-2">
+                <div class="card-header bg-dark-blue rounded-top-3">
                     <h5 class="text-light mb-0" id="main_title">{{ $project->my_project_name }}</h5>
                 </div>
                 <div class="card-body">
@@ -297,6 +297,23 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="location-container">
+{{--                                        @foreach($projectCities as $city)--}}
+{{--                                            <div class="location d-lg-flex justify-content-between align-items-center my-2">--}}
+{{--                                                <input class="form-control mx-1 my-2 my-lg-0" placeholder="US" value="US" disabled readonly>--}}
+{{--                                                <select class="states form-control mx-1 my-2 my-lg-0" name="states[]" required data-parsley-error-message="Please Select State">--}}
+{{--                                                    @foreach($us_states as $state => $cities)--}}
+{{--                                                        @if(in_array($city, $cities))--}}
+{{--                                                            <option value="{{ $state }}" selected>{{ $state }}</option>--}}
+{{--                                                        @else--}}
+{{--                                                            <option value="{{ $state }}">{{ $state }}</option>--}}
+{{--                                                        @endif--}}
+{{--                                                    @endforeach--}}
+{{--                                                </select>--}}
+{{--                                                <button class="btn btn-danger deleteLocation ms-1 my-2 my-lg-0">--}}
+{{--                                                    <i class="fas fa-trash-alt"></i>--}}
+{{--                                                </button>--}}
+{{--                                            </div>--}}
+{{--                                        @endforeach--}}
                                     </div>
                                     <button class="btn btn-primary my-2 add-location">Add City</button>
                                     <hr class="my-30">
@@ -325,33 +342,36 @@
                                 <div class="col-lg-3">
                                     <lablel class="label">Household Income (Optional)</lablel>
                                 </div>
+                                @php
+                                    $selectedHouseholdIncomes = $project->householdIncomes ? json_decode($project->householdIncomes->household_income) : [];
+                                @endphp
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="less20000" id="less20000" {{ in_array('less20000', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="less20000" id="less20000" {{ in_array('less20000', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="less20000">Less than $20,000</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="20000to34999" id="20000to34999" {{ in_array('20000to34999', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="20000to34999" id="20000to34999" {{ in_array('20000to34999', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="20000to34999">$20,000 – $34,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="35000to49999" id="35000to49999" {{ in_array('35000to49999', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="35000to49999" id="35000to49999" {{ in_array('35000to49999', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="35000to49999">$35,000– $49,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="50000to74999" id="50000to74999" {{ in_array('50000to74999', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="50000to74999" id="50000to74999" {{ in_array('50000to74999', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="50000to74999">$50,000 – $74,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="75000to99999" id="75000to99999" {{ in_array('75000to99999', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="75000to99999" id="75000to99999" {{ in_array('75000to99999', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="75000to99999">$75,000 - $99,999</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="100000plus" id="100000plus" {{ in_array('100000plus', old('household_income', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="household_income[]" value="100000plus" id="100000plus" {{ in_array('100000plus', $selectedHouseholdIncomes) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="100000plus">$100,000 +</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="household_income[]" value="" id="allHouseholeIncome" {{ empty(old('household_income')) ? 'checked' : ''  }}>
+                                        <input type="checkbox" name="household_income[]" value="" id="allHouseholeIncome" {{ empty($selectedHouseholdIncomes) ? 'checked' : ''  }}>
                                         <span class="mx-2"><label class="form-check-label" for="allHouseholeIncome">All Household Income</label></span>
                                     </div>
                                     @error('household_income')
@@ -365,25 +385,28 @@
                                 <div class="col-lg-3">
                                     <lablel class="label">Gender (Optional)</lablel>
                                 </div>
+                                @php
+                                    $selectedGenders = $project->projectGenders ? json_decode($project->projectGenders->gender) : [];
+                                @endphp
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="gender[]" value="male" id="male" {{ in_array('male', old('gender', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="gender[]" value="male" id="male" {{ in_array('male', $selectedGenders) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="male">Male</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender[]" value="female" id="female" {{ in_array('female', old('gender', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="gender[]" value="female" id="female" {{ in_array('female', $selectedGenders) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="female">Female</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender[]" value="non-binary" id="non-binary" {{ in_array('non-binary', old('gender', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="gender[]" value="non-binary" id="non-binary" {{ in_array('non-binary', $selectedGenders) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="non-binary">Non Binary</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender[]" value="prefer-not-to-say" id="prefer-not-to-say" {{ in_array('prefer-not-to-say', old('gender', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="gender[]" value="prefer-not-to-say" id="prefer-not-to-say" {{ in_array('prefer-not-to-say', $selectedGenders) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="prefer-not-to-say">Prefer Not To Say</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="gender[]" value="" id="allGender" {{ empty(old('gender')) ? 'checked' : ''  }}>
+                                        <input type="checkbox" name="gender[]" value="" id="allGender" {{ empty($selectedGenders) ? 'checked' : ''  }}>
                                         <span class="mx-2"><label class="form-check-label" for="allGender">All Gender</label></span>
                                     </div>
                                     @error('gender')
@@ -397,41 +420,44 @@
                                 <div class="col-lg-3">
                                     <lablel class="label">Education Level (Optional)</lablel>
                                 </div>
+                                @php
+                                    $selectedEducationLevels = $project->educationLevels ? json_decode($project->educationLevels->education_level) : [];
+                                @endphp
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="less-than-a-high-school-diploma" id="less-than-a-high-school-diploma" {{ in_array('less-than-a-high-school-diploma', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="less-than-a-high-school-diploma" id="less-than-a-high-school-diploma" {{ in_array('less-than-a-high-school-diploma', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="less-than-a-high-school-diploma">Less Than a High School Diploma</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="high-school-diploma-or-equivalent" id="high-school-diploma-or-equivalent" {{ in_array('high-school-diploma-or-equivalent', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="high-school-diploma-or-equivalent" id="high-school-diploma-or-equivalent" {{ in_array('high-school-diploma-or-equivalent', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="high-school-diploma-or-equivalent">High School Diploma or Equivalent</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="some-college-no-degree" id="some-college-no-degree" {{ in_array('some-college-no-degree', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="some-college-no-degree" id="some-college-no-degree" {{ in_array('some-college-no-degree', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="some-college-no-degree">Some College No Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="associate-degree" id="associate-degree" {{ in_array('associate-degree', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="associate-degree" id="associate-degree" {{ in_array('associate-degree', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="associate-degree">Associate Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="bachelors-degree" id="bachelors-degree" {{ in_array('bachelors-degree', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="bachelors-degree" id="bachelors-degree" {{ in_array('bachelors-degree', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="bachelors-degree">Bachelor's Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="masters-degree" id="masters-degree" {{ in_array('masters-degree', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="masters-degree" id="masters-degree" {{ in_array('masters-degree', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="masters-degree">Master's Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="professional-degree" id="professional-degree" {{ in_array('professional-degree', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="professional-degree" id="professional-degree" {{ in_array('professional-degree', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="professional-degree">Professional Degree</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="doctorate" id="doctorate" {{ in_array('doctorate', old('education_level', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="education_level[]" value="doctorate" id="doctorate" {{ in_array('doctorate', $selectedEducationLevels) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="doctorate">Doctorate</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="education_level[]" value="" id="allEducationLevels" {{ empty(old('education_level')) ? 'checked' : ''  }}>
+                                        <input type="checkbox" name="education_level[]" value="" id="allEducationLevels" {{ empty($selectedEducationLevels) ? 'checked' : ''  }}>
                                         <span class="mx-2"><label class="form-check-label" for="allEducationLevels">All Education Levels</label></span>
                                     </div>
                                     @error('education_level')
@@ -445,41 +471,44 @@
                                 <div class="col-lg-3">
                                     <lablel class="label">Ethnicity (Optional)</lablel>
                                 </div>
+                                @php
+                                    $selectedEthnicities = $project->projectEthnicities ? json_decode($project->projectEthnicities->ethnicity) : [];
+                                @endphp
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="american-indian-or-alaska-native" id="american-indian-or-alaska-native" {{ in_array('american-indian-or-alaska-native', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="american-indian-or-alaska-native" id="american-indian-or-alaska-native" {{ in_array('american-indian-or-alaska-native', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="american-indian-or-alaska-native">American Indian / Alaskan Native</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="asian" id="asian" {{ in_array('asian', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="asian" id="asian" {{ in_array('asian', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="asian">Asian</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="white-caucasian" id="white-caucasian" {{ in_array('white-caucasian', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="white-caucasian" id="white-caucasian" {{ in_array('white-caucasian', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="white-caucasian">White/Caucasian</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="pacific-islander" id="pacific-islander" {{ in_array('pacific-islander', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="pacific-islander" id="pacific-islander" {{ in_array('pacific-islander', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="pacific-islander">Pacific Islander</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="african-american" id="african-american" {{ in_array('african-american', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="african-american" id="african-american" {{ in_array('african-american', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="african-american">African American</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="hispanic" id="hispanic" {{ in_array('hispanic', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="hispanic" id="hispanic" {{ in_array('hispanic', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="hispanic">Hispanic</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="multiracial" id="multiracial" {{ in_array('multiracial', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="multiracial" id="multiracial" {{ in_array('multiracial', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="multiracial">Multiracial</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="other" id="other" {{ in_array('other', old('ethnicity', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="ethnicity[]" value="other" id="other" {{ in_array('other', $selectedEthnicities) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="other">Other</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="ethnicity[]" value="" id="allEthnicity" {{ empty(old('ethnicity')) ? 'checked' : ''  }}>
+                                        <input type="checkbox" name="ethnicity[]" value="" id="allEthnicity" {{ empty($selectedEthnicities) ? 'checked' : ''  }}>
                                         <span class="mx-2"><label class="form-check-label" for="allEthnicity">All Ethnicity</label></span>
                                     </div>
                                     @error('ethnicity')
@@ -493,29 +522,32 @@
                                 <div class="col-lg-3">
                                     <lablel class="label">Age Range (Optional)</lablel>
                                 </div>
+                                @php
+                                    $selectedAgeRanges = $project->projectAgeRanges ? json_decode($project->projectAgeRanges->age_range) : [];
+                                @endphp
                                 <div class="col-lg-9">
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="18-20" id="18-20" {{ in_array('18-20', old('age_range', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="age_range[]" value="18-20" id="18-20" {{ in_array('18-20', $selectedAgeRanges) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="18-20">18-20</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="21-29" id="21-29" {{ in_array('21-29', old('age_range', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="age_range[]" value="21-29" id="21-29" {{ in_array('21-29', $selectedAgeRanges) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="21-29">21-29</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="30-39" id="30-39" {{ in_array('30-39', old('age_range', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="age_range[]" value="30-39" id="30-39" {{ in_array('30-39', $selectedAgeRanges) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="30-39">30-39</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="40-54" id="40-54" {{ in_array('40-54', old('age_range', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="age_range[]" value="40-54" id="40-54" {{ in_array('40-54', $selectedAgeRanges) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="40-54">40-54</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="55plus" id="55plus" {{ in_array('55plus', old('age_range', [])) ? 'checked' : '' }}>
+                                        <input type="checkbox" name="age_range[]" value="55plus" id="55plus" {{ in_array('55plus', $selectedAgeRanges) ? 'checked' : '' }}>
                                         <span class="mx-2"><label class="form-check-label" for="55plus">55+</label></span>
                                     </div>
                                     <div class="">
-                                        <input type="checkbox" name="age_range[]" value="" id="allAges">
+                                        <input type="checkbox" name="age_range[]" value="" id="allAges" {{ empty($selectedAgeRanges) ? 'checked' : ''  }}>
                                         <span class="mx-2"><label class="form-check-label" for="allAges">All Ages</label></span>
                                     </div>
                                     @error('age_range')
@@ -689,8 +721,13 @@
                     $(this).val(selectedOptions).trigger('change');
                 }
             });
+            @php
+                $selectedProjectSkills = $project->projectSkills ? json_decode($project->projectSkills->skills) : [];
+            @endphp
             setTimeout(function() {
-                var selectedSkills = {!! json_encode(old('skills', [])) !!};
+                var selectedSkillsJson = @json($selectedProjectSkills);
+                var selectedSkills = $.parseJSON(JSON.stringify(selectedSkillsJson));
+                console.log(selectedSkills)
                 if (!Array.isArray(selectedSkills)) {
                     selectedSkills = [selectedSkills];
                 }

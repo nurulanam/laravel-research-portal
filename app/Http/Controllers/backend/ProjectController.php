@@ -11,6 +11,7 @@ use App\Models\backend\ProjectHasEthnicity;
 use App\Models\backend\ProjectHasGender;
 use App\Models\backend\ProjectHasHouseholdIncome;
 use App\Models\backend\ProjectHasIndustry;
+use App\Models\backend\ProjectHasLocation;
 use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\ProjectHasResponse;
@@ -86,8 +87,10 @@ class ProjectController extends Controller
            'industry' => 'required|array|max:5',
            'industry.*' => 'string',
            'company_size' => 'nullable|array',
-           'cities' => 'nullable|array',
-           'cities.*' => 'string',
+           'state' => 'required|array',
+           'cities' => 'required|array',
+           'state.*.*' => 'required|string',
+           'cities.*.*' => 'required|string',
            'skills' => 'nullable|array|max:25',
            'skills.*' => 'string',
            'household_income' => 'nullable|array',
@@ -168,14 +171,29 @@ class ProjectController extends Controller
         }
 
         // Creating New Cities Size belongsToProject
-        if ($request->cities !== null){
-            foreach ($request->cities as $city){
-                $new_cities = new ProjectHasCity();
-                $new_cities->project_id = $project->id;
-                $new_cities->city_name = $city;
-                $new_cities->save();
+
+        $locations = [];
+        $stateData = $request->state;
+        $cityData = $request->cities;
+
+        // Combine the state and city data into a single array
+        $locations = [];
+        foreach ($stateData as $index => $states) {
+            $cities = $cityData[$index];
+
+            if (count($states) > 0 && count($cities) > 0) {
+                $locations[] = [
+                    'state' => $states[0], // Access the first element of the nested array
+                    'city' => $cities[0], // Access the first element of the nested array
+                ];
             }
         }
+        $locationJson = json_encode($locations);
+        $new_location = new ProjectHasLocation();
+        $new_location->project_id = $project->id;
+        $new_location->locations = $locationJson;
+        $new_location->save();
+//        dd($locationJson);
 
         // Creating New Skills belongsToProject
         if ($request->skills !== null){
@@ -357,8 +375,10 @@ class ProjectController extends Controller
         if (!$project){
             return back()->with('error', 'Project Not Found');
         }
+        $projectCities = json_decode($project->projectCities->city_name, true);
 
-        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries'));
+
+        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries', 'projectCities'));
     }
 
     /**

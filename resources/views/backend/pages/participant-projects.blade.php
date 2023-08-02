@@ -16,7 +16,7 @@
     </div>
     <div class="row">
         <div class="col-12">
-            <div class="card p-2">
+            <div class="card rounded-4 shadow-md p-2">
                 <div class="card-body p-0">
                     <table class="table table-responsive table-hover table-borderless rounded">
                         <thead class="bg-dark-blue text-light rounded border-bottom">

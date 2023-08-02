@@ -475,9 +475,4 @@ class ProfileController extends Controller
     }
 
 
-
-
-
-//    extra helper functions
-
 }
