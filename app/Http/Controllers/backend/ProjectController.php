@@ -193,7 +193,6 @@ class ProjectController extends Controller
         $new_location->project_id = $project->id;
         $new_location->locations = $locationJson;
         $new_location->save();
-//        dd($locationJson);
 
         // Creating New Skills belongsToProject
         if ($request->skills !== null){
@@ -375,10 +374,25 @@ class ProjectController extends Controller
         if (!$project){
             return back()->with('error', 'Project Not Found');
         }
-        $projectCities = json_decode($project->projectCities->city_name, true);
+        $projectLocations = json_decode($project->projectLocations->locations, true);
 
 
-        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries', 'projectCities'));
+        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries', 'projectLocations'));
+    }
+    public function projectPreview($slug)
+    {
+        $findProject = Projects::where('slug', $slug)->first();
+        if ($findProject) {
+            // The project with the given slug exists
+            $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
+
+            if ($findQuestions) {
+                $questions = json_decode($findQuestions->questions);
+                return view('backend.pages.project-preview', compact('findProject', 'questions'));
+            } else {
+                return redirect()->route('project.index')->with('error', 'Project Not Found');
+            }
+        }
     }
 
     /**

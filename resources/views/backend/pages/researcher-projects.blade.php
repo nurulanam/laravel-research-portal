@@ -34,13 +34,14 @@
                             </tr>
                         </thead>
                         <tbody>
+                        @if(count($projects) > 0)
                         @foreach($projects as $key => $project)
                             @php
                                 $serialNumber = ($projects->currentPage() - 1) * $projects->perPage() + $key + 1;
                             @endphp
                             <tr>
                                 <td class="align-middle">{{ $project->my_project_name }}</td>
-                                <td class="align-middle">0</td>
+                                <td class="align-middle">{{ count($project->responses) }}</td>
                                 <td class="align-middle">@if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif</td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle">
@@ -58,7 +59,7 @@
                                     <a href="{{ route('project.edit', $project->id) }}"><i class="fas fa-edit text-success"></i></a>
                                 </td>
                                 <td class="align-middle">
-                                    <a href=""><i class="fa-solid fa-eye text-warning"></i></a>
+                                    <a href="{{ route('project.preview', $project->slug) }}"><i class="fa-solid fa-eye text-warning"></i></a>
                                 </td>
                                 <td class="align-middle">
                                     <a type="button" data-bs-toggle="modal" data-bs-target="#deleteConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-danger"></i></a>
@@ -84,6 +85,11 @@
                                 </td>
                             </tr>
                         @endforeach
+                        @else
+                            <tr class="h-auto">
+                                <td colspan="8" class="text-center"><div class="alert alert-danger" role="alert">Opps.. sorry! you don't have any projects</div></td>
+                            </tr>
+                        @endif
 
                         </tbody>
 

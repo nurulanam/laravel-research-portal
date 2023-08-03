@@ -40,23 +40,24 @@
                                 <td class="align-middle"></td>
                                 <td class="align-middle">
                                     @foreach($project->responses as $response)
-                                        @if($response->status == "submitted")
-                                            <a class="badge bg-success text-decoration-none">Submitted</a>
-                                        @elseif($response->status == "invited")
-                                            <a class="badge bg-secondary text-decoration-none">Invited</a>
-                                        @elseif($response->status == "scheduled")
-                                            <a class="badge bg-warning text-decoration-none">Scheduled</a>
-                                        @elseif($response->status == "attended")
-                                            <a class="badge bg-secondary text-decoration-none">Attended</a>
-                                        @elseif($response->status == "paid")
-                                            <a class="badge bg-warning text-decoration-none">Paid</a>
-                                        @elseif($response->status == "cancelled")
-                                            <a class="badge bg-danger text-decoration-none">Cancelled</a>
-                                        @elseif($response->status == "no-show")
-                                            <a class="badge bg-danger text-decoration-none">No Show</a>
+                                        @if(Auth::id() == $response->user_id)
+                                            @if($response->status == "submitted")
+                                                <a class="badge bg-success text-decoration-none">Submitted</a>
+                                            @elseif($response->status == "invited")
+                                                <a class="badge bg-secondary text-decoration-none">Invited</a>
+                                            @elseif($response->status == "scheduled")
+                                                <a class="badge bg-warning text-decoration-none">Scheduled</a>
+                                            @elseif($response->status == "attended")
+                                                <a class="badge bg-secondary text-decoration-none">Attended</a>
+                                            @elseif($response->status == "paid")
+                                                <a class="badge bg-warning text-decoration-none">Paid</a>
+                                            @elseif($response->status == "cancelled")
+                                                <a class="badge bg-danger text-decoration-none">Cancelled</a>
+                                            @elseif($response->status == "no-show")
+                                                <a class="badge bg-danger text-decoration-none">No Show</a>
+                                            @endif
                                         @endif
                                     @endforeach
-
                                 </td>
                                 <td>
                                     <a type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-white me-2"></i><span>Withdraw</span></a>
@@ -65,7 +66,7 @@
                         @endforeach
                         @else
                             <tr class="h-auto">
-                                <td colspan="5" class="text-center"><div class="alert alert-success my-3" role="alert">Opps.. Sorry! No Projects Found</div></td>
+                                <td colspan="5" class="text-center"><div class="alert alert-danger" role="alert">Opps.. Sorry! No Projects Found</div></td>
                             </tr>
                         @endif
 

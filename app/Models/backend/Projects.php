@@ -4,7 +4,7 @@ namespace App\Models\backend;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\backend\ProjectHasCity;
+use App\Models\backend\ProjectHasLocation;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasIndustry;
@@ -74,7 +74,7 @@ class Projects extends Model
     public function projectSkills(){
         return $this->hasOne(ProjectHasSkill::class, 'project_id', 'id');
     }
-//    public function projectCities(){
-//        return $this->hasOne(ProjectHasCity::class, 'project_id', 'id');
-//    }
+    public function projectLocations(){
+        return $this->hasOne(ProjectHasLocation::class, 'project_id', 'id');
+    }
 }

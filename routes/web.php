@@ -47,6 +47,8 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::middleware('role:researcher')->group(function (){
         // Project
         Route::resource('/project', ProjectController::class)->except('index');
+        Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
+
     });
 
     Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');

@@ -752,6 +752,14 @@
                     });
                 }
             }, 1000); // Delay of 1000 milliseconds (1 second)
+            
+            Parsley.on('field:success', function(parsleyField) {
+                // Get the parent element of the Parsley field (usually the form-group)
+                const parentElement = $(parsleyField.$element).closest('.form-group');
+
+                // Remove the parsley-errors-list element
+                parentElement.find('.parsley-errors-list').remove();
+            });
 
         });
 
@@ -866,108 +874,27 @@
             }
         });
     </script>
-{{--    <script>--}}
-{{--        $(document).ready( function() {--}}
-{{--            let addLocation = $(".add-location");--}}
-{{--            let locationContainer = $(".location-container");--}}
-
-{{--            function populateStateOptions(selectElement) {--}}
-{{--                for (const state in usStateAndCity) {--}}
-{{--                    const option = $("<option></option>").val(state).text(state);--}}
-{{--                    selectElement.append(option);--}}
-{{--                }--}}
-{{--            }--}}
-
-{{--            function populateCityOptions(selectElement, selectedState) {--}}
-{{--                const cities = usStateAndCity[selectedState];--}}
-
-{{--                // Clear city select options--}}
-{{--                selectElement.empty();--}}
-
-{{--                // Add default option for city select--}}
-{{--                const defaultOption = $("<option></option>").val("").text("Select City");--}}
-{{--                selectElement.append(defaultOption);--}}
-
-{{--                // Populate city select options--}}
-{{--                for (const city of cities) {--}}
-{{--                    const option = $("<option></option>").val(city).text(city);--}}
-{{--                    selectElement.append(option);--}}
-{{--                }--}}
-{{--            }--}}
-
-{{--            function createLocationSet(isInitial = false) {--}}
-{{--                const locationDiv = $("<div class='location d-lg-flex justify-content-between align-items-center my-2'></div>");--}}
-{{--                const country = $("<input class='form-control mx-1 my-2 my-lg-0' placeholder='US' disabled='disabled' readonly='readonly'>")--}}
-{{--                const stateSelect = $("<select class='states form-control mx-1 my-2 my-lg-0'></select>");--}}
-{{--                const citySelect = $("<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[]' required data-parsley-error-message=\"Please Select City\"></select>");--}}
-
-{{--                // Populate state select options--}}
-{{--                populateStateOptions(stateSelect);--}}
-
-{{--                // Event handler for the state select change event--}}
-{{--                stateSelect.on("change", function() {--}}
-{{--                    const selectedState = $(this).val();--}}
-{{--                    populateCityOptions(citySelect, selectedState);--}}
-{{--                });--}}
-
-{{--                locationDiv.append(country);--}}
-{{--                locationDiv.append(stateSelect);--}}
-{{--                locationDiv.append(citySelect);--}}
-
-{{--                // Add delete button dynamically for non-initial location sets--}}
-{{--                if (!isInitial) {--}}
-{{--                    const deleteButton = $("<button class='btn btn-danger deleteLocation ms-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");--}}
-{{--                    locationDiv.append(deleteButton);--}}
-{{--                } else {--}}
-{{--                    // For the initial location set, add a class to hide the delete button--}}
-{{--                    const disableDeleteButton = $("<button class='btn btn-danger disabled ms-1 my-2 my-lg-0'><i class='fas fa-trash-alt'></i></button>");--}}
-{{--                    locationDiv.append(disableDeleteButton);--}}
-{{--                }--}}
-
-{{--                locationContainer.append(locationDiv);--}}
-
-{{--                // Automatically select the first state and populate the city options--}}
-{{--                const firstState = stateSelect.find("option:first").val();--}}
-{{--                stateSelect.val(firstState).trigger("change");--}}
-
-{{--                citySelect.parsley().validate();--}}
-
-
-{{--            }--}}
-
-{{--            // Add an initial location set on page load--}}
-{{--            createLocationSet(true);--}}
-
-{{--            // Event handler for the "add location" button click--}}
-{{--            addLocation.on("click", function() {--}}
-{{--                createLocationSet();--}}
-{{--            });--}}
-
-{{--            // Event delegation for the delete button click--}}
-{{--            locationContainer.on("click", ".deleteLocation", function() {--}}
-{{--                $(this).closest(".location").remove();--}}
-{{--            });--}}
-
-{{--        });--}}
-{{--        let usStateAndCity = @json($us_states);--}}
-{{--    </script>--}}
 
     <script>
         function populateStateOptions(selectElement) {
             // Replace this with your actual state data
             const usStateAndCity = @json($us_states);
+            const states = Object.keys(usStateAndCity);
 
-            for (const state in usStateAndCity) {
-                const option = $("<option></option>").val(state).text(state);
+            states.forEach((state, index) => {
+                const option = $("<option></option>").val(index).text(state);
                 selectElement.append(option);
-            }
+            });
         }
-
         function populateCityOptions(selectElement, selectedState) {
             // Replace this with your actual state data
             const usStateAndCity = @json($us_states);
 
-            const cities = usStateAndCity[selectedState];
+            const states = Object.keys(usStateAndCity);
+            const selectedStatefind = states[selectedState];
+
+            const cities = usStateAndCity[selectedStatefind];
+
 
             // Clear city select options
             selectElement.empty();
@@ -976,10 +903,11 @@
             const defaultOption = $("<option></option>").val("").text("Select City");
             selectElement.append(defaultOption);
 
-            // Populate city select options
-            for (const city of cities) {
-                const option = $("<option></option>").val(city).text(city);
-                selectElement.append(option);
+            if (cities) {
+                cities.forEach((city, index) => {
+                    const option = $("<option></option>").val(index).text(city);
+                    selectElement.append(option);
+                });
             }
         }
 

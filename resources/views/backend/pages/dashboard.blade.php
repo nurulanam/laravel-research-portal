@@ -50,7 +50,7 @@
             </div>
         </div>
         <div class="row my-4">
-            <div class="col-12 col-lg-3">
+            <div class="col-12 col-lg-3 mb-4 mb-lg-0">
                 <div class="card rounded-4 shadow-md">
                     <div class="card-header rounded-top-4 bg-dark-blue py-3">
                         <h5 class="text-light mb-0">Filter Projects</h5>
@@ -262,11 +262,10 @@
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
                                                         <p class="text-dark mb-2"><i
-                                                                class="fas fa-clipboard-list text-success me-2"></i><span>Proposals:
+                                                                class="fas fa-clipboard-list text-success me-2"></i><span>Responses:
                                                                 <span class="total-response">0</span></span></p>
                                                         <p class="text-dark mb-2"><i
-                                                                class="fas fa-clipboard-check text-success me-2"></i><span>Total
-                                                                Hired: <span class="">0</span></span></p>
+                                                                class="fas fa-clipboard-check text-success me-2"></i><span>Hired: <span class="">0</span></span></p>
                                                     </div>
                                                 </div>
                                             </div>

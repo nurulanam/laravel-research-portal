@@ -297,23 +297,44 @@
                                 </div>
                                 <div class="col-lg-9">
                                     <div class="location-container">
-{{--                                        @foreach($projectCities as $city)--}}
-{{--                                            <div class="location d-lg-flex justify-content-between align-items-center my-2">--}}
-{{--                                                <input class="form-control mx-1 my-2 my-lg-0" placeholder="US" value="US" disabled readonly>--}}
-{{--                                                <select class="states form-control mx-1 my-2 my-lg-0" name="states[]" required data-parsley-error-message="Please Select State">--}}
-{{--                                                    @foreach($us_states as $state => $cities)--}}
-{{--                                                        @if(in_array($city, $cities))--}}
-{{--                                                            <option value="{{ $state }}" selected>{{ $state }}</option>--}}
-{{--                                                        @else--}}
-{{--                                                            <option value="{{ $state }}">{{ $state }}</option>--}}
-{{--                                                        @endif--}}
-{{--                                                    @endforeach--}}
-{{--                                                </select>--}}
-{{--                                                <button class="btn btn-danger deleteLocation ms-1 my-2 my-lg-0">--}}
-{{--                                                    <i class="fas fa-trash-alt"></i>--}}
-{{--                                                </button>--}}
-{{--                                            </div>--}}
-{{--                                        @endforeach--}}
+                                        @if(count($projectLocations) > 0)
+                                            @php $us_states_name = array_keys($us_states) @endphp
+                                        @foreach($projectLocations as $index => $location)
+                                            <div class="location d-lg-flex justify-content-between align-items-center my-2">
+                                                <input class="form-control mx-1 my-2 my-lg-0" placeholder="US" value="US" disabled readonly>
+                                                <select class="states form-control mx-1 my-2 my-lg-0" name="states[{{ $index }}][]" required data-parsley-error-message="Please Select State">
+                                                    @foreach($us_states_name as $stateIndex => $state)
+                                                        @if($location['state'] == $stateIndex)
+                                                            <option value="{{ $stateIndex }}" selected >{{ $state }}</option>
+                                                        @else
+                                                            <option value="{{ $stateIndex }}">{{ $state }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                <select class="cities form-control mx-1 my-2 my-lg-0" name="cities[{{ $index }}][]" required data-parsley-error-message="Please Select City">
+                                                    @php
+                                                        $selectedStateCities = $us_states[$us_states_name[$location['state']]];
+                                                    @endphp
+                                                    @foreach($selectedStateCities as $cityIndex => $city)
+                                                        @if($location['city'] == $cityIndex)
+                                                            <option value="{{ $cityIndex }}" selected>{{ $city }}</option>
+                                                        @else
+                                                            <option value="{{ $cityIndex }}">{{ $city }}</option>
+                                                        @endif
+                                                    @endforeach
+                                                </select>
+                                                @if($index > 0)
+                                                    <button class="btn btn-danger deleteLocation ms-1 my-2 my-lg-0">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                @else
+                                                    <button class="btn btn-danger disabled ms-1 my-2 my-lg-0">
+                                                        <i class="fas fa-trash-alt"></i>
+                                                    </button>
+                                                @endif
+                                            </div>
+                                        @endforeach
+                                        @endif
                                     </div>
                                     <button class="btn btn-primary my-2 add-location">Add City</button>
                                     <hr class="my-30">
@@ -650,6 +671,7 @@
 @section('extraJs')
     <script src="{{ asset('backend/js/parsley.min.js') }}"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
     <script>
         $(document).ready(function() {
             $('input[name="company_size[]"]').click(function() {
@@ -800,6 +822,16 @@
                 }
             }, 1000); // Delay of 1000 milliseconds (1 second)
 
+
+
+            Parsley.on('field:success', function(parsleyField) {
+                // Get the parent element of the Parsley field (usually the form-group)
+                const parentElement = $(parsleyField.$element).closest('.form-group');
+
+                // Remove the parsley-errors-list element
+                parentElement.find('.parsley-errors-list').remove();
+            });
+
         });
 
 
@@ -829,7 +861,7 @@
                 const curOldIndex = curIndex()+1;
                 const backStep= document.querySelector('.step'+curOldIndex);
                 backStep.style.backgroundColor="#fff";
-                backStep.style.color="#858796";
+                backStep.style.color="#0d6efd";
             });
 
             $('.form-navigation .next').click(function(){
@@ -919,14 +951,18 @@
             let locationContainer = $(".location-container");
 
             function populateStateOptions(selectElement) {
-                for (const state in usStateAndCity) {
-                    const option = $("<option></option>").val(state).text(state);
+                const states = Object.keys(usStateAndCity);
+
+                states.forEach((state, index) => {
+                    const option = $("<option></option>").val(index).text(state);
                     selectElement.append(option);
-                }
+                });
             }
 
             function populateCityOptions(selectElement, selectedState) {
-                const cities = usStateAndCity[selectedState];
+                const states = Object.keys(usStateAndCity);
+                const selectedStatefind = states[selectedState];
+                const cities = usStateAndCity[selectedStatefind];
 
                 // Clear city select options
                 selectElement.empty();
@@ -935,18 +971,24 @@
                 const defaultOption = $("<option></option>").val("").text("Select City");
                 selectElement.append(defaultOption);
 
-                // Populate city select options
-                for (const city of cities) {
-                    const option = $("<option></option>").val(city).text(city);
-                    selectElement.append(option);
+                if (cities) {
+                    cities.forEach((city, index) => {
+                        const option = $("<option></option>").val(index).text(city);
+                        selectElement.append(option);
+                    });
                 }
             }
+            locationContainer.on("change", ".states", function () {
+                const selectedState = $(this).val();
+                const citySelect = $(this).closest(".location").find(".cities");
+                populateCityOptions(citySelect, selectedState);
+            });
 
-            function createLocationSet(isInitial = false) {
+            function createLocationSet(index, isInitial = false) {
                 const locationDiv = $("<div class='location d-lg-flex justify-content-between align-items-center my-2'></div>");
-                const country = $("<input class='form-control mx-1 my-2 my-lg-0' placeholder='US' disabled='disabled' readonly='readonly'>")
-                const stateSelect = $("<select class='states form-control mx-1 my-2 my-lg-0'></select>");
-                const citySelect = $("<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[]' required data-parsley-error-message=\"Please Select City\"></select>");
+                const country = $("<input class='form-control mx-1 my-2 my-lg-0' value='US' placeholder='US' disabled='disabled' readonly='readonly'>")
+                const stateSelect = $(`<select class='states form-control mx-1 my-2 my-lg-0' name='state[${index}][]' required data-parsley-error-message="Please Select State"></select>`);
+                const citySelect = $(`<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[${index}][]' required data-parsley-error-message="Please Select City"></select>`);
 
                 // Populate state select options
                 populateStateOptions(stateSelect);
@@ -982,22 +1024,39 @@
 
             }
 
+
             // Add an initial location set on page load
-            createLocationSet(true);
+            // createLocationSet(true);
 
             // Event handler for the "add location" button click
-            addLocation.on("click", function() {
-                createLocationSet();
+
+            // Event handler for the "add location" button click
+            addLocation.on("click", function () {
+                const currentIndex = locationContainer.find(".location").length;
+                createLocationSet(currentIndex);
             });
 
             // Event delegation for the delete button click
-            locationContainer.on("click", ".deleteLocation", function() {
+            locationContainer.on("click", ".deleteLocation", function () {
                 $(this).closest(".location").remove();
+                resetIndices();
             });
+
+            // Function to reset the indices after deletion
+            function resetIndices() {
+                const locationSets = $(".location-container").find(".location");
+                locationSets.each(function (index) {
+                    $(this).attr("data-index", index);
+                    $(this).find(".states").attr("name", `state[${index}][]`);
+                    $(this).find(".cities").attr("name", `cities[${index}][]`);
+                });
+            }
 
         });
         let usStateAndCity = @json($us_states);
     </script>
+
+
     <script>
         $(document).ready(function() {
             const audienceValue = $('input[name="target_audience"].target-audience:checked').val();

@@ -118,7 +118,7 @@ class ProjectApplyController extends Controller
                 $userResponseModel->qualification = $overallQualification; // Set the 'qualification' directly in $userResponseModel
 
                 $userResponseModel->save();
-                return redirect()->route('dashboard.index')->with('success', 'response saved');
+                return redirect()->route('dashboard.index')->with('success', 'Response Submitted');
             }
         }
     }
