@@ -32,16 +32,13 @@ class Projects extends Model
         'published_at'
     ];
 
-    public function projectHasCities(){
-        return $this->hasMany(ProjectHasCity::class, 'project_id');
-    }
     public function responses()
     {
         return $this->hasMany(ProjectHasResponse::class, 'project_id', 'id');
     }
     public function projectTopic()
     {
-        return $this->hasMany(ProjectHasProjectTopic::class, 'project_id', 'id');
+        return $this->hasOne(ProjectHasProjectTopic::class, 'project_id', 'id');
     }
     public function projectIndustires()
     {
@@ -76,5 +73,8 @@ class Projects extends Model
     }
     public function projectLocations(){
         return $this->hasOne(ProjectHasLocation::class, 'project_id', 'id');
+    }
+    public function projectQuestions(){
+        return $this->hasOne(ProjectHasQuestion::class, 'project_id', 'id');
     }
 }

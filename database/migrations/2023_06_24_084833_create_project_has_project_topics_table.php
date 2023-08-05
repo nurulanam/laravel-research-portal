@@ -16,7 +16,7 @@ class CreateProjectHasProjectTopicsTable extends Migration
         Schema::create('project_has_project_topics', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('project_id');
-            $table->string('project_topic');
+            $table->json('project_topic');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->timestamps();

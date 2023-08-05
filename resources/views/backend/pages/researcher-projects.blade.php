@@ -11,8 +11,13 @@
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="text-dark py-4">My Projects</h4>
-
                 <a  href="{{ route('project.create') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Create a Project</a>
+            </div>
+            <div class="alert alert-success d-flex align-items-center" role="alert">
+                <i class="fa-solid fa-circle-exclamation fa-2x text-dark-blue me-3"></i>
+                <div>
+                    Remember! Once You Publish Your Project. You Can't Edit That Again.
+                </div>
             </div>
         </div>
     </div>

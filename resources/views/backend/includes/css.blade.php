@@ -30,8 +30,9 @@
 <link href="{{ asset('backend') }}/css/all.css" rel="stylesheet">
 {{--bootstrap 5 css --}}
 <link href="{{ asset('backend') }}/css/bootstrap.css" rel="stylesheet">
+<link href="{{ asset('backend') }}/css/toastr.css" rel="stylesheet">
 {{--toastr css --}}
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>
+{{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css"/>--}}
 
 {{--main css--}}
 <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">

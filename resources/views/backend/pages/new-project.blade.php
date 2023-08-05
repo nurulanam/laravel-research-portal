@@ -752,7 +752,7 @@
                     });
                 }
             }, 1000); // Delay of 1000 milliseconds (1 second)
-            
+
             Parsley.on('field:success', function(parsleyField) {
                 // Get the parent element of the Parsley field (usually the form-group)
                 const parentElement = $(parsleyField.$element).closest('.form-group');
@@ -914,7 +914,7 @@
         function createLocationSet(index, isInitial = false) {
             const locationDiv = $(`<div class='location d-lg-flex justify-content-between align-items-center my-2' data-index="${index}"></div>`);
             const country = $("<input class='form-control mx-1 my-2 my-lg-0' placeholder='US' disabled='disabled' readonly='readonly'>")
-            const stateSelect = $(`<select class='states form-control mx-1 my-2 my-lg-0' name='state[${index}][]' required data-parsley-error-message="Please Select State"></select>`);
+            const stateSelect = $(`<select class='states form-control mx-1 my-2 my-lg-0' name='states[${index}][]' required data-parsley-error-message="Please Select State"></select>`);
             const citySelect = $(`<select class='cities form-control mx-1 my-2 my-lg-0' name='cities[${index}][]' required data-parsley-error-message="Please Select City"></select>`);
 
             // Populate state select options

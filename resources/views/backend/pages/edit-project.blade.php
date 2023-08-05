@@ -15,6 +15,7 @@
         <div class="col-12">
             <form action="{{ route('project.update', $project->id) }}" method="post" class="new-project-form">
                 @csrf
+                @method('PUT')
                 <div class="card rounded-4 shadow p-2">
                 <div class="card-header bg-dark-blue rounded-top-3">
                     <h5 class="text-light mb-0" id="main_title">{{ $project->my_project_name }}</h5>
@@ -88,29 +89,32 @@
                                         @enderror
                                         <div id="projectTopic" style="display: none">
                                             <p class="py-2" title="Required" >Project Topic <span class="text-danger">(Max:2) *</span></p>
+                                            @php
+                                                $selectedProjectTopics = $project->projectTopic ? json_decode($project->projectTopic->project_topic) : [];
+                                            @endphp
                                             <select name="project_topic[]" class="topic-select form-control" multiple disabled data-parsley-error-message="Please Select Project Topic">
-                                                <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Arts & Entertainment</option>
-                                                <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Automobile & Vehicles</option>
-                                                <option value="beauty" {{ in_array('beauty', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Beauty</option>
-                                                <option value="business" {{ in_array('business', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Business</option>
-                                                <option value="computer-and-electronics" {{ in_array('computer-and-electronics', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Computer & Electronics</option>
-                                                <option value="education" {{ in_array('education', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Education</option>
-                                                <option value="family-and-relationships" {{ in_array('family-and-relationships', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Family & Relationships</option>
-                                                <option value="finance" {{ in_array('finance', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Finance</option>
-                                                <option value="food-and-drink" {{ in_array('food-and-drink', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Food & Drink</option>
-                                                <option value="games" {{ in_array('games', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Games</option>
-                                                <option value="health-and-wellness" {{ in_array('health-and-wellness', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Health & Wellness</option>
-                                                <option value="home-and-garden" {{ in_array('home-and-garden', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Home & Garden</option>
-                                                <option value="information-technology" {{ in_array('information-technology', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Information Technology</option>
-                                                <option value="law-and-government" {{ in_array('law-and-government', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Law & Government</option>
-                                                <option value="other" {{ in_array('other', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Other</option>
-                                                <option value="pets-and-animals" {{ in_array('pets-and-animals', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Pets & Animals</option>
-                                                <option value="real-estate" {{ in_array('real-estate', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Real Estate</option>
-                                                <option value="science" {{ in_array('science', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Science</option>
-                                                <option value="shopping" {{ in_array('shopping', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Shopping</option>
-                                                <option value="social-media" {{ in_array('social-media', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Social Media</option>
-                                                <option value="sports-and-outdoors" {{ in_array('sports-and-outdoors', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>sports & outdoors</option>
-                                                <option value="travel" {{ in_array('travel', $project->projectTopic->pluck('project_topic')->toArray()) ? 'selected' : '' }}>Travel</option>
+                                                <option value="arts-and-entertainment" {{ in_array('arts-and-entertainment', $selectedProjectTopics) ? 'selected' : '' }}>Arts & Entertainment</option>
+                                                <option value="automobile-and-vehicles" {{ in_array('automobile-and-vehicles', $selectedProjectTopics) ? 'selected' : '' }}>Automobile & Vehicles</option>
+                                                <option value="beauty" {{ in_array('beauty', $selectedProjectTopics) ? 'selected' : '' }}>Beauty</option>
+                                                <option value="business" {{ in_array('business', $selectedProjectTopics) ? 'selected' : '' }}>Business</option>
+                                                <option value="computer-and-electronics" {{ in_array('computer-and-electronics', $selectedProjectTopics) ? 'selected' : '' }}>Computer & Electronics</option>
+                                                <option value="education" {{ in_array('education', $selectedProjectTopics) ? 'selected' : '' }}>Education</option>
+                                                <option value="family-and-relationships" {{ in_array('family-and-relationships', $selectedProjectTopics) ? 'selected' : '' }}>Family & Relationships</option>
+                                                <option value="finance" {{ in_array('finance', $selectedProjectTopics) ? 'selected' : '' }}>Finance</option>
+                                                <option value="food-and-drink" {{ in_array('food-and-drink', $selectedProjectTopics) ? 'selected' : '' }}>Food & Drink</option>
+                                                <option value="games" {{ in_array('games', $selectedProjectTopics) ? 'selected' : '' }}>Games</option>
+                                                <option value="health-and-wellness" {{ in_array('health-and-wellness', $selectedProjectTopics) ? 'selected' : '' }}>Health & Wellness</option>
+                                                <option value="home-and-garden" {{ in_array('home-and-garden', $selectedProjectTopics) ? 'selected' : '' }}>Home & Garden</option>
+                                                <option value="information-technology" {{ in_array('information-technology', $selectedProjectTopics) ? 'selected' : '' }}>Information Technology</option>
+                                                <option value="law-and-government" {{ in_array('law-and-government', $selectedProjectTopics) ? 'selected' : '' }}>Law & Government</option>
+                                                <option value="other" {{ in_array('other', $selectedProjectTopics) ? 'selected' : '' }}>Other</option>
+                                                <option value="pets-and-animals" {{ in_array('pets-and-animals', $selectedProjectTopics) ? 'selected' : '' }}>Pets & Animals</option>
+                                                <option value="real-estate" {{ in_array('real-estate', $selectedProjectTopics) ? 'selected' : '' }}>Real Estate</option>
+                                                <option value="science" {{ in_array('science', $selectedProjectTopics) ? 'selected' : '' }}>Science</option>
+                                                <option value="shopping" {{ in_array('shopping', $selectedProjectTopics) ? 'selected' : '' }}>Shopping</option>
+                                                <option value="social-media" {{ in_array('social-media', $selectedProjectTopics) ? 'selected' : '' }}>Social Media</option>
+                                                <option value="sports-and-outdoors" {{ in_array('sports-and-outdoors', $selectedProjectTopics) ? 'selected' : '' }}>sports & outdoors</option>
+                                                <option value="travel" {{ in_array('travel', $selectedProjectTopics) ? 'selected' : '' }}>Travel</option>
                                             </select>
                                             <p class="font-13 pt-2">Tagging your projects with topics will better help match your general population project with participants that have indicated interest in these topics. </p>
                                             @error('project_topic')
@@ -583,36 +587,96 @@
                             <button class="btn btn-primary rounded-pill text-white" id="addQuestion"><i class="fa-solid fa-plus me-2"></i>Question</button>
                         </div>
                         <div class="my-3" id="questionsField">
-                            <div class="form-group border p-3 my-3 bg-body-tertiary rounded full-question" data-qid="q1">
+                            @foreach($projectQuestions as $key => $question)
+                                @php
+                                    $key++
+                                @endphp
+                            <div class="form-group border p-3 my-4 bg-body-tertiary rounded full-question" data-qid="q{{$key}}">
                                 <div class="row">
                                     <div class="col-6">
-                                        <h5>Screener Question: 1</h5>
+                                        <h5>Screener Question: {{ $key }}</h5>
                                     </div>
-                                    <div class="col-6 text-right">
+                                    <div class="col-6 text-end">
+                                        @if($key > 1)
+                                        <button class="btn btn-delete-question" onclick="confirm('Sure To Delete This Question?')"><i class="fas fa-trash-alt"></i></button>
+                                            @endif
                                     </div>
                                 </div>
                                 <div class="question-title mb-3">
-                                    <textarea name="question_name[1][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required data-parsley-error-message="Please Add Question Name"></textarea>
+                                    <textarea name="question_name[{{$key}}][]" class="form-control" placeholder="Please Add A Question Name Here....." rows="1" required data-parsley-error-message="Please Add Question Name">{{$question["question_name"][0]}}</textarea>
                                 </div>
                                 <div class="question-body">
                                     <div class="d-flex align-items-center">
-                                        <select name="question_type[1][]" class="form-control question_type" data-typeid="1" required data-parsley-error-message="Please Select Questestion Type">
+                                        <select name="question_type[{{$key}}][]" class="form-control question_type" data-typeid="{{$key}}" required data-parsley-error-message="Please Select Questestion Type">
                                             <option value="" id="">Select a Type</option>
-                                            <option value="checkbox">Checkbox (Multi select)</option>
-                                            <option value="textarea">Multi-line text box</option>
-                                            <option value="text">Single-line text box</option>
-                                            <option value="number">Number box</option>
-                                            <option value="slider">Slider (number selector)</option>
+                                            <option value="checkbox" @if($question["question_type"][0] == 'checkbox') selected @endif>Checkbox (Multi select)</option>
+                                            <option value="textarea" @if($question["question_type"][0] == 'textarea') selected @endif>Multi-line text box</option>
+                                            <option value="text" @if($question["question_type"][0] == 'text') selected @endif>Single-line text box</option>
+                                            <option value="number" @if($question["question_type"][0] == 'number') selected @endif>Number box</option>
+                                            <option value="slider" @if($question["question_type"][0] == 'slider') selected @endif>Slider (number selector)</option>
                                         </select>
                                         <div class="d-flex mx-2">
-                                            <input type="checkbox" name="required[1][]" id="requiredCheck1" class="mx-2">
-                                            <label class="mb-0" for="requiredCheck1">Required</label>
+                                            <input type="checkbox" name="required[{{$key}}][]" id="requiredCheck{{$key}}" class="mx-2" @if(!empty($question["required"][0])) checked @endif>
+                                            <label class="mb-0" for="requiredCheck{{$key}}">Required</label>
                                         </div>
                                     </div>
-                                    <div id="answer1">
+                                    <div id="answer{{$key}}">
+                                        @if($question["question_type"][0] == 'checkbox')
+                                            @php
+                                                $answers = $question['answer'] ?? [];
+                                                $answerQualify = $question['answer_qualify'] ?? [];
+                                            @endphp
+                                            <div class="checkbox-answer pt-2" id="checkboxAnswer{{$key}}">
+                                                @foreach($answers as $index => $answer)
+                                                    <div class="row align-items-top checkAns py-2 checkboxAnsweItem" data-id="{{$key}}">
+                                                        <div class="col-1">
+                                                            <p class="serial_nom m-0">{{ $index + 1 }}</p>
+                                                        </div>
+                                                        <div class="col-7">
+                                                            <input type="text" class="form-control checkbox-answer-item" name="answer[{{$key}}][]" placeholder="Answer" required value="{{ $answer }}">
+                                                        </div>
+                                                        <div class="col-3">
+                                                            <select name="answer_qualify[{{$key}}][]" class="form-control" required>
+                                                                <option value="qualify"{{ $answerQualify[$index] === 'qualify' ? ' selected' : '' }}>Qualify</option>
+                                                                <option value="disqualify"{{ $answerQualify[$index] === 'disqualify' ? ' selected' : '' }}>Disqualify</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="col-1 text-right">
+                                                            @if($index > 1)
+                                                            <button class="btn btn-danger deleteCheckAns"><i class="fa-solid fa-trash-alt"></i></button>
+                                                            @endif
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <button class="btn btn-primary" id="addCheckboxAnswer" data-id="{{$key}}"><i class="fas fa-plus me-2"></i> Answer</button>
+                                        @elseif($question["question_type"][0] == 'slider')
+                                            @php
+                                                $minValue = $question['min_value'][0] ?? '';
+                                                $maxValue = $question['max_value'][0] ?? '';
+                                                $step = $question['steps'][0] ?? '';
+                                            @endphp
+                                            <div class="text-area-answer pt-2" id="answer{{$key}}">
+                                                <div class="row align-items-center py-2">
+                                                    <div class="col-4">
+                                                        <label for="" class="col-form-label" title="required">Min Value <span class="text-danger">*</span></label>
+                                                        <input type="number" name="min_value[{{$key}}][]" class="form-control" required value="{{ $minValue }}">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label for="" class="col-form-label" title="required">Max Value <span class="text-danger">*</span></label>
+                                                        <input type="number" name="max_value[{{$key}}][]" class="form-control" required value="{{ $maxValue }}">
+                                                    </div>
+                                                    <div class="col-4">
+                                                        <label for="" class="col-form-label" title="required">Step <span class="text-danger">*</span></label>
+                                                        <input type="number" name="steps[{{$key}}][]" class="form-control" required value="{{ $step }}">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
 
                     </div>
@@ -674,6 +738,14 @@
 
     <script>
         $(document).ready(function() {
+            $('#myProjectName').on('input', function(){
+                const projectName = $(this).val();
+                if (projectName.trim() === '') {
+                    $('#main_title').html('Please Add Project Name');
+                } else {
+                    $('#main_title').html(projectName);
+                }
+            });
             $('input[name="company_size[]"]').click(function() {
                 if ($(this).index('input[name="company_size[]"]') === 9) {
                 $('input[name="company_size[]"]').not(this).prop('checked', false);
@@ -743,9 +815,11 @@
                     $(this).val(selectedOptions).trigger('change');
                 }
             });
+
             @php
                 $selectedProjectSkills = $project->projectSkills ? json_decode($project->projectSkills->skills) : [];
             @endphp
+
             setTimeout(function() {
                 var selectedSkillsJson = @json($selectedProjectSkills);
                 var selectedSkills = $.parseJSON(JSON.stringify(selectedSkillsJson));
@@ -831,7 +905,22 @@
                 // Remove the parsley-errors-list element
                 parentElement.find('.parsley-errors-list').remove();
             });
+            const audienceValue = $('input[name="target_audience"].target-audience:checked').val();
+            if (audienceValue === 'b2c') {
+                $('#projectTopic').show();
+                $('select.topic-select').prop('required', true).prop('disabled', false);
+            }
 
+            $('input[name="target_audience"].target-audience').on('click', function() {
+                const currentValue = $(this).val();
+                if (currentValue === 'b2c') {
+                    $('#projectTopic').show();
+                    $('select.topic-select').prop('required', true).prop('disabled', false);
+                } else {
+                    $('#projectTopic').hide();
+                    $('select.topic-select').prop('required', false).prop('disabled', true);
+                }
+            });
         });
 
 
@@ -1018,17 +1107,8 @@
                 // Automatically select the first state and populate the city options
                 const firstState = stateSelect.find("option:first").val();
                 stateSelect.val(firstState).trigger("change");
-
                 citySelect.parsley().validate();
-
-
             }
-
-
-            // Add an initial location set on page load
-            // createLocationSet(true);
-
-            // Event handler for the "add location" button click
 
             // Event handler for the "add location" button click
             addLocation.on("click", function () {
@@ -1051,34 +1131,19 @@
                     $(this).find(".cities").attr("name", `cities[${index}][]`);
                 });
             }
-
         });
         let usStateAndCity = @json($us_states);
     </script>
 
 
     <script>
-        $(document).ready(function() {
-            const audienceValue = $('input[name="target_audience"].target-audience:checked').val();
-
-            if (audienceValue === 'b2c') {
-                $('#projectTopic').show();
-                $('select.topic-select').prop('required', true).prop('disabled', false);
-            }
-
-            $('input[name="target_audience"].target-audience').on('click', function() {
-                const currentValue = $(this).val();
-                if (currentValue === 'b2c') {
-                    $('#projectTopic').show();
-                    $('select.topic-select').prop('required', true).prop('disabled', false);
-                } else {
-                    $('#projectTopic').hide();
-                    $('select.topic-select').prop('required', false).prop('disabled', true);
-                }
-            });
-        });
+        function updateQuestionCount() {
+            qnum = $('#questionsField').find('.full-question').length + 1;
+        }
+        let qnum = $('#questionsField').find('.full-question').length;
 
         $('#addQuestion').on('click', function (){
+            updateQuestionCount();
             let question = '<div class="form-group border p-3 my-3 bg-body-tertiary rounded full-question" data-qid="q'+qnum+'">\
                 <div class="row">\
                 <div class="col-6">\
@@ -1112,8 +1177,6 @@
         </div>';
 
             $('#questionsField').append(question);
-            qnum +=1;
-
         });
         $('#questionsField').on('change', '.question_type', function (){
             changeQuestionType( $(this) );
@@ -1228,14 +1291,52 @@
             container.find('.checkbox-answer-item').parsley().validate();
         });
 
-        let qnum = 2;
-
         $('#questionsField').on('click', '.btn-delete-question', function (){
             $(this).closest(".full-question").remove();
+            reindexQuestions();
+            updateQuestionCount();
         })
+
+        function reindexQuestions() {
+            $('#questionsField .full-question').each(function(index) {
+                const $question = $(this);
+                const newQNum = index + 1;
+
+                // Update data-qid
+                $question.attr('data-qid', 'q' + newQNum);
+
+                // Update question title
+                $question.find('h5').text('Screener Question: ' + newQNum);
+
+                // Update question input names and IDs
+                $question.find('textarea[name^="question_name"]').attr('name', 'question_name[' + newQNum + '][]');
+                $question.find('select[name^="question_type"]').attr('name', 'question_type[' + newQNum + '][]');
+                $question.find('.question_type').attr('data-typeid', newQNum);
+                $question.find('input[name^="required"]').attr('name', 'required[' + newQNum + '][]');
+                $question.find('input[id^="requiredCheck"]').attr('id', 'requiredCheck' + newQNum);
+                $question.find('label[for^="requiredCheck"]').attr('for', 'requiredCheck' + newQNum);
+                $question.find('div[id^="answer"]').attr('id', 'answer' + newQNum);
+
+                // Update checkbox answer row attributes
+                $question.find('.checkAns').each(function(ansIndex) {
+                    const $answerRow = $(this);
+                    $answerRow.attr('data-id', newQNum);
+                    $answerRow.find('.serial_nom').text(ansIndex + 1);
+                    $answerRow.find('input[name^="answer"]').attr('name', 'answer[' + newQNum + '][]');
+                    $answerRow.find('select[name^="answer_qualify"]').attr('name', 'answer_qualify[' + newQNum + '][]');
+                });
+
+                // Update slider input names
+                $question.find('input[name^="min_value"]').attr('name', 'min_value[' + newQNum + '][]');
+                $question.find('input[name^="max_value"]').attr('name', 'max_value[' + newQNum + '][]');
+                $question.find('input[name^="steps"]').attr('name', 'steps[' + newQNum + '][]');
+            });
+        }
+
         $('#questionsField').on('click', '.deleteCheckAns', function (){
             $(this).closest(".checkAns").remove();
         })
+
     </script>
 
 @endsection

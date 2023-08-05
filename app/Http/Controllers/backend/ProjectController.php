@@ -71,7 +71,6 @@ class ProjectController extends Controller
      */
     public function store(Request $request)
     {
-//        dd($request);
         $request->validate([
            'my_project_name' => 'required|string',
            'study_title' => 'required|string',
@@ -87,9 +86,9 @@ class ProjectController extends Controller
            'industry' => 'required|array|max:5',
            'industry.*' => 'string',
            'company_size' => 'nullable|array',
-           'state' => 'required|array',
+           'states' => 'required|array',
            'cities' => 'required|array',
-           'state.*.*' => 'required|string',
+           'states.*.*' => 'required|string',
            'cities.*.*' => 'required|string',
            'skills' => 'nullable|array|max:25',
            'skills.*' => 'string',
@@ -137,12 +136,10 @@ class ProjectController extends Controller
         // Creating New Project Topics belongsToProject
         if ($request->target_audience == 'b2c'){
             if ($request->project_topic !== null){
-                foreach ($request->project_topic as $topic){
-                    $new_project_topic = new ProjectHasProjectTopic();
-                    $new_project_topic->project_id = $project->id;
-                    $new_project_topic->project_topic = $topic;
-                    $new_project_topic->save();
-                }
+                $new_project_topic = new ProjectHasProjectTopic();
+                $new_project_topic->project_id = $project->id;
+                $new_project_topic->project_topic = json_encode($request->project_topic);
+                $new_project_topic->save();
             }
         }
 
@@ -173,7 +170,7 @@ class ProjectController extends Controller
         // Creating New Cities Size belongsToProject
 
         $locations = [];
-        $stateData = $request->state;
+        $stateData = $request->states;
         $cityData = $request->cities;
 
         // Combine the state and city data into a single array
@@ -374,10 +371,13 @@ class ProjectController extends Controller
         if (!$project){
             return back()->with('error', 'Project Not Found');
         }
+        if ($project->status == 'publish'){
+            return back()->with('error', 'Once You Publish Project You Can\'t Update That');
+        }
         $projectLocations = json_decode($project->projectLocations->locations, true);
+        $projectQuestions = json_decode($project->projectQuestions->questions, true);
 
-
-        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries', 'projectLocations'));
+        return view('backend.pages.edit-project', compact('project', 'us_states', 'industries', 'projectLocations', 'projectQuestions'));
     }
     public function projectPreview($slug)
     {
@@ -404,7 +404,248 @@ class ProjectController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'my_project_name' => 'required|string',
+            'study_title' => 'required|string',
+            'study_description' => 'required|string',
+            'target_audience' => 'required|string',
+            'project_topic' => 'nullable|array|max:2',
+            'project_topic.*' => 'string',
+            'project_type' => 'required|string',
+            'research_type' => 'nullable|string',
+            'required_time' => 'nullable|numeric',
+            'participant_incentive' => 'required|numeric',
+            'target_participant' => 'required',
+            'industry' => 'required|array|max:5',
+            'industry.*' => 'string',
+            'company_size' => 'nullable|array',
+            'states' => 'required|array',
+            'cities' => 'required|array',
+            'states.*.*' => 'required|string',
+            'cities.*.*' => 'required|string',
+            'skills' => 'nullable|array|max:25',
+            'skills.*' => 'string',
+            'household_income' => 'nullable|array',
+            'gender' => 'nullable|array',
+            'education_level' => 'nullable|array',
+            'ethnicity' => 'nullable|array',
+            'age_range' => 'nullable|array',
+            'status' => 'required'
+        ]);
+        // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
+        $user_id = Auth::id();
+
+        $project = Projects::where('id', '=' ,$id)->where('user_id', '=', $user_id)->first();
+
+        if (!$project){
+            return back()->with('error', 'Project Not Found! Or You are Not Right Author');
+        }
+
+        if ($project->status == 'publish'){
+            return back()->with('error', 'Once You Publish Project You Can\'t Update That');
+        }
+
+        // Project Cost Calculation
+        $total_participant_incentive = $request->participant_incentive * $request->target_participant;
+        $total_service_fee = $total_participant_incentive/2;
+        $total_cost  = $total_participant_incentive + $total_service_fee;
+
+        //Adjusting Project Fields
+        $project->user_id = $user_id;
+        $project->my_project_name = $request->my_project_name;
+        $project->study_title = $request->study_title;
+        $project->study_description = $request->study_description;
+        $project->target_audience = $request->target_audience;
+        $project->project_type = $request->project_type;
+        $project->research_type = $request->research_type;
+        $project->required_time = $request->required_time;
+        $project->participant_incentive = $request->participant_incentive;
+        $project->target_participant = $request->target_participant;
+        $project->total_incentive = $total_participant_incentive;
+        $project->total_service_fee = $total_service_fee;
+        $project->total_coast = $total_cost;
+        $project->status = $request->status;
+
+        if ($request->has('schedule_date')){
+            $project->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+        }
+
+        $project->update();
+
+        // Creating New Project Topics belongsToProject
+        if ($request->target_audience == 'b2c'){
+            if ($request->project_topic !== null){
+                $project_topic = ProjectHasProjectTopic::where('project_id', '=', $project->id)->first();
+                $project_topic->project_topic = json_encode($request->project_topic);
+                $project_topic->update();
+            }
+        }
+
+        // Creating New Industries belongsToProject
+        if ($request->industry !== null){
+            $new_industry = ProjectHasIndustry::where('project_id', '=', $project->id)->first();
+            $new_industry->industries = json_encode($request->industry);
+            $new_industry->update();
+        }
+
+        // Creating New Company Size belongsToProject
+
+        // Check if each element in the $request->company_size array is a string
+        if (is_array($request->company_size)) {
+            $filtered_company_sizes = array_filter($request->company_size, 'is_string');
+
+            // Convert the array to JSON
+            $company_sizes_json = json_encode($filtered_company_sizes);
+
+            // Save the JSON data in the database using the model
+            $new_company_size = ProjectHasCompanySize::where('project_id', '=', $project->id)->first();
+            $new_company_size->company_size = $company_sizes_json;
+            $new_company_size->update();
+        }
+
+        // Creating New Cities Size belongsToProject
+
+        $locations = [];
+        $stateData = $request->states;
+        $cityData = $request->cities;
+
+        // Combine the state and city data into a single array
+        $locations = [];
+        foreach ($stateData as $index => $states) {
+            $cities = $cityData[$index];
+
+            if (count($states) > 0 && count($cities) > 0) {
+                $locations[] = [
+                    'state' => $states[0], // Access the first element of the nested array
+                    'city' => $cities[0], // Access the first element of the nested array
+                ];
+            }
+        }
+        $locationJson = json_encode($locations);
+        $new_location = ProjectHasLocation::where('project_id', '=', $project->id)->first();
+        $new_location->locations = $locationJson;
+        $new_location->update();
+
+        // Creating New Skills belongsToProject
+        if ($request->skills !== null){
+            $skillIds = [];
+
+            foreach ($request->skills as $skill){
+                $findSkill = Skill::where('skill_name', $skill)->first();
+                if ($findSkill) {
+                    $skillIds[] = $findSkill->id;
+                }
+            }
+            $json_skills = json_encode($skillIds);
+            $new_skills = ProjectHasSkill::where('project_id', '=', $project->id)->first();
+            $new_skills->skills = $json_skills;
+            $new_skills->update();
+        }
+
+        // Creating New Household Income belongsToProject
+        // Check if each element in the $request->household_income array is a string
+        if (is_array($request->household_income)) {
+            $filtered_household_incomes = array_filter($request->household_income, 'is_string');
+
+            // Convert the array to JSON
+            $household_income_json = json_encode($filtered_household_incomes);
+
+            // Save the JSON data in the database using the model
+            $new_household_income = ProjectHasHouseholdIncome::where('project_id', '=', $project->id)->first();
+            $new_household_income->household_income = $household_income_json;
+            $new_household_income->update();
+        }
+
+        // Creating New Gender belongsToProject
+        // Check if each element in the $request->gender array is a string
+        if (is_array($request->gender)) {
+            $filtered_genders = array_filter($request->gender, 'is_string');
+
+            // Convert the array to JSON
+            $gender_json = json_encode($filtered_genders);
+
+            // Save the JSON data in the database using the model
+            $new_gender = ProjectHasGender::where('project_id', '=', $project->id)->first();
+            $new_gender->gender = $gender_json;
+            $new_gender->update();
+        }
+
+        // Creating New Education Level belongsToProject
+        // Check if each element in the $request->education_level array is a string
+        if (is_array($request->education_level)) {
+            $filtered_education_levels = array_filter($request->education_level, 'is_string');
+
+            // Convert the array to JSON
+            $education_level_json = json_encode($filtered_education_levels);
+
+            // Save the JSON data in the database using the model
+            $new_education_level = ProjectHasEducationLevel::where('project_id', '=', $project->id)->first();
+            $new_education_level->education_level = $education_level_json;
+            $new_education_level->update();
+        }
+
+        // Creating New Ethnicity belongsToProject
+        // Check if each element in the $request->ethnicity array is a string
+        if (is_array($request->ethnicity)) {
+            $filtered_ethnicities = array_filter($request->ethnicity, 'is_string');
+
+            // Convert the array to JSON
+            $ethnicity_json = json_encode($filtered_ethnicities);
+
+            // Save the JSON data in the database using the model
+            $new_ethnicity = ProjectHasEthnicity::where('project_id', '=', $project->id)->first();
+            $new_ethnicity->ethnicity = $ethnicity_json;
+            $new_ethnicity->update();
+        }
+
+        // Creating New Age Range belongsToProject
+        // Check if each element in the $request->age_range array is a string
+        if (is_array($request->age_range)) {
+            $filtered_age_ranges = array_filter($request->age_range, 'is_string');
+
+            // Convert the array to JSON
+            $age_range_json = json_encode($filtered_age_ranges);
+
+            // Save the JSON data in the database using the model
+            $new_age_range = ProjectHasAgeRange::where('project_id', '=', $project->id)->first();
+            $new_age_range->age_range = $age_range_json;
+            $new_age_range->update();
+        }
+
+        // Creating New Questions belongsToProject
+        if ($request->has('question_name')){
+            $new_project_question = ProjectHasQuestion::where('project_id', '=', $project->id)->first();
+            $question_name = $request->question_name;
+            $question_type = $request->question_type;
+            $required = $request->required;
+            $answer = $request->answer;
+            $answer_qualify = $request->answer_qualify;
+            $min_value = $request->min_value;
+            $max_value = $request->max_value;
+            $steps = $request->steps;
+
+            $combinedArray = [];
+
+            foreach ($question_name as $index => $name) {
+                $combinedArray[] = [
+                    'question_name' => $name,
+                    'question_type' => isset($question_type[$index]) ? $question_type[$index] : null,
+                    'required' => isset($required[$index]) ? $required[$index] : null,
+                    'answer' => isset($answer[$index]) ? $answer[$index] : null,
+                    'answer_qualify' => isset($answer_qualify[$index]) ? $answer_qualify[$index] : null,
+                    'min_value' => isset($min_value[$index]) ? $min_value[$index] : null,
+                    'max_value' => isset($max_value[$index]) ? $max_value[$index] : null,
+                    'steps' => isset($steps[$index]) ? $steps[$index] : null,
+                ];
+            }
+            $json_questions = json_encode($combinedArray);
+
+            $new_project_question->questions = $json_questions;
+            $new_project_question->update();
+        }
+
+        return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
+
     }
 
     /**
