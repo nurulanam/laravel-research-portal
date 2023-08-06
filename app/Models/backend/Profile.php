@@ -30,4 +30,5 @@ class Profile extends Model
         'slug',
         'status',
     ];
+
 }

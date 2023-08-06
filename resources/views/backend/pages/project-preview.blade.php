@@ -60,7 +60,7 @@
                                         @foreach ($question->answer as $index => $answer)
 
                                             <div class="">
-                                                <input type="checkbox"
+                                                <input type="checkbox" class="form-check-input"
                                                     name="{{ $question->question_type[0] }}[{{ $q }}][{{ $index }}]"
                                                     value="{{ $answer }}" id="{{ $answer . '-' . $q }}"
                                                     >

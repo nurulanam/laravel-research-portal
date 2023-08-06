@@ -2,6 +2,7 @@
 
 namespace App\Models\backend;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\backend\ProjectHasLocation;
@@ -32,6 +33,9 @@ class Projects extends Model
         'published_at'
     ];
 
+    public function user(){
+        return $this->hasOne(User::class, 'user_id', 'id');
+    }
     public function responses()
     {
         return $this->hasMany(ProjectHasResponse::class, 'project_id', 'id');

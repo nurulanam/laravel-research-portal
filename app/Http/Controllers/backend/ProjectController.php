@@ -356,6 +356,11 @@ class ProjectController extends Controller
         //
     }
 
+    public function projectParticipants($slug){
+        $findProject = Projects::where('slug', '=', $slug)->first();
+        $allSkills = Skill::all();
+        return view('backend.pages.project-participants', compact('findProject', 'allSkills'));
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -372,7 +377,7 @@ class ProjectController extends Controller
             return back()->with('error', 'Project Not Found');
         }
         if ($project->status == 'publish'){
-            return back()->with('error', 'Once You Publish Project You Can\'t Update That');
+            return back()->with('error', 'Once you publish project you can\'t update that');
         }
         $projectLocations = json_decode($project->projectLocations->locations, true);
         $projectQuestions = json_decode($project->projectQuestions->questions, true);

@@ -152,7 +152,7 @@
                                 </div>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <p class="text-success font-weight-bold mb-0">${{ $project->total_incentive }}</p>
+                                <p class="text-primary font-weight-bold mb-0">${{ $project->total_incentive }}</p>
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
                                 <p class="text-dark mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
                                 @if($project->required_time)
@@ -215,7 +215,7 @@
                                             <div class="card-body">
                                                 <h3 class="project-title text-capitalize text-dark"></h3>
                                                 <p class="mb-2"><i
-                                                        class="fas fa-calendar-alt text-success me-2"></i><span
+                                                        class="fas fa-calendar-alt text-primary me-2"></i><span
                                                         class="project-posted-time text-dark"></span></p>
                                                 <hr>
                                                 <p class="project-full-details text-dark text-justify"></p>
@@ -232,24 +232,24 @@
                                                 <div class="row ">
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark mb-2" title="Required Time"><i
-                                                                class="text-success fas fa-clock me-2" ></i><span
+                                                                class="text-primary fas fa-clock me-2" ></i><span
                                                                 class="project-required-time"></span> Minutes</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark mb-2" title="Target Participants"><i
-                                                                class="text-success fas fa-users me-2"></i><span
+                                                                class="text-primary fas fa-users me-2"></i><span
                                                                 class="project-total-participants"></span> Target
                                                             Participants</p>
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark mb-2" title="Research Type"><i
-                                                                class="text-success fas fa-user-shield me-2"></i><span
+                                                                class="text-primary fas fa-user-shield me-2"></i><span
                                                                 class="project-research-type"></span></p>
 
                                                     </div>
                                                     <div class="col-12 col-md-6">
                                                         <p class="text-dark mb-2" title="Research Method"><i
-                                                                class="text-success fas fa-bullseye me-2"></i><span
+                                                                class="text-primary fas fa-bullseye me-2"></i><span
                                                                 class="project-research-method"></span></p>
                                                     </div>
                                                 </div>
@@ -262,10 +262,10 @@
                                                         <h5 class="text-dark font-weight-500">Project Activities</h5>
                                                         <hr>
                                                         <p class="text-dark mb-2"><i
-                                                                class="fas fa-clipboard-list text-success me-2"></i><span>Responses:
+                                                                class="fas fa-clipboard-list text-primary me-2"></i><span>Responses:
                                                                 <span class="total-response">0</span></span></p>
                                                         <p class="text-dark mb-2"><i
-                                                                class="fas fa-clipboard-check text-success me-2"></i><span>Hired: <span class="">0</span></span></p>
+                                                                class="fas fa-clipboard-check text-primary me-2"></i><span>Hired: <span class="">0</span></span></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -279,7 +279,7 @@
                                                     Now</a>
                                             </div>
                                             <div class="card-body">
-                                                <p class="text-success text-uppercase font-weight-500">Project Budget:
+                                                <p class="text-dark text-uppercase font-weight-500">Project Budget:
                                                     $<span class="project-total-incentive"></span></p>
                                                 <hr>
                                                 <div class="my-2 project-skills"></div>
@@ -392,7 +392,7 @@
                             projectSkillsDiv.append(skillTitle);
                             $.each(skills, function(index, skill) {
                                 var badge = $(
-                                    '<span class="badge bg-success rounded-pill px-3 py-2 me-2 mb-2">'
+                                    '<span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2">'
                                 ).text(skill.skill_name);
                                 projectSkillsDiv.append(badge);
                             });
@@ -409,7 +409,7 @@
                             projectIndustriesDiv.append(industryTitle);
                             $.each(Industries, function(index, industry) {
                                 var badge = $(
-                                    '<span class="badge bg-success rounded-pill px-3 py-2 me-2 mb-2">'
+                                    '<span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2">'
                                 ).text(industry);
                                 projectIndustriesDiv.append(badge);
                             });

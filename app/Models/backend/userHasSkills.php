@@ -13,7 +13,5 @@ class userHasSkills extends Model
       'user_id',
       'skills',
     ];
-//    public function skillName(){
-//        return $this->belongsToMany(Skill::class);
-//    }
+
 }

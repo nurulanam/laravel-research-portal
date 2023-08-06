@@ -4,8 +4,8 @@
 @endsection
 @section('title', 'Researcher Projects')
 @section('extraCss')
-
 @endsection
+
 @section('mainContent')
     <div class="row">
         <div class="col-12">
@@ -16,7 +16,7 @@
             <div class="alert alert-success d-flex align-items-center" role="alert">
                 <i class="fa-solid fa-circle-exclamation fa-2x text-dark-blue me-3"></i>
                 <div>
-                    Remember! Once You Publish Your Project. You Can't Edit That Again.
+                    Remember! Once you publish your project. You can't edit that again.
                 </div>
             </div>
         </div>
@@ -46,7 +46,7 @@
                             @endphp
                             <tr>
                                 <td class="align-middle">{{ $project->my_project_name }}</td>
-                                <td class="align-middle">{{ count($project->responses) }}</td>
+                                <td class="align-middle"><a href="{{ route('project.participants', $project->slug) }}" class="badge bg-success px-2 text-decoration-none"><i class="fa-solid fa-users me-2"></i>{{ count($project->responses) }}</a></td>
                                 <td class="align-middle">@if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif</td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle">
@@ -95,13 +95,10 @@
                                 <td colspan="8" class="text-center"><div class="alert alert-danger" role="alert">Opps.. sorry! you don't have any projects</div></td>
                             </tr>
                         @endif
-
                         </tbody>
-
                     </table>
                 </div>
             </div>
-
             <div class="d-flex justify-content-center justify-content-lg-start mt-3">
                 {{ $projects->links() }}
             </div>
