@@ -24,12 +24,12 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-8">
+        <div class="col-lg-8">
             @foreach($findProject->responses as $project)
             <div class="card rounded-4 shadow-md my-4">
                 <div class="card-body">
                     <div class="row align-items-center">
-                        <div class="col-lg-2 text-center">
+                        <div class="col-lg-2 text-start  text-lg-center">
                             @if(!empty($project->user->profile->user_avatar))
                                 <img src="{{ asset('/backend/img/profile/'. $project->user->profile->user_avatar ) }}" alt="profile avater" class="border border-2 border-dark rounded-circle object-fit-contain" style="height: 80px; width: 80px">
                             @else
@@ -79,8 +79,8 @@
                                 </span>
                             </div>
                         </div>
-                        <div class="col-md-2">
-                            <div class="d-flex justify-content-end align-items-center">
+                        <div class="col-lg-2">
+                            <div class="d-flex justify-content-start justify-content-lg-end align-items-center mt-4 mt-lg-0">
                                 <a href="#" class="btn btn-primary btn-sm mx-1">
                                     <i class="fa-solid fa-check"></i>
                                 </a>
