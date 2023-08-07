@@ -1,7 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\backend\dashboardController;
+use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\ProfileController;
 use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
@@ -24,7 +24,7 @@ Route::get('/', function () {
 
 //Dashboard
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
-    Route::get('/', [dashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard.index');
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
@@ -47,15 +47,17 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::middleware('role:researcher')->group(function (){
         // Project
         Route::resource('/project', ProjectController::class)->except('index');
+        Route::get('/project/edit/{slug}', [ProjectController::class, 'edit'])->name('project.preview')->name('project.edit');
         Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
+        Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.destroy');
 
     });
-
-    Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');
-    Route::resource('/project-apply/', ProjectApplyController::class);
-    Route::post('/project-apply/{slug}', [ProjectApplyController::class, 'store'])->name('project-apply.store');
-
+    Route::middleware('role:participant')->group(function () {
+        Route::resource('/project-apply/', ProjectApplyController::class);
+        Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');
+        Route::post('/project-apply/{slug}', [ProjectApplyController::class, 'store'])->name('project-apply.store');
+    });
     // Reset Password
     Route::resource('/change-password', ChangePasswordController::class);
 });

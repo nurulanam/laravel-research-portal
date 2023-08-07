@@ -1270,7 +1270,7 @@
         $('#questionsField').on('click', '#addCheckboxAnswer', function (){
             let id = $(this).data('id');
             let count = $('#checkboxAnswer'+ id).children().length;
-            $('#checkboxAnswer'+ id).append('<div class="row align-items-top checkAns py-2 checkboxAnsweItem="'+ id +'">\
+            $('#checkboxAnswer'+ id).append('<div class="row align-items-top checkAns py-2">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">'+ ++count +'</p>\
         </div>\
@@ -1318,7 +1318,7 @@
                 $question.find('div[id^="answer"]').attr('id', 'answer' + newQNum);
 
                 // Update checkbox answer row attributes
-                $question.find('.checkAns').each(function(ansIndex) {
+                $question.find('.checkbox-answer .row').each(function (ansIndex) {
                     const $answerRow = $(this);
                     $answerRow.attr('data-id', newQNum);
                     $answerRow.find('.serial_nom').text(ansIndex + 1);

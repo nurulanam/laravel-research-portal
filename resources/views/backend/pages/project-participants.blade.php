@@ -78,6 +78,10 @@
                                     @endforeach
                                 </span>
                             </div>
+                            <div class="d-flex my-2">
+                                <i class="fas fa-database text-primary pt-1 me-3"></i>
+                                <a href="#" class="btn btn-sm btn-primary rounded-pill"><i class="fas fa-eye me-2"></i><span>Response</span></a>
+                            </div>
                         </div>
                         <div class="col-lg-2">
                             <div class="d-flex justify-content-start justify-content-lg-end align-items-center mt-4 mt-lg-0">

@@ -24,8 +24,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card rounded-4 shadow-md p-2">
-                <div class="card-body p-0">
-                    <table class="table table-responsive table-hover table-borderless rounded">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover table-borderless rounded">
                         <thead class="bg-dark-blue text-light rounded border-bottom">
                             <tr>
                                 <th class="font-15 text-uppercase">My Project Name</th>
@@ -61,15 +61,15 @@
                                     @endif
                                 </td>
                                 <td class="align-middle">
-                                    <a href="{{ route('project.edit', $project->id) }}"><i class="fas fa-edit text-success"></i></a>
+                                    <a href="{{ route('project.edit', $project->slug) }}"><i class="fas fa-edit text-success"></i></a>
                                 </td>
                                 <td class="align-middle">
                                     <a href="{{ route('project.preview', $project->slug) }}"><i class="fa-solid fa-eye text-warning"></i></a>
                                 </td>
                                 <td class="align-middle">
-                                    <a type="button" data-bs-toggle="modal" data-bs-target="#deleteConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-danger"></i></a>
+                                    <a type="button" data-bs-toggle="modal" data-bs-target="#deleteConfim{{$project->slug}}"><i class="fa-solid fa-trash-alt text-danger"></i></a>
                                     <!-- Modal -->
-                                    <div class="modal fade" id="deleteConfim{{$project->id}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal fade" id="deleteConfim{{$project->slug}}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
                                             <div class="modal-content">
                                                 <div class="modal-body py-4">
@@ -78,7 +78,7 @@
                                                 </div>
                                                 <div class="modal-footer py-2">
                                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancle</button>
-                                                    <form action="{{ route('project.destroy', $project->id) }}" method="POST">
+                                                    <form action="{{ route('project.destroy', $project->slug) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Delete</button>

@@ -610,6 +610,14 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>
         $(document).ready(function() {
+            $('#myProjectName').on('keyup', function (){
+                let name = $(this).val();
+                if (name !== ""){
+                    $('#main_title').html(name);
+                }else {
+                    $('#main_title').html('Project Title');
+                }
+            });
             $('input[name="company_size[]"]').click(function() {
                 if ($(this).index('input[name="company_size[]"]') === 9) {
                 $('input[name="company_size[]"]').not(this).prop('checked', false);
@@ -728,7 +736,6 @@
                         },
                         data: { search: skillName },
                         success: function(response) {
-                            console.log(response);
                             var opt = '<option value=\"'+response.options[0].skill_name+'\" selected>'+response.options[0].skill_name+'</option>';
                             $('.skills-box').append(opt).trigger('change');
                             fetchCount++;
@@ -865,14 +872,7 @@
             let targetRange = $(this).val();
             $('#target_participant').val(targetRange);
         });
-        $('#internal_name').on('keyup', function (){
-            let name = $(this).val();
-            if (name !== ""){
-                $('#main_title').html(name);
-            }else {
-                $('#main_title').html('Project Title');
-            }
-        });
+
     </script>
 
     <script>
@@ -1001,8 +1001,13 @@
                 }
             });
         });
+        function updateQuestionCount() {
+            qnum = $('#questionsField').find('.full-question').length + 1;
+        }
+        let qnum = 0;
 
         $('#addQuestion').on('click', function (){
+            updateQuestionCount();
             let question = '<div class="form-group border p-3 my-3 bg-body-tertiary rounded full-question" data-qid="q'+qnum+'">\
                 <div class="row">\
                 <div class="col-6">\
@@ -1036,7 +1041,6 @@
         </div>';
 
             $('#questionsField').append(question);
-            qnum +=1;
 
         });
         $('#questionsField').on('change', '.question_type', function (){
@@ -1044,8 +1048,6 @@
         });
         function changeQuestionType( $this ){
             let questionTypeId = $this.data('typeid');
-            console.log( $this.val() );
-
             if($this.val() == 'checkbox'){
                 questionTypeCheckbox( questionTypeId );
                 $('#requiredCheck'+ questionTypeId).attr('checked', true);
@@ -1131,7 +1133,7 @@
         $('#questionsField').on('click', '#addCheckboxAnswer', function (){
             let id = $(this).data('id');
             let count = $('#checkboxAnswer'+ id).children().length;
-            $('#checkboxAnswer'+ id).append('<div class="row align-items-top checkAns py-2 checkboxAnsweItem="'+ id +'">\
+            $('#checkboxAnswer'+ id).append('<div class="row align-items-top checkAns py-2">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">'+ ++count +'</p>\
         </div>\
@@ -1152,11 +1154,51 @@
             container.find('.checkbox-answer-item').parsley().validate();
         });
 
-        let qnum = 2;
-
         $('#questionsField').on('click', '.btn-delete-question', function (){
             $(this).closest(".full-question").remove();
+            reindexQuestions();
+            updateQuestionCount();
         })
+
+        function reindexQuestions() {
+            $('#questionsField .full-question').each(function(index) {
+                const $question = $(this);
+                console.log($question);
+                const newQNum = index + 1;
+
+                // Update data-qid
+                $question.attr('data-qid', 'q' + newQNum);
+
+                // Update question title
+                $question.find('h5').text('Screener Question: ' + newQNum);
+
+                // Update question input names and IDs
+                $question.find('textarea[name^="question_name"]').attr('name', 'question_name[' + newQNum + '][]');
+                $question.find('select[name^="question_type"]').attr('name', 'question_type[' + newQNum + '][]');
+                $question.find('.question_type').attr('data-typeid', newQNum);
+                $question.find('input[name^="required"]').attr('name', 'required[' + newQNum + '][]');
+                $question.find('input[id^="requiredCheck"]').attr('id', 'requiredCheck' + newQNum);
+                $question.find('label[for^="requiredCheck"]').attr('for', 'requiredCheck' + newQNum);
+                $question.find('div[id^="answer"]').attr('id', 'answer' + newQNum);
+
+                // Update checkbox answer row attributes
+                $question.find('.checkbox-answer .row').each(function (ansIndex) {
+                    const $answerRow = $(this);
+                    const newAnsIndex = ansIndex + 1;
+
+                    $answerRow.find('.serial_nom').text(newAnsIndex);
+                    $answerRow.find('input[name^="answer"]').attr('name', 'answer[' + newQNum + '][]');
+                    $answerRow.find('select[name^="answer_qualify"]').attr('name', 'answer_qualify[' + newQNum + '][]');
+                    $answerRow.attr('data-id', newQNum);
+                });
+
+                // Update slider input names
+                $question.find('input[name^="min_value"]').attr('name', 'min_value[' + newQNum + '][]');
+                $question.find('input[name^="max_value"]').attr('name', 'max_value[' + newQNum + '][]');
+                $question.find('input[name^="steps"]').attr('name', 'steps[' + newQNum + '][]');
+            });
+        }
+
         $('#questionsField').on('click', '.deleteCheckAns', function (){
             $(this).closest(".checkAns").remove();
         })

@@ -17,8 +17,8 @@
     <div class="row">
         <div class="col-12">
             <div class="card rounded-4 shadow-md p-2">
-                <div class="card-body p-0">
-                    <table class="table table-responsive table-hover table-borderless rounded">
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover table-borderless rounded">
                         <thead class="bg-dark-blue text-light rounded border-bottom">
                             <tr>
                                 <th class="font-15 text-uppercase">Study Title</th>
@@ -59,8 +59,8 @@
                                         @endif
                                     @endforeach
                                 </td>
-                                <td>
-                                    <a type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-white me-2"></i><span>Withdraw</span></a>
+                                <td class="align-middle">
+                                    <a type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-white me-0 me-md-2"></i><span class="d-none d-md-inline-block">Withdraw</span></a>
                                 </td>
                             </tr>
                         @endforeach
@@ -75,10 +75,10 @@
                     </table>
                 </div>
             </div>
-
             <div class="d-flex justify-content-center justify-content-lg-start mt-3">
                 {{ $projects->links() }}
             </div>
+
         </div>
     </div>
 @endsection

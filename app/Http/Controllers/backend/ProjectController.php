@@ -4,7 +4,6 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasAgeRange;
-use App\Models\backend\ProjectHasCity;
 use App\Models\backend\ProjectHasCompanySize;
 use App\Models\backend\ProjectHasEducationLevel;
 use App\Models\backend\ProjectHasEthnicity;
@@ -32,19 +31,16 @@ class ProjectController extends Controller
      */
     public function index()
     {
-
-        app()->call([dashboardController::class, 'updateProjectStatus']);
-
+        app()->call([DashboardController::class, 'updateProjectStatus']);
         if (Auth::user()->hasRole('researcher')) {
-            $projects = Projects::where('user_id', '=', Auth::id())->orderBy('created_at', 'desc')->paginate(5);
+            $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->paginate(5);
             return view('backend.pages.researcher-projects', compact('projects'));
 
         }elseif (Auth::user()->hasRole('participant')){
             $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->get();
             if ($findProjectHasResponse){
                 $projectIds = $findProjectHasResponse->pluck('project_id')->toArray();
-                $projects = Projects::whereIn('id', $projectIds)->paginate(10); // Change '10' to the number of items per page you want to display
-
+                $projects = Projects::whereIn('id', $projectIds)->orderByDesc('updated_at')->paginate(2); // Change '10' to the number of items per page you want to display
             }
             return view('backend.pages.participant-projects', compact('projects'));
         }
@@ -357,7 +353,10 @@ class ProjectController extends Controller
     }
 
     public function projectParticipants($slug){
-        $findProject = Projects::where('slug', '=', $slug)->first();
+        $findProject = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        if (!$findProject){
+            return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
+        }
         $allSkills = Skill::all();
         return view('backend.pages.project-participants', compact('findProject', 'allSkills'));
     }
@@ -367,17 +366,17 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit($slug)
     {
         $us_states = config('app.us_states');
         $industries = config('app.industries');
-        $project = Projects::where('id', '=', $id)->first();
+        $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
 
         if (!$project){
-            return back()->with('error', 'Project Not Found');
+            return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
         }
         if ($project->status == 'publish'){
-            return back()->with('error', 'Once you publish project you can\'t update that');
+            return redirect()->route('project.index')->with('error', 'Once you publish project you can\'t update that');
         }
         $projectLocations = json_decode($project->projectLocations->locations, true);
         $projectQuestions = json_decode($project->projectQuestions->questions, true);
@@ -386,7 +385,7 @@ class ProjectController extends Controller
     }
     public function projectPreview($slug)
     {
-        $findProject = Projects::where('slug', $slug)->first();
+        $findProject = Projects::where('slug', $slug)->where('user_id', '=', Auth::id())->first();
         if ($findProject) {
             // The project with the given slug exists
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
@@ -395,8 +394,10 @@ class ProjectController extends Controller
                 $questions = json_decode($findQuestions->questions);
                 return view('backend.pages.project-preview', compact('findProject', 'questions'));
             } else {
-                return redirect()->route('project.index')->with('error', 'Project Not Found');
+                return redirect()->route('project.index')->with('error', 'Sorry! Questions not found');
             }
+        }else{
+            return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
         }
     }
 
@@ -443,7 +444,7 @@ class ProjectController extends Controller
         $project = Projects::where('id', '=' ,$id)->where('user_id', '=', $user_id)->first();
 
         if (!$project){
-            return back()->with('error', 'Project Not Found! Or You are Not Right Author');
+            return back()->with('error', 'Sorry! Project not found');
         }
 
         if ($project->status == 'publish'){
@@ -659,10 +660,14 @@ class ProjectController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($slug)
     {
-        $findProject = Projects::find($id);
+        $findProject = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        if (!$findProject) {
+            return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
+        }
         $findProject->delete();
         return back()->with('info', 'Project Deleted Successfully');
     }
+
 }

@@ -81,7 +81,7 @@ class dashboardController extends Controller
                     $query->whereIn('id', $projectIds);
                 }
             }
-            $projects = $query->orderBy('created_at', 'desc')->paginate(2)->withQueryString();
+            $projects = $query->orderByDesc('created_at')->paginate(2)->withQueryString();
 
         return view('backend.pages.dashboard', compact('projects', 'filterValues', 'userIndustries'));
 

@@ -25,7 +25,7 @@
     </style>
 @endsection
 @section('mainContent')
-    <div class="row mb-3 mb-md-5 shadow-md">
+    <div class="row mb-3 mb-md-4 shadow-md">
         <div class="col-12">
             <div class="card bg-dark-blue bg-gradient rounded-4">
                 <div class="card-body p-4">
