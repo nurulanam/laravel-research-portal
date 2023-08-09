@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-use App\Models\backend\Industry;
 use App\Models\backend\Profile;
 use App\Models\backend\userHasSkills;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
@@ -48,9 +47,6 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
 
-    public function industries(){
-        return $this->belongsTo(Industry::class);
-    }
     public function profile(){
         return $this->hasOne(Profile::class, 'user_id', 'id');
     }

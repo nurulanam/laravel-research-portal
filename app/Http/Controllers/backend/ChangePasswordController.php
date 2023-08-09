@@ -50,7 +50,7 @@ class ChangePasswordController extends Controller
             $user = User::find(Auth::id());
             $user->password = $newPass;
             $user->update();
-            return redirect()->back()->with('success', 'Password Changed');
+            return redirect()->route('profile.index')->with('success', 'Password Changed');
         }else{
             return redirect()->back()->with('error', 'Your Current Password Not Matched');
         }

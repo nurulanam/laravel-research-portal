@@ -30,37 +30,53 @@
                         </thead>
 
                         <tbody>
-                        @if(count($projects) > 0)
-                        @foreach($projects as $key => $project)
+                        @if(count($findProjectHasResponse) > 0)
+{{--                            @dd($findProjectHasResponse)--}}
+                        @foreach($findProjectHasResponse as $key => $response)
                             <tr>
-                                <td class="align-middle">{{ $project->study_title }}</td>
+                                <td class="align-middle">{{ $response->project->study_title }}</td>
                                 <td class="align-middle">
-                                    @if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif
+                                    @if($response->project->project_type == 'remote') Remote @elseif('in-person') In Person @endif
                                 </td>
                                 <td class="align-middle"></td>
                                 <td class="align-middle">
-                                    @foreach($project->responses as $response)
-                                        @if(Auth::id() == $response->user_id)
-                                            @if($response->status == "submitted")
-                                                <a class="badge bg-success text-decoration-none">Submitted</a>
-                                            @elseif($response->status == "invited")
-                                                <a class="badge bg-secondary text-decoration-none">Invited</a>
-                                            @elseif($response->status == "scheduled")
-                                                <a class="badge bg-warning text-decoration-none">Scheduled</a>
-                                            @elseif($response->status == "attended")
-                                                <a class="badge bg-secondary text-decoration-none">Attended</a>
-                                            @elseif($response->status == "paid")
-                                                <a class="badge bg-warning text-decoration-none">Paid</a>
-                                            @elseif($response->status == "cancelled")
-                                                <a class="badge bg-danger text-decoration-none">Cancelled</a>
-                                            @elseif($response->status == "no-show")
-                                                <a class="badge bg-danger text-decoration-none">No Show</a>
-                                            @endif
-                                        @endif
-                                    @endforeach
+                                    @if($response->status == "submitted")
+                                        <a class="badge bg-success text-decoration-none">Submitted</a>
+                                    @elseif($response->status == "invited")
+                                        <a class="badge bg-secondary text-decoration-none">Invited</a>
+                                    @elseif($response->status == "scheduled")
+                                        <a class="badge bg-warning text-decoration-none">Scheduled</a>
+                                    @elseif($response->status == "attended")
+                                        <a class="badge bg-secondary text-decoration-none">Attended</a>
+                                    @elseif($response->status == "paid")
+                                        <a class="badge bg-warning text-decoration-none">Paid</a>
+                                    @elseif($response->status == "cancelled")
+                                        <a class="badge bg-danger text-decoration-none">Cancelled</a>
+                                    @endif
                                 </td>
                                 <td class="align-middle">
-                                    <a type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{$project->id}}"><i class="fa-solid fa-trash-alt text-white me-0 me-md-2"></i><span class="d-none d-md-inline-block">Withdraw</span></a>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{ $response->id }}">
+                                            <i class="fa-solid fa-trash-alt text-white me-0 me-md-2"></i>
+                                            <span class="d-none d-md-inline-block">Withdraw</span>
+                                        </button>
+                                    <!-- Modal -->
+                                    <div class="modal fade" id="withdrawConfim{{ $response->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content">
+                                                <div class="modal-body py-4">
+                                                    <h5 class="modal-title text-dark" id="deleteModalLabel">Sure, To withdraw your response?</h5>
+                                                </div>
+                                                <div class="modal-footer py-2">
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancel</button>
+                                                    <form action="{{ route('project.withdraw.response', $response->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('put')
+                                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Withdraw</button>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         @endforeach
@@ -76,7 +92,7 @@
                 </div>
             </div>
             <div class="d-flex justify-content-center justify-content-lg-start mt-3">
-                {{ $projects->links() }}
+                {{ $findProjectHasResponse->links() }}
             </div>
 
         </div>

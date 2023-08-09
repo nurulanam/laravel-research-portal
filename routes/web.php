@@ -28,13 +28,13 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
 
     Route::prefix('profile')->group(function () {
         Route::get('/', [ProfileController::class, 'index'])->name('profile.index');
-        Route::post('/avatar', [ProfileController::class, 'userAvatar'])->name('profile.avatar');
+        Route::post('/avatar', [ProfileController::class, 'storeUserAvatar'])->name('profile.avatar');
         Route::get('/edit/contact', [ProfileController::class, 'editContact'])->name('profile.edit.contact');
-        Route::post('/contact-details', [ProfileController::class, 'contactDetails'])->name('profile.contact.details');
+        Route::post('/contact-details', [ProfileController::class, 'storeContactDetails'])->name('profile.contact.details');
         Route::get('/edit/demographics', [ProfileController::class, 'editDemographics'])->name('profile.edit.demographics');
-        Route::post('/demographics', [ProfileController::class, 'demographics'])->name('profile.demographics');
+        Route::post('/demographics', [ProfileController::class, 'storeDemographics'])->name('profile.demographics');
         Route::get('/edit/employment', [ProfileController::class, 'editEmployment'])->name('profile.edit.employment');
-        Route::post('/employment', [ProfileController::class, 'employment'])->name('profile.employment');
+        Route::post('/employment', [ProfileController::class, 'storeEmployment'])->name('profile.employment');
         Route::get('/edit/skill', [ProfileController::class, 'editSkill'])->name('profile.edit.skill');
         Route::post('/store/skill', [ProfileController::class, 'storeSkill'])->name('profile.store.skill');
     });
@@ -44,14 +44,17 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         // Project
         Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
     });
+    Route::middleware('role:participant')->group(function (){
+        // Project
+        Route::put('/project/response/withdraw/{id}', [ProjectController::class, 'withdrawResponse'])->name('project.withdraw.response');
+    });
     Route::middleware('role:researcher')->group(function (){
         // Project
-        Route::resource('/project', ProjectController::class)->except('index');
+        Route::resource('/project', ProjectController::class)->except('index', 'withdrawResponse');
         Route::get('/project/edit/{slug}', [ProjectController::class, 'edit'])->name('project.preview')->name('project.edit');
         Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.destroy');
-
     });
     Route::middleware('role:participant')->group(function () {
         Route::resource('/project-apply/', ProjectApplyController::class);

@@ -77,7 +77,7 @@
                                                         <span class="text-decoration-underline text-danger">{{ $project->my_project_name }}</span>?</h5>
                                                 </div>
                                                 <div class="modal-footer py-2">
-                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancle</button>
+                                                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancel</button>
                                                     <form action="{{ route('project.destroy', $project->slug) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')

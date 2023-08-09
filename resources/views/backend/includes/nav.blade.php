@@ -17,22 +17,24 @@
         <div class="d-none d-lg-block text-center">
             <h4 class="menu-reaserch-hub pt-3 mt-2">My Research Hub:</h4>
         </div>
-
+        @php
+            $currentRoute = \Illuminate\Support\Facades\Route::currentRouteName(); // Get the current route name
+        @endphp
         <!-- Navigation Menu Items -->
         <div class="navbar-collapse collapse justify-content-center" id="navbarNav">
             <ul class="navbar-nav main-nav-list pt-3 pt-lg-0">
                 @if(Auth::user()->hasRole('participant'))
-                <li class="nav-item px-2 me-lg-4">
+                <li class="nav-item @if($currentRoute == 'dashboard.index') active @endif px-2 me-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('dashboard.index') }}"><i class="fa-solid fa-folder-open text-dark-blue me-2"></i><span>All Projects</span></a>
                 </li>
                 @endif
-                <li class="nav-item px-2 mx-lg-4">
+                <li class="nav-item @if($currentRoute == 'project.index') active @endif px-2 mx-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('project.index') }}"><i class="fa-solid fa-chalkboard-user text-dark-blue me-2"></i><span>My Projects</span></a>
                 </li>
                 <li class="nav-item px-2 mx-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-comments text-dark-blue me-2"></i><span>My Messages</span></a>
                 </li>
-                <li class="nav-item px-2 mx-lg-4">
+                <li class="nav-item @if($currentRoute == 'profile.index' ||  $currentRoute == 'profile.edit.contact' ||  $currentRoute == 'profile.edit.demographics' ||  $currentRoute == 'profile.edit.employment' ||  $currentRoute == 'profile.edit.skill') active @endif px-2 mx-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('profile.index') }}"><i class="fa-solid fa-user-gear text-dark-blue me-2"></i><span>@if(Auth::user()->hasRole('researcher'))My Account Manager @elseif(Auth::user()->hasRole('participant'))My Profile Details @endif</span></a>
                 </li>
                 @if(Auth::user()->hasRole('researcher'))

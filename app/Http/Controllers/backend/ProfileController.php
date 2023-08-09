@@ -238,7 +238,7 @@ class ProfileController extends Controller
     {
 
     }
-    public function userAvatar(Request $request){
+    public function storeUserAvatar(Request $request){
         $request->validate([
             'user_avatar' => 'required|mimes:jpg,jpeg,png|max:2048',
         ]);
@@ -275,7 +275,7 @@ class ProfileController extends Controller
             return redirect()->back()->with('success', $message);
         }
     }
-    public function contactDetails(Request $request){
+    public function storeContactDetails(Request $request){
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();
         if (Auth::user()->hasRole('participant')){
@@ -289,6 +289,8 @@ class ProfileController extends Controller
             if ($find_profile !== null){
                 if ($request->phone !== null){
                     $find_profile->phone = $request->phone;
+                }else{
+                    $find_profile->phone = '';
                 }
                 $find_profile->paypal_email = $request->paypal_email;
                 $find_profile->state = $request->state;
@@ -327,7 +329,7 @@ class ProfileController extends Controller
             }
         }
     }
-    public function demographics(Request $request)
+    public function storeDemographics(Request $request)
     {
         if (Auth::user()->hasRole('participant')) {
         $user_id = Auth::id();
@@ -380,7 +382,7 @@ class ProfileController extends Controller
             return redirect()->route('profile.index')->with('error', 'Your Don\'t Have Permission');
         }
     }
-    public function employment(Request $request){
+    public function storeEmployment(Request $request){
         $user_id = Auth::id();
         $find_profile = Profile::where('user_id', '=' , $user_id)->first();
 
@@ -473,6 +475,7 @@ class ProfileController extends Controller
     {
 
     }
+
 
 
 }

@@ -19,7 +19,7 @@ class CreateProjectHasResponsesTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->json('user_response');
             $table->string('qualification')->nullable();
-            $table->string('status')->default('submitted')->comment('submitted, invited, scheduled, attended, paid, cancelled, no-show');
+            $table->string('status')->default('submitted')->comment('submitted, invited, scheduled, attended, paid, cancelled, withdrawn');
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -37,12 +37,12 @@ class ProjectController extends Controller
             return view('backend.pages.researcher-projects', compact('projects'));
 
         }elseif (Auth::user()->hasRole('participant')){
-            $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->get();
+            $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->whereNotIn('status', ['withdrawn'])->orderByDesc('created_at')->paginate(2);
             if ($findProjectHasResponse){
-                $projectIds = $findProjectHasResponse->pluck('project_id')->toArray();
-                $projects = Projects::whereIn('id', $projectIds)->orderByDesc('updated_at')->paginate(2); // Change '10' to the number of items per page you want to display
+                return view('backend.pages.participant-projects', compact('findProjectHasResponse'));
+            }else{
+                return redirect()->route('project.index')->with('error', 'Sorry! Your Response not found.');
             }
-            return view('backend.pages.participant-projects', compact('projects'));
         }
     }
 
@@ -668,6 +668,19 @@ class ProjectController extends Controller
         }
         $findProject->delete();
         return back()->with('info', 'Project Deleted Successfully');
+    }
+    public function withdrawResponse($id)
+    {
+
+        $findResponse = ProjectHasResponse::where('id', '=', $id)->where('user_id', '=', Auth::id())->first();
+
+        if ($findResponse){
+            $findResponse->status = 'withdrawn';
+            $findResponse->update();
+            return redirect()->route('project.index')->with('success', 'Your response withdrawn successfully');
+        }else{
+            return redirect()->route('project.index')->with('error', 'Your response not found');
+        }
     }
 
 }

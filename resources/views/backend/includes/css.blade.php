@@ -36,3 +36,6 @@
 
 {{--main css--}}
 <link rel="stylesheet" href="{{ asset('backend') }}/css/style.css">
+
+<!-- Jquery-->
+<script src="{{ asset('backend') }}/js/jquery.min.js"></script>
