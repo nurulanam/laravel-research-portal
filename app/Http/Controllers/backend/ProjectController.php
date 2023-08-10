@@ -360,6 +360,15 @@ class ProjectController extends Controller
         $allSkills = Skill::all();
         return view('backend.pages.project-participants', compact('findProject', 'allSkills'));
     }
+    public function showParticipantResponse($slug, $id){
+        $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->where('status', '=', 'publish')->first();
+        if (!$project){
+            return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
+        }
+        $response = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
+        $allSkills = Skill::all();
+        return view('backend.pages.project-participant-response', compact('response', 'allSkills'));
+    }
     /**
      * Show the form for editing the specified resource.
      *
@@ -657,7 +666,7 @@ class ProjectController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  string  $slug
      * @return \Illuminate\Http\Response
      */
     public function destroy($slug)

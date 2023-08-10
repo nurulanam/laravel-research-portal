@@ -54,6 +54,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/edit/{slug}', [ProjectController::class, 'edit'])->name('project.preview')->name('project.edit');
         Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
+        Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.destroy');
     });
     Route::middleware('role:participant')->group(function () {

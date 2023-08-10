@@ -7,16 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
 @endsection
 @section('mainContent')
-    <pre>
-    {{ $errors }}
-        </pre>
-
     <div class="row">
         <div class="col-12">
             <form action="{{ route('project.store') }}" method="post" class="new-project-form">
                 @csrf
-                <div class="card shadow p-2">
-                <div class="card-header bg-dark-blue">
+                <div class="card shadow-md rounded-4">
+                <div class="card-header bg-dark-blue rounded-top-4 py-3">
                     <h5 class="text-light mb-0" id="main_title">Project Title</h5>
                 </div>
                 <div class="card-body">

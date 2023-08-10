@@ -38,7 +38,7 @@
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('profile.index') }}"><i class="fa-solid fa-user-gear text-dark-blue me-2"></i><span>@if(Auth::user()->hasRole('researcher'))My Account Manager @elseif(Auth::user()->hasRole('participant'))My Profile Details @endif</span></a>
                 </li>
                 @if(Auth::user()->hasRole('researcher'))
-                <li class="nav-item px-2 mx-lg-3">
+                <li class="nav-item px-2 mx-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-file-invoice-dollar text-dark-blue me-2"></i><span>My Billing Center</span></a>
                 </li>
                 @endif

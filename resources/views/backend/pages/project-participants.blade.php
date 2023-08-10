@@ -24,24 +24,24 @@
         </div>
     </div>
     <div class="row">
-        @foreach($findProject->responses as $project)
+        @foreach($findProject->responses as $response)
         <div class="col-12 col-md-6 col-lg-4 my-2 my-lg-0">
-            <div class="card h-100 @if($project->status == 'withdrawn') bg-danger-subtle position-relative @endif rounded-4 shadow-md py-3">
-                @if(!empty($project->user->profile->user_avatar))
-                    <img src="{{ asset('/backend/img/profile/'. $project->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
+            <div class="card h-100 @if($response->status == 'withdrawn') bg-danger-subtle position-relative @endif rounded-4 shadow-md py-3">
+                @if(!empty($response->user->profile->user_avatar))
+                    <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
                     <img src="{{ asset('/backend/img/profile/undraw_profile.svg') }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @endif
-                    @if($project->status == 'withdrawn')
+                    @if($response->status == 'withdrawn')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Withdrawn</span>
                     @endif
                 <div class="card-body text-center">
-                    <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $project->user->first_name.' '.$project->user->last_name }}</h2>
-                    <p class="font-15 text-secondary">{{ $project->user->profile->job_title }}</p>
+                    <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
+                    <p class="font-15 text-secondary">{{ $response->user->profile->job_title }}</p>
                     <div class="d-flex justify-content-center my-2">
                         <i class="fa-solid fa-user text-primary pt-1 me-3"></i>
                         <span>
-                            @switch($project->user->profile->gender)
+                            @switch($response->user->profile->gender)
                                 @case('male')
                                     Male
                                     @break
@@ -59,10 +59,10 @@
                             @endswitch
                         </span>
                     </div>
-                    <div class="d-flex my-2">
+                    <div class="d-flex justify-content-center align-items-center my-2">
                         <span>
                             @php
-                                $skillIds = json_decode($project->user->skills->skills);
+                                $skillIds = json_decode($response->user->skills->skills);
                             @endphp
                             @foreach( $skillIds as $skillId)
                                 @foreach($allSkills as $skill)
@@ -73,17 +73,17 @@
                             @endforeach
                         </span>
                     </div>
-                    @if($project->status == 'withdrawn')
+                    @if($response->status == 'withdrawn')
                     @else
                     <div class="d-flex justify-content-center align-items-center mt-4">
-                        <a href="#" class="btn btn-primary btn-sm mx-1">
+                        <a href="{{ route('project.participant.response', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
                             <i class="fa-solid fa-eye me-1"></i><span>Response</span>
                         </a>
                         <a href="#" class="btn btn-primary btn-sm mx-1">
                             <i class="fa-solid fa-check me-1"></i><span>Hire</span>
                         </a>
                         <a href="#" class="btn btn-danger btn-sm mx-1">
-                            <i class="fa-solid fa-trash-alt me-1"></i><span>Cancel</span>
+                            <i class="fa-solid fa-trash-alt me-1"></i><span>Reject</span>
                         </a>
                     </div>
                     @endif

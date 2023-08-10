@@ -32,7 +32,7 @@
                     </div>
                     <div class="row justify-content-between">
                         <div class="col-12 col-lg-4 mb-2 mb-md-3">
-                            <p class="fw-medium">Email @if(Auth::user()->hasVerifiedEmail())<span data-toggle="tooltip" data-placement="right" title="Verified"><i class="fa-regular fa-circle-check text-primary"></i></span> @endif </p>
+                            <p class="fw-medium">Email @if(Auth::user()->hasVerifiedEmail())<span data-bs-toggle="tooltip" data-bs-placement="right" title="Verified"><i class="fa-regular fa-circle-check text-primary"></i></span> @endif </p>
                         </div>
                         <div class="col-12 col-lg-8 mb-3">
                             <p>{{ Auth::user()->email }}</p>
