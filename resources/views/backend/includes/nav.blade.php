@@ -22,7 +22,7 @@
         @endphp
         <!-- Navigation Menu Items -->
         <div class="navbar-collapse collapse justify-content-center" id="navbarNav">
-            <ul class="navbar-nav main-nav-list pt-3 pt-lg-0">
+            <ul class="navbar-nav align-items-center main-nav-list pt-3 pt-lg-0">
                 @if(Auth::user()->hasRole('participant'))
                 <li class="nav-item @if($currentRoute == 'dashboard.index') active @endif px-2 me-lg-4">
                     <a class="nav-link ps-2 ps-lg-auto" href="{{ route('dashboard.index') }}"><i class="fa-solid fa-folder-open text-dark-blue me-2"></i><span>All Projects</span></a>
@@ -42,6 +42,12 @@
                     <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-file-invoice-dollar text-dark-blue me-2"></i><span>My Billing Center</span></a>
                 </li>
                 @endif
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <li class="nav-item px-2 mx-lg-4 bg-danger rounded">
+                        <button class="nav-link ps-2 ps-lg-auto text-light" href="#" ><i class="fa-solid fa-sign-out-alt me-2"></i><span>Logout</span></button>
+                    </li>
+                </form>
             </ul>
         </div>
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\backend\api;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasIndustry;
+use App\Models\backend\ProjectHasProjectTopic;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
@@ -48,6 +49,7 @@ class ApiController extends Controller
 
             $findResponse = ProjectHasResponse::where('project_id', '=', $projectInfo->id)->get();
             $findParticipant = ProjectHasResponse::where('project_id', '=', $projectInfo->id)->where('user_id', '=', $userId)->first();
+            $findProjectTopics = ProjectHasProjectTopic::where('project_id', '=', $projectInfo->id)->first();
 
             $response = [
                 'data' => $projectInfo,
@@ -70,6 +72,10 @@ class ApiController extends Controller
                     $projectSkills = Skill::whereIn('id', $projectSkillIds)->get();
                     $response['skills'] = $projectSkills;
                 }
+            }
+            if ($findProjectTopics){
+                $projectTopics = json_decode($findProjectTopics->project_topic);
+                $response['topics'] = $projectTopics;
             }
             if ($findResponse){
                 $response['totalResponse'] = count($findResponse);

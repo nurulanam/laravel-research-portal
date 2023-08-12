@@ -16,6 +16,12 @@ input::placeholder,
 textarea::placeholder, select option{
     font-weight: 300 !important;
 }
+.dashboard-content{
+    padding-top: 100px;
+    padding-bottom: 30px;
+    min-height: 93vh;
+    overflow-x: hidden;
+}
 .modal{
     z-index: 1069;
 }
@@ -173,6 +179,10 @@ input.small::placeholder{
 
 /* responsive design */
 @media (min-width: 992px) {
+    /*main container*/
+    .dashboard-content{
+        padding-top: 225px;
+    }
     /*main navigation */
     .menu-reaserch-hub{
         color: #092D5F;

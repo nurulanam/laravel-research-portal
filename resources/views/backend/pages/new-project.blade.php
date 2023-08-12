@@ -592,7 +592,7 @@
                         <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="me-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
                         <button type="button" class="next btn btn-primary btn-custom float-end">Next <span class="ms-2"><i class="fas fa-chevron-right"></i></span></button>
 
-                        <button type="submit" class="btn btn-success mx-1 publish-btn btn-custom float-end">Select Status</button>
+                        <button type="submit" class="btn btn-primary mx-1 publish-btn btn-custom float-end">Select Status</button>
 
                     </div>
                 </div>
@@ -690,6 +690,7 @@
                 }
 
                 $('.skills-box').select2({
+                    tags: true,
                     minimumInputLength: 2,
                     maximumSelectionLength: 25,
                     delay: 300,
@@ -820,14 +821,14 @@
                     $(document).ready(function (){
                         let status = $('.publish-status').val();
                         if (status == 'publish'){
-                            $('.publish-btn').html('publish');
+                            $('.publish-btn').html('Publish');
                             $('.schedule-box').html('');
                         }else if (status == 'schedule'){
                             $('.publish-btn').html('Schedule');
                             $('.schedule-box').html('<input type="datetime-local" name="schedule_date" class="form-control schedule-date" value="{{ old("schedule_date") }}" required>')
                             $('.schedule-date').parsley().validate();
                         }else if (status == 'draft'){
-                            $('.publish-btn').html('draft');
+                            $('.publish-btn').html('Draft');
                             $('.schedule-box').html('');
                         }else if(status == ""){
                             $('.publish-btn').html('Select Status');
@@ -838,14 +839,14 @@
                         let status = $(this).val();
 
                         if (status == 'publish'){
-                            $('.publish-btn').html('publish');
+                            $('.publish-btn').html('Publish');
                             $('.schedule-box').html('');
                         }else if (status == 'schedule'){
                             $('.publish-btn').html('Schedule');
                             $('.schedule-box').html('<input type="datetime-local" name="schedule_date" class="form-control schedule-date" value="{{ old("schedule_date") }}" required>')
                             $('.schedule-date').parsley().validate();
                         }else if (status == 'draft'){
-                            $('.publish-btn').html('draft');
+                            $('.publish-btn').html('Draft');
                             $('.schedule-box').html('');
                         }else if(status == ""){
                             $('.publish-btn').html('Select Status');

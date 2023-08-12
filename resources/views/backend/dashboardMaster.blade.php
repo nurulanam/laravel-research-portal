@@ -24,7 +24,7 @@
             @include('backend.includes.nav')
 
             <!-- Begin Page Content -->
-            <div class="content" style="padding-top: 225px; padding-bottom: 30px; min-height: 93vh; overflow-x: hidden;">
+            <div class="content dashboard-content">
                 @yield('mainContent')
             </div>
             <!-- /.container-fluid -->

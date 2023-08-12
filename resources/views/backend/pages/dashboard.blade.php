@@ -284,6 +284,7 @@
                                                 <hr>
                                                 <div class="my-2 project-skills"></div>
                                                 <div class="my-2 project-industries"></div>
+                                                <div class="my-2 project-topics"></div>
                                             </div>
                                         </div>
                                     </div>
@@ -384,6 +385,7 @@
                         $('.project-total-incentive').html(response.data.total_incentive);
                         var projectSkillsDiv = $('.project-skills');
                         var projectIndustriesDiv = $('.project-industries');
+                        var projectTopicsDiv = $('.project-topics');
                         if (response.skills) {
                             var skills = response.skills;
                             projectSkillsDiv.html('');
@@ -413,8 +415,24 @@
                                 ).text(industry);
                                 projectIndustriesDiv.append(badge);
                             });
+                            projectIndustriesDiv.append("<hr>");
                         } else {
                             projectIndustriesDiv.html('');
+                        }
+                        if (response.topics) {
+                            var topics = response.topics;
+                            projectTopicsDiv.html('');
+                            var topicTitle =
+                                "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Topics</h6>";
+                            projectTopicsDiv.append(topicTitle);
+                            $.each(topics, function(index, topic) {
+                                var badge = $(
+                                    '<span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2">'
+                                ).text(topic);
+                                projectTopicsDiv.append(badge);
+                            });
+                        } else {
+                            projectTopicsDiv.html('');
                         }
 
                         $('.project-required-time').html(response.data.required_time);

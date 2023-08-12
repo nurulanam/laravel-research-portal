@@ -187,7 +187,7 @@ class ProjectController extends Controller
         $new_location->locations = $locationJson;
         $new_location->save();
 
-        // Creating New Skills belongsToProject
+        // Creating New Skills belongsToProject also creating new skills
         if ($request->skills !== null){
             $skillIds = [];
 
@@ -195,6 +195,11 @@ class ProjectController extends Controller
                 $findSkill = Skill::where('skill_name', $skill)->first();
                 if ($findSkill) {
                     $skillIds[] = $findSkill->id;
+                }else{
+                    $newSkill = new Skill();
+                    $newSkill->skill_name = $skill;
+                    $newSkill->save();
+                    $skillIds[] = $newSkill->id;
                 }
             }
             $json_skills = json_encode($skillIds);

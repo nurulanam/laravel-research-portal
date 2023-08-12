@@ -32,13 +32,13 @@
 
             <div class="d-flex justify-content-center mt-3 mt-md-0 float-md-end">
                 <a href="{{ route('change-password.index') }}" class="btn btn-primary me-2"><span><i class="fas fa-key me-2"></i></span>Change Password</a>
-                <form method="POST" action="{{ route('logout') }}">
-                    @csrf
-                    <button class="btn btn-danger">
-                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
-                    </button>
-                </form>
+{{--                <form method="POST" action="{{ route('logout') }}">--}}
+{{--                    @csrf--}}
+{{--                    <button class="btn btn-danger">--}}
+{{--                        <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>--}}
+{{--                        Logout--}}
+{{--                    </button>--}}
+{{--                </form>--}}
             </div>
         </div>
     </div>
