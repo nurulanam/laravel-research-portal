@@ -38,6 +38,7 @@ class ProfileController extends Controller
         $user_id = Auth::id();
 
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
+
         $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
         $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
 

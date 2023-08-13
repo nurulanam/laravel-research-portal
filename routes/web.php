@@ -36,7 +36,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/edit/employment', [ProfileController::class, 'editEmployment'])->name('profile.edit.employment');
         Route::post('/employment', [ProfileController::class, 'storeEmployment'])->name('profile.employment');
         Route::get('/edit/skill', [ProfileController::class, 'editSkill'])->name('profile.edit.skill');
-        Route::post('/store/skill', [ProfileController::class, 'storeSkill'])->name('profile.store.skill');
+        Route::post('/skill', [ProfileController::class, 'storeSkill'])->name('profile.store.skill');
     });
 
 

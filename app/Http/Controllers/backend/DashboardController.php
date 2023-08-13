@@ -157,7 +157,7 @@ class dashboardController extends Controller
         //
     }
 
-    public function updateProjectStatus()
+    public static function updateProjectStatus()
     {
         // Fetch all projects from the database
         Projects::whereNotNull('published_at')

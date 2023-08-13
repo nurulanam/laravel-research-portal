@@ -33,11 +33,11 @@ class ProjectController extends Controller
     {
         app()->call([DashboardController::class, 'updateProjectStatus']);
         if (Auth::user()->hasRole('researcher')) {
-            $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->paginate(5);
+            $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->with('responses')->paginate(5);
             return view('backend.pages.researcher-projects', compact('projects'));
 
         }elseif (Auth::user()->hasRole('participant')){
-            $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->whereNotIn('status', ['withdrawn'])->orderByDesc('created_at')->paginate(2);
+            $findProjectHasResponse = ProjectHasResponse::where('user_id', '=', Auth::id())->whereNotIn('status', ['withdrawn'])->orderByDesc('created_at')->with('project')->paginate(2);
             if ($findProjectHasResponse){
                 return view('backend.pages.participant-projects', compact('findProjectHasResponse'));
             }else{
@@ -358,7 +358,7 @@ class ProjectController extends Controller
     }
 
     public function projectParticipants($slug){
-        $findProject = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        $findProject = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->with('responses', 'responses.project' , 'responses.user', 'responses.user.profile', 'responses.user.skills')->first();
         if (!$findProject){
             return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
         }

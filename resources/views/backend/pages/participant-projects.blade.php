@@ -31,7 +31,6 @@
 
                         <tbody>
                         @if(count($findProjectHasResponse) > 0)
-{{--                            @dd($findProjectHasResponse)--}}
                         @foreach($findProjectHasResponse as $key => $response)
                             <tr>
                                 <td class="align-middle">{{ $response->project->study_title }}</td>

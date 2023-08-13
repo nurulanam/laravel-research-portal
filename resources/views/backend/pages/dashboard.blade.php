@@ -426,9 +426,12 @@
                                 "<h6 class=\"mt-2 font-weight-bold text-dark font-weight-500 mb-3\">Topics</h6>";
                             projectTopicsDiv.append(topicTitle);
                             $.each(topics, function(index, topic) {
+                                var formattedText = topic.replace(/-/g, ' ').replace(/\b\w/g, function(c) {
+                                    return c.toUpperCase();
+                                });
                                 var badge = $(
                                     '<span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2">'
-                                ).text(topic);
+                                ).text(formattedText);
                                 projectTopicsDiv.append(badge);
                             });
                         } else {
