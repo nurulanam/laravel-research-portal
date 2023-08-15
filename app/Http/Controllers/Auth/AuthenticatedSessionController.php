@@ -17,7 +17,16 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return view('auth.login');
+        return redirect('/')->with('error', 'Please Choose Researcher Login / Participant Login');
+    }
+
+    public function researcherLogin()
+    {
+        return view('auth.researcher-login');
+    }
+    public function participantLogin()
+    {
+        return view('auth.participant-login');
     }
 
     /**

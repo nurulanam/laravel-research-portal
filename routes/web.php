@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\backend\DashboardController;
 use App\Http\Controllers\backend\ProfileController;
 use App\Http\Controllers\backend\ChangePasswordController;
@@ -21,6 +22,9 @@ use App\Http\Controllers\backend\ProjectApplyController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::middleware(['guest'])->get('/researcher-login', [AuthenticatedSessionController::class, 'researcherLogin'])->name('researcher.login');
+Route::middleware(['guest'])->get('/participant-login', [AuthenticatedSessionController::class, 'participantLogin'])->name('participant.login');
 
 //Dashboard
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){

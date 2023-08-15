@@ -136,19 +136,17 @@
                                     <h4>
                                         {{ $project->study_title }}</h4>
                                 </a>
-                                <div class="d-flex">
-                                    <div class="dropdown mr-1">
-                                        <button type="button" class="btn btn-primary dropdown-toggle"
-                                            id="actionDropdown" data-toggle="dropdown" aria-haspopup="true"
-                                            aria-expanded="false" data-offset="10,20">
-                                        </button>
-                                        <div class="dropdown-menu" aria-labelledby="actionDropdown">
-                                            <a class="dropdown-item" href="#"><i class="fas fa-clone mr-2"></i>
-                                                Copy Project link</a>
-                                            <a class="dropdown-item" href="#"><i class="fas fa-eye-slash mr-2"></i>
-                                                Hide Project</a>
-                                        </div>
-                                    </div>
+
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+
+                                    </button>
+                                    <ul class="dropdown-menu">
+                                        <buttnpn type="button" class="dropdown-item copyProjectLink" data-slug="{{ $project->slug }}" href="#"><i class="fas fa-clone text-primary me-2"></i>
+                                            Copy Project link</buttnpn>
+                                        <a class="dropdown-item" href="#"><i class="fas fa-eye-slash text-primary me-2"></i>
+                                            Hide Project</a>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
@@ -343,8 +341,24 @@
                     minTime.removeClass("border-danger");
                 }
             }
-
         });
+        $('.copyProjectLink').on('click', function (){
+            var slug = $(this).data('slug');
+            var url = window.location.origin + '/dashboard/project-apply/' + slug;
+
+            // Create a temporary input element to copy the URL to the clipboard
+            var tempInput = document.createElement('input');
+            tempInput.value = url;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+
+            toastr.success('Link copied successfully', {
+                timeOut: 3000, // Time in milliseconds
+                progressBar: true
+            });
+        })
     </script>
 
     <script>

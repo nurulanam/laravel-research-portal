@@ -8,4 +8,29 @@
             $('[data-bs-toggle="tooltip"]').tooltip()
         });
     })
+
+    @if (Session::has('success'))
+        toastr.options.closeButton = true;
+    toastr.options.progressBar = true;
+    toastr.options.timeOut = 3000;
+    toastr.success("{{session('success')}}");
+
+    @elseif (Session::has('error'))
+        toastr.options.closeButton = true;
+    toastr.options.progressBar = true;
+    toastr.options.timeOut = 3000;
+    toastr.error("{{session('error')}}");
+
+    @elseif (Session::has('info'))
+        toastr.options.closeButton = true;
+    toastr.options.progressBar = true;
+    toastr.options.timeOut = 3000;
+    toastr.info("{{session('info')}}");
+    @endif
+        @if(count($errors) > 0)
+        toastr.options.closeButton = true;
+    toastr.options.progressBar = true;
+    toastr.options.timeOut = 3000;
+    toastr.error("Error Please Recheck !");
+    @endif
 </script>

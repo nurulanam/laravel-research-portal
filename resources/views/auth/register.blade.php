@@ -77,7 +77,12 @@
                                     </form>
                                     <div class="d-flex justify-content-between pt-4 small">
                                         <p>Already have an account?</p>
-                                        <a href="{{ route('login') }}" class="font-weight-500 text-decoration-none">Login</a>
+                                        <div class="d-flex">
+                                            <a href="{{ route('researcher.login') }}" class="font-weight-500 text-decoration-none">Researcher</a>
+                                            <span class="mx-2">/</span>
+                                            <a href="{{ route('participant.login') }}" class="font-weight-500 text-decoration-none">Participant</a>
+                                        </div>
+
                                     </div>
                                 </div>
                             </div>

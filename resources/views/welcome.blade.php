@@ -21,8 +21,8 @@
                                 <hr class="my-4">
                                 @guest
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('login') }}" class="btn btn-primary btn-custom mx-2">Researcher Login</a>
-                                        <a href="{{ route('login') }}" class="btn btn-primary btn-custom mx-2">Participant Login</a>
+                                        <a href="{{ route('researcher.login') }}" class="btn btn-primary btn-custom mx-2">Researcher Login</a>
+                                        <a href="{{ route('participant.login') }}" class="btn btn-primary btn-custom mx-2">Participant Login</a>
 {{--                                        <a href="{{ route('register') }}" class="btn btn-primary btn-custom mx-2">Register</a>--}}
                                     </div>
                                     <div class="d-flex justify-content-center pt-4">

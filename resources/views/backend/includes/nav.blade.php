@@ -15,7 +15,7 @@
         </button>
 
         <div class="d-none d-lg-block text-center">
-            <h4 class="menu-reaserch-hub pt-3 mt-2">My Research Hub:</h4>
+            <h4 class="menu-reaserch-hub pt-3 mt-2">@if(Auth::user()->hasRole('researcher')) My Research Hub:@elseif(Auth::user()->hasRole('participant')) My Participant Portal: @endif</h4>
         </div>
         @php
             $currentRoute = \Illuminate\Support\Facades\Route::currentRouteName(); // Get the current route name
