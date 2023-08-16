@@ -42,7 +42,7 @@
                                     @if($response->status == "submitted")
                                         <a class="badge bg-success text-decoration-none">Submitted</a>
                                     @elseif($response->status == "invited")
-                                        <a class="badge bg-secondary text-decoration-none">Invited</a>
+                                        <a class="badge bg-primary text-decoration-none">Invited</a>
                                     @elseif($response->status == "scheduled")
                                         <a class="badge bg-warning text-decoration-none">Scheduled</a>
                                     @elseif($response->status == "attended")

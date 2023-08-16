@@ -26,7 +26,7 @@
     <div class="row">
         @foreach($findProject->responses as $response)
         <div class="col-12 col-md-6 col-lg-4 my-2 my-lg-0">
-            <div class="card h-100 @if($response->status == 'withdrawn') bg-danger-subtle position-relative @endif rounded-4 shadow-md py-3">
+            <div class="card h-100 @if($response->status == 'withdrawn') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative  @endif rounded-4 shadow-md py-3">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
@@ -34,6 +34,8 @@
                 @endif
                     @if($response->status == 'withdrawn')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Withdrawn</span>
+                    @elseif($response->status == 'invited')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Invited</span>
                     @endif
                 <div class="card-body text-center">
                     <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
@@ -79,9 +81,11 @@
                         <a href="{{ route('project.participant.response', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
                             <i class="fa-solid fa-eye me-1"></i><span>Response</span>
                         </a>
-                        <a href="#" class="btn btn-primary btn-sm mx-1">
+                        @if($response->status == 'submitted')
+                        <a href="{{ route('project.hire', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
                             <i class="fa-solid fa-check me-1"></i><span>Hire</span>
                         </a>
+                        @endif
                         <a href="#" class="btn btn-danger btn-sm mx-1">
                             <i class="fa-solid fa-trash-alt me-1"></i><span>Reject</span>
                         </a>

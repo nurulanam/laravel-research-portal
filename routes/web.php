@@ -7,6 +7,7 @@ use App\Http\Controllers\backend\ProfileController;
 use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
 use App\Http\Controllers\backend\ProjectApplyController;
+use App\Http\Controllers\backend\ProjectHireController;
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +61,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.destroy');
+        Route::get('/project/{slug}/hire/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
     });
     Route::middleware('role:participant')->group(function () {
         Route::resource('/project-apply/', ProjectApplyController::class);
