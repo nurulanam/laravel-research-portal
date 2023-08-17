@@ -60,8 +60,8 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
-        Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.destroy');
-        Route::get('/project/{slug}/hire/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
+        Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.delete');
+        Route::get('/project-hire/{slug}/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
     });
     Route::middleware('role:participant')->group(function () {
         Route::resource('/project-apply/', ProjectApplyController::class);

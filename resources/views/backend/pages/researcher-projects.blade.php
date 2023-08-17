@@ -78,7 +78,7 @@
                                                 </div>
                                                 <div class="modal-footer py-2">
                                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancel</button>
-                                                    <form action="{{ route('project.destroy', $project->slug) }}" method="POST">
+                                                    <form action="{{ route('project.delete', $project->slug) }}" method="POST">
                                                         @csrf
                                                         @method('DELETE')
                                                         <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Delete</button>

@@ -129,7 +129,7 @@
                 @elseif ($projects->count() > 0)
                     @foreach ($projects as $key => $project)
                         <div class="card p-4 mb-3 rounded-4 shadow-md">
-                            <div class="d-flex justify-content-between">
+                            <div class="d-flex justify-content-between align-items-centerl">
                                 <a href="#" type="button" data-bs-toggle="modal" data-id="{{ $project->id }}"
                                    data-bs-target=".project-details-modal"
                                     class="text-primary show-details text-capitalize text-decoration-none modal-project-title">

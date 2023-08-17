@@ -17,7 +17,7 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
-        return redirect('/')->with('error', 'Please Choose Researcher Login / Participant Login');
+        return redirect('/');
     }
 
     public function researcherLogin()
