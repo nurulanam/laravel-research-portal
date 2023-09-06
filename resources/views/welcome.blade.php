@@ -21,13 +21,14 @@
                                 <hr class="my-4">
                                 @guest
                                     <div class="d-flex justify-content-center">
-                                        <a href="{{ route('researcher.login') }}" class="btn btn-primary btn-custom mx-2">Researcher Login</a>
-                                        <a href="{{ route('participant.login') }}" class="btn btn-primary btn-custom mx-2">Participant Login</a>
+                                        <a href="{{ route('login', 'researcher') }}" class="btn btn-primary btn-custom mx-2">Researcher Login</a>
+                                        <a href="{{ route('login', 'participant') }}" class="btn btn-primary btn-custom mx-2">Participant Login</a>
 {{--                                        <a href="{{ route('register') }}" class="btn btn-primary btn-custom mx-2">Register</a>--}}
                                     </div>
                                     <div class="d-flex justify-content-center pt-4">
                                         <p class="small">Don't have an account?</p>
-                                        <a href="{{ route('register') }}" class="font-weight-500 small text-decoration-none ms-3">Register Here</a>
+                                        <a href="{{ route('register', 'researcher') }}" class="font-weight-500 small text-decoration-none ms-3">Researcher</a> <span class="mx-2">/</span>
+                                        <a href="{{ route('register', 'participant') }}" class="font-weight-500 small text-decoration-none">Participant</a>
                                     </div>
                                 @endguest
                                 @auth

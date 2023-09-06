@@ -15,9 +15,9 @@
                             <div class="p-5">
                                 <div class="text-center">
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
-                                    <h1 class="h4 text-gray-900 my-4">Researchers Login Here</h1>
+                                    <h1 class="h4 text-gray-900 my-4">Researchers Login</h1>
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
-                                    <form action="{{ route('login') }}" method="POST" class="user">
+                                    <form action="{{ url('login/researcher') }}" method="POST" class="user">
                                         @csrf
                                         <div class="form-group mb-3">
                                             <input type="email" name="email" class="form-control small rounded-pill py-2"
@@ -48,9 +48,10 @@
                                             Login
                                         </button>
                                     </form>
-                                    <div class="d-flex justify-content-between pt-4">
+                                    <div class="d-flex justify-content-center pt-4">
                                         <p class="small">Don't have an account?</p>
-                                        <a href="{{ route('register') }}" class="font-weight-500 small text-decoration-none">Register Here</a>
+                                        <a href="{{ route('register', 'researcher') }}" class="font-weight-500 small text-decoration-none ms-3">Researcher</a> <span class="mx-2">/</span>
+                                        <a href="{{ route('register', 'participant') }}" class="font-weight-500 small text-decoration-none">Participant</a>
                                     </div>
                                 </div>
                             </div>

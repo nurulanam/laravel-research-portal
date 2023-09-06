@@ -15,19 +15,23 @@ class AuthenticatedSessionController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create($type)
     {
-        return redirect('/');
+        if ($type == 'researcher'){
+            return view('auth.researcher-login');
+        }elseif ($type == 'participant'){
+            return view('auth.participant-login');
+        }
     }
 
-    public function researcherLogin()
-    {
-        return view('auth.researcher-login');
-    }
-    public function participantLogin()
-    {
-        return view('auth.participant-login');
-    }
+//    public function researcherLogin()
+//    {
+//        return view('auth.researcher-login');
+//    }
+//    public function participantLogin()
+//    {
+//        return view('auth.participant-login');
+//    }
 
     /**
      * Handle an incoming authentication request.

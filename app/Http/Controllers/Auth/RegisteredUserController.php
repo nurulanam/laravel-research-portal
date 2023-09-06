@@ -18,10 +18,23 @@ class RegisteredUserController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function create()
+    public function create($type)
     {
-        return view('auth.register');
+        if ($type == 'researcher'){
+            return view('auth.researcher-register');
+        }elseif($type == 'participant'){
+            return view('auth.participant-register');
+        }
     }
+
+//    public function researcherCreate()
+//    {
+//        return view('auth.researcher-register');
+//    }
+//    public function participantCreate()
+//        {
+//            return view('auth.participant-register');
+//        }
 
     /**
      * Handle an incoming registration request.

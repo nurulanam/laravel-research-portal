@@ -24,8 +24,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware(['guest'])->get('/researcher-login', [AuthenticatedSessionController::class, 'researcherLogin'])->name('researcher.login');
-Route::middleware(['guest'])->get('/participant-login', [AuthenticatedSessionController::class, 'participantLogin'])->name('participant.login');
+//Route::middleware(['guest'])->get('/researcher-login', [AuthenticatedSessionController::class, 'researcherLogin'])->name('researcher.login');
+//Route::middleware(['guest'])->get('/participant-login', [AuthenticatedSessionController::class, 'participantLogin'])->name('participant.login');
 
 //Dashboard
 Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|participant'])->group(function (){
