@@ -17,7 +17,7 @@
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
                                     <h1 class="h4 text-gray-900 my-4">Researchers Login</h1>
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
-                                    <form action="{{ url('login/researcher') }}" method="POST" class="user">
+                                    <form action="{{ route('login', 'researcher') }}" method="POST" class="user">
                                         @csrf
                                         <div class="form-group mb-3">
                                             <input type="email" name="email" class="form-control small rounded-pill py-2"
