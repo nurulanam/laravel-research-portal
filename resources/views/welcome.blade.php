@@ -16,14 +16,14 @@
                                 <div class="text-center">
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
                                     <h1 class="h4 text-gray-900 my-4">Welcome!</h1>
-                                    <p>Third Estate Research is a simple and affordable qualitative market research option for business of all sizes and budgets.</p>
+                                    <p class="pb-2">Third Estate Research is a simple and affordable qualitative market research option for businesses of all sizes and budgets.</p>
+                                    <p>If you are interested in becoming a participant in paid research studies, sign up here for free.</p>
                                 </div>
                                 <hr class="my-4">
                                 @guest
                                     <div class="d-flex justify-content-center">
                                         <a href="{{ route('login', 'researcher') }}" class="btn btn-primary btn-custom mx-2">Researcher Login</a>
                                         <a href="{{ route('login', 'participant') }}" class="btn btn-primary btn-custom mx-2">Participant Login</a>
-{{--                                        <a href="{{ route('register') }}" class="btn btn-primary btn-custom mx-2">Register</a>--}}
                                     </div>
                                     <div class="d-flex justify-content-center pt-4">
                                         <p class="small">Don't have an account?</p>
