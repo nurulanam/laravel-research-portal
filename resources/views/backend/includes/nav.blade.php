@@ -39,7 +39,7 @@
                 </li>
                 @if(Auth::user()->hasRole('researcher'))
                 <li class="nav-item px-2 mx-lg-4">
-                    <a class="nav-link ps-2 ps-lg-auto" href="#"><i class="fa-solid fa-file-invoice-dollar text-dark-blue me-2"></i><span>My Billing Center</span></a>
+                    <a class="nav-link ps-2 ps-lg-auto" href="{{ route('billing.index') }}"><i class="fa-solid fa-file-invoice-dollar text-dark-blue me-2"></i><span>My Billing Center</span></a>
                 </li>
                 @endif
                 <form method="POST" action="{{ route('logout') }}">

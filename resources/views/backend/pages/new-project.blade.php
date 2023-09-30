@@ -549,19 +549,39 @@
                         </div>
 
                     </div>
-                    <div class="form-section" >
+                    <div class="form-section">
                         <div class="row">
-                            <div class="col-12 col-lg-8 offset-lg-2 shadow rounded p-4 my-3">
-                                <div class="row">
-                                    <div class="col-md-4"><b>Total Incentive</b></div>
+                            <div class="col-12 col-lg-8 offset-lg-2 shadow rounded-4 p-4 my-3">
+                                <div class="row mb-2">
+                                    <div class="col-md-4">Total Incentive</div>
                                     <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalIncentive"></span> USD</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4"><b>Total Service Fees</b></div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">Total Service Fees</div>
                                     <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalServiceFrees"></span> USD</p>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-md-6">Card Number <span class="text-danger">*</span></div>
+                                    <div class="col-md-6 text-end">
+                                        <input type="number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-2">
+                                    <div class="col-md-6">Expiration Date <span class="text-danger">*</span></div>
+                                    <div class="col-md-6 text-end">
+                                        <input type="date" class="form-control expiration_date" value="{{ old('expiration_date') }}" required>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">Cvv <span class="text-danger">*</span></div>
+                                    <div class="col-md-6 text-end">
+                                        <input type="number" class="form-control cvv" value="{{ old('cvv') }}" placeholder="123" required>
                                     </div>
                                 </div>
 
@@ -585,8 +605,9 @@
                                 </div>
                             </div>
                         </div>
-
-
+                        <div class="creditCards position-fixed top-50 translate-middle-y">
+                            <img src="{{ asset('/backend/img/card-authorizenet.png') }}" alt="">
+                        </div>
                     </div>
                     <div class="form-navigation mt-3">
                         <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="me-2"><i class="fas fa-chevron-left"></i></span> Previous</button>

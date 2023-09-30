@@ -683,6 +683,7 @@ class ProjectController extends Controller
         $findProject->delete();
         return back()->with('info', 'Project Deleted Successfully');
     }
+
     public function withdrawResponse($id)
     {
 

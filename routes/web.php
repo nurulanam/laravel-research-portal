@@ -8,6 +8,7 @@ use App\Http\Controllers\backend\ChangePasswordController;
 use App\Http\Controllers\backend\ProjectController;
 use App\Http\Controllers\backend\ProjectApplyController;
 use App\Http\Controllers\backend\ProjectHireController;
+use App\Http\Controllers\backend\BillingController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +63,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.delete');
         Route::get('/project-hire/{slug}/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
+
+        //Billing
+        Route::get('/billing-center', [BillingController::class, 'index'])->name('billing.index');
     });
     Route::middleware('role:participant')->group(function () {
         Route::resource('/project-apply/', ProjectApplyController::class);
