@@ -568,20 +568,65 @@
                                 <div class="row mb-2">
                                     <div class="col-md-6">Card Number <span class="text-danger">*</span></div>
                                     <div class="col-md-6 text-end">
-                                        <input type="number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>
+                                        <input type="number" name="card_number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>
                                     </div>
                                 </div>
 
                                 <div class="row mb-2">
-                                    <div class="col-md-6">Expiration Date <span class="text-danger">*</span></div>
+                                    <div class="col-md-6">Expiration Year <span class="text-danger">*</span></div>
                                     <div class="col-md-6 text-end">
-                                        <input type="date" class="form-control expiration_date" value="{{ old('expiration_date') }}" required>
+                                        <select class="form-select" name="expiration_year">
+                                            <option value="">Please Choose A Year</option>
+                                            @foreach (range(now()->year, now()->year + 15) as $expiration_year)
+                                                <option value="{{ $expiration_year }}"
+                                                        @if (old('expiration_year') == $expiration_year) selected @endif
+                                                >{{ $expiration_year }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('expiration_year')
+                                        <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-md-6">Expiration Month <span class="text-danger">*</span></div>
+                                    <div class="col-md-6 text-end">
+                                        @php
+                                            $expiration_months = [
+                                                 'January',
+                                                 'February',
+                                                 'March',
+                                                 'April',
+                                                 'May',
+                                                 'June',
+                                                 'July',
+                                                 'August',
+                                                 'September',
+                                                 'October',
+                                                 'November',
+                                                 'December'
+                                                 ];
+                                        @endphp
+                                        <select class="form-select" name="expiration_month">
+                                            <option value="">Please Choose A Month</option>
+                                            @foreach ($expiration_months as $key => $expiration_month)
+                                                <option value="{{ str_pad($key + 1, 2, '0', STR_PAD_LEFT) }}"
+                                                        @if (old('expiration_month') == str_pad($key + 1, 2, '0', STR_PAD_LEFT)) selected @endif
+                                                >{{ $expiration_month }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('expiration_month')
+                                        <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="row mb-2">
                                     <div class="col-md-6">Cvv <span class="text-danger">*</span></div>
                                     <div class="col-md-6 text-end">
-                                        <input type="number" class="form-control cvv" value="{{ old('cvv') }}" placeholder="123" required>
+                                        <input type="number" name="cvv" class="form-control cvv" value="{{ old('cvv') }}" placeholder="123" required>
+                                        @error('cvv')
+                                        <p class="text-danger">{{ $message }}</p>
+                                        @enderror
                                     </div>
                                 </div>
 
