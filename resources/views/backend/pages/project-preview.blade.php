@@ -50,7 +50,7 @@
             @endphp
             <div class="card rounded-4 shadow-md mt-4">
                 <div class="card-body p-4">
-                    <form action=""  class="question-form">
+                    <form action="#"  class="question-form">
                         @foreach ($questions as $question)
                             @if($question->question_type[0] == 'checkbox')
                                 <div class="form-section">
@@ -140,9 +140,7 @@
                                     class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
                             <button type="button" class="next btn btn-primary btn-custom float-end">Next <span
                                     class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
-
-                            <button type="submit"
-                                class="btn btn-success mx-1 publish-btn btn-custom float-end">Submit</button>
+                            <a href="{{ route('project.index') }}" class="btn btn-success mx-1 publish-btn btn-custom float-end">Done</a>
 
                         </div>
                     </form>

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
+use App\Models\backend\AuthorizeCustomer;
 use App\Models\backend\ProjectHasAgeRange;
 use App\Models\backend\ProjectHasCompanySize;
 use App\Models\backend\ProjectHasEducationLevel;
@@ -16,6 +17,7 @@ use App\Models\backend\ProjectHasQuestion;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
+use App\Models\backend\ResearcherBilling;
 use App\Models\backend\Skill;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -319,24 +321,71 @@ class ProjectController extends Controller
         // Creating Researcher project billing
         if ($request->status == 'publish' || $request->has('schedule_date')){
             $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
-            $project_name = $project->study_title;
-//            $billing = $this->chargeCreditCard($total_cost, $request->card_number, $expiration_date, $request->cvv, $project_name);
-            $customerProfile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv);
-            dd($customerProfile);
-            //        if ($response != null) {
-            // Check to see if the API request was successfully received and acted upon
-//            if ($billing->getMessages()->getResultCode() == "Ok") {
-//                $updateProject = Projects::find($project->id);
-//                $updateProject->status = $request->status;
-//                if ($request->has('schedule_date')){
-//                    $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
-//                }
-//                $updateProject->update();
-//            }
+            $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
+
+            if ($find_customer != null){
+                $charge_customer = $this->chargeCustomerProfile($find_customer->profile_id, $find_customer->payment_id, $total_cost);
+                if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
+                    $tresponse = $charge_customer->getTransactionResponse();
+                    $new_researcher_billing = new ResearcherBilling();
+                    $new_researcher_billing->user_id = $user_id;
+                    $new_researcher_billing->project_id = $project->id;
+                    $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                    $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                    $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                    $new_researcher_billing->message_code = $tresponse->getMessages()[0]->getDescription();
+                    $new_researcher_billing->save();
+
+                    $updateProject = Projects::find($project->id);
+                    $updateProject->status = $request->status;
+                    if ($request->has('schedule_date')){
+                        $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+                    }
+                    $updateProject->update();
+                }else{
+                    dd($charge_customer);
+                }
+            }else{
+                $userType = Auth::user()->getRoleNames();
+                $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
+
+                if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")){
+
+                    $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
+                    $profile_id = $customer_profile->getCustomerProfileId();
+                    $payment_id = $payment_profiles[0];
+
+                    $new_customer = new AuthorizeCustomer();
+                    $new_customer->user_id = $user_id;
+                    $new_customer->profile_id = $profile_id;
+                    $new_customer->payment_id = $payment_id;
+                    $new_customer->save();
+
+                    // charge payment through customer profile
+                    $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
+                    if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
+                        $tresponse = $charge_customer->getTransactionResponse();
+                        $new_researcher_billing = new ResearcherBilling();
+                        $new_researcher_billing->user_id = $user_id;
+                        $new_researcher_billing->project_id = $project->id;
+                        $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                        $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                        $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                        $new_researcher_billing->message_code = $tresponse->getMessages()[0]->getDescription();
+                        $new_researcher_billing->save();
+
+                        $updateProject = Projects::find($project->id);
+                        $updateProject->status = $request->status;
+                        if ($request->has('schedule_date')){
+                            $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+                        }
+                        $updateProject->update();
+                    }else{
+                        dd($charge_customer);
+                    }
+                }
+            }
         }
-
-
-
         return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
 
     }
@@ -347,7 +396,7 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function createCustomerProfile($card_number, $expiration_date, $cvv)
+    public function createCustomerProfile($card_number, $expiration_date, $cvv, $userType)
     {
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
@@ -357,13 +406,6 @@ class ProjectController extends Controller
 
         // Set the transaction's refId
         $refId = 'ref' . time();
-
-        // Create a Customer Profile Request
-        //  1. (Optionally) create a Payment Profile
-        //  2. (Optionally) create a Shipping Profile
-        //  3. Create a Customer Profile (or specify an existing profile)
-        //  4. Submit a CreateCustomerProfile Request
-        //  5. Validate Profile ID returned
 
         // Set credit card information for payment profile
         $creditCard = new AnetAPI\CreditCardType();
@@ -377,31 +419,6 @@ class ProjectController extends Controller
         $billTo = new AnetAPI\CustomerAddressType();
         $billTo->setFirstName(Auth::user()->first_name);
         $billTo->setLastName(Auth::user()->last_name);
-//        $billTo->setCompany("Souveniropolis");
-//        $billTo->setAddress("14 Main Street");
-//        $billTo->setCity("Pecan Springs");
-//        $billTo->setState("TX");
-//        $billTo->setZip("44628");
-//        $billTo->setCountry("USA");
-//        $billTo->setPhoneNumber("888-888-8888");
-//        $billTo->setfaxNumber("999-999-9999");
-
-        // Create a customer shipping address
-//        $customerShippingAddress = new AnetAPI\CustomerAddressType();
-//        $customerShippingAddress->setFirstName("James");
-//        $customerShippingAddress->setLastName("White");
-//        $customerShippingAddress->setCompany("Addresses R Us");
-//        $customerShippingAddress->setAddress(rand() . " North Spring Street");
-//        $customerShippingAddress->setCity("Toms River");
-//        $customerShippingAddress->setState("NJ");
-//        $customerShippingAddress->setZip("08753");
-//        $customerShippingAddress->setCountry("USA");
-//        $customerShippingAddress->setPhoneNumber("888-888-8888");
-//        $customerShippingAddress->setFaxNumber("999-999-9999");
-
-        // Create an array of any shipping addresses
-//        $shippingProfiles[] = $customerShippingAddress;
-
 
         // Create a new CustomerPaymentProfile object
         $paymentProfile = new AnetAPI\CustomerPaymentProfileType();
@@ -411,15 +428,12 @@ class ProjectController extends Controller
         $paymentProfile->setDefaultpaymentProfile(true);
         $paymentProfiles[] = $paymentProfile;
 
-
         // Create a new CustomerProfileType and add the payment profile object
         $customerProfile = new AnetAPI\CustomerProfileType();
-        $customerProfile->setDescription("Researcher");
+        $customerProfile->setDescription($userType);
         $customerProfile->setMerchantCustomerId("M_" . time());
         $customerProfile->setEmail(Auth::user()->email);
         $customerProfile->setpaymentProfiles($paymentProfiles);
-//        $customerProfile->setShipToList($shippingProfiles);
-
 
         // Assemble the complete transaction request
         $request = new AnetAPI\CreateCustomerProfileRequest();
@@ -431,15 +445,6 @@ class ProjectController extends Controller
         $controller = new AnetController\CreateCustomerProfileController($request);
         $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
 
-//        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok")) {
-//            echo "Succesfully created customer profile : " . $response->getCustomerProfileId() . "\n";
-//            $paymentProfiles = $response->getCustomerPaymentProfileIdList();
-//            echo "SUCCESS: PAYMENT PROFILE ID : " . $paymentProfiles[0] . "\n";
-//        } else {
-//            echo "ERROR :  Invalid response\n";
-//            $errorMessages = $response->getMessages()->getMessage();
-//            echo "Response : " . $errorMessages[0]->getCode() . "  " .$errorMessages[0]->getText() . "\n";
-//        }
         return $response;
     }
 
@@ -449,7 +454,7 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function chargeCreditCard($amount, $card_number, $expiration_date, $cvv, $project_name)
+    public function chargeCustomerProfile($profile_id, $payment_id, $amount)
     {
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
@@ -460,113 +465,24 @@ class ProjectController extends Controller
         // Set the transaction's refId
         $refId = 'ref' . time();
 
-        // Create the payment data for a credit card
-        $creditCard = new AnetAPI\CreditCardType();
-        $creditCard->setCardNumber($card_number);
-        $creditCard->setExpirationDate($expiration_date);
-        $creditCard->setCardCode($cvv);
+        $profileToCharge = new AnetAPI\CustomerProfilePaymentType();
+        $profileToCharge->setCustomerProfileId($profile_id);
+        $paymentProfile = new AnetAPI\PaymentProfileType();
+        $paymentProfile->setPaymentProfileId($payment_id);
+        $profileToCharge->setPaymentProfile($paymentProfile);
 
-
-
-        // Add the payment data to a paymentType object
-        $paymentOne = new AnetAPI\PaymentType();
-        $paymentOne->setCreditCard($creditCard);
-
-        // Create order information
-        $order = new AnetAPI\OrderType();
-        $order->setInvoiceNumber("10101");
-        $order->setDescription($project_name);
-
-        // Set the customer's Bill To address
-        $customerAddress = new AnetAPI\CustomerAddressType();
-        $customerAddress->setFirstName(Auth::user()->first_name);
-        $customerAddress->setLastName(Auth::user()->last_name );
-//        $customerAddress->setCompany(Auth::user()->profile->company_name);
-//        $customerAddress->setAddress("14 Main Street");
-//        $customerAddress->setCity("Pecan Springs");
-//        $customerAddress->setState("TX");
-//        $customerAddress->setZip("44628");
-//        $customerAddress->setCountry("USA");
-
-        // Set the customer's identifying information
-//        $customerData = new AnetAPI\CustomerDataType();
-//        $customerData->setType("Individual");
-//        $customerData->setId(Auth::id());
-//        $customerData->setEmail(Auth::user()->email);
-
-        // Add values for transaction settings
-//        $duplicateWindowSetting = new AnetAPI\SettingType();
-//        $duplicateWindowSetting->setSettingName("duplicateWindow");
-//        $duplicateWindowSetting->setSettingValue("60");
-
-        // Add some merchant defined fields. These fields won't be stored with the transaction,
-        // but will be echoed back in the response.
-//        $merchantDefinedField1 = new AnetAPI\UserFieldType();
-//        $merchantDefinedField1->setName("Third Estate Research");
-//        $merchantDefinedField1->setValue("1128836273");
-
-//        $merchantDefinedField2 = new AnetAPI\UserFieldType();
-//        $merchantDefinedField2->setName("favoriteColor");
-//        $merchantDefinedField2->setValue("blue");
-
-        // Create a TransactionRequestType object and add the previous objects to it
         $transactionRequestType = new AnetAPI\TransactionRequestType();
-        $transactionRequestType->setTransactionType("authCaptureTransaction");
+        $transactionRequestType->setTransactionType( "authCaptureTransaction");
         $transactionRequestType->setAmount($amount);
-        $transactionRequestType->setOrder($order);
-        $transactionRequestType->setPayment($paymentOne);
-        $transactionRequestType->setBillTo($customerAddress);
-//        $transactionRequestType->setCustomer($customerData);
-//        $transactionRequestType->addToTransactionSettings($duplicateWindowSetting);
-//        $transactionRequestType->addToUserFields($merchantDefinedField1);
-//        $transactionRequestType->addToUserFields($merchantDefinedField2);
+        $transactionRequestType->setProfile($profileToCharge);
 
-        // Assemble the complete transaction request
         $request = new AnetAPI\CreateTransactionRequest();
         $request->setMerchantAuthentication($merchantAuthentication);
-        $request->setRefId($refId);
-        $request->setTransactionRequest($transactionRequestType);
-
-        // Create the controller and get the response
+        $request->setRefId( $refId);
+        $request->setTransactionRequest( $transactionRequestType);
         $controller = new AnetController\CreateTransactionController($request);
-        $response = $controller->executeWithApiResponse(\net\authorize\api\constants\ANetEnvironment::SANDBOX);
+        $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
 
-//        if ($response != null) {
-//            // Check to see if the API request was successfully received and acted upon
-//            if ($response->getMessages()->getResultCode() == "Ok") {
-//                // Since the API request was successful, look for a transaction response
-//                // and parse it to display the results of authorizing the card
-//                $tresponse = $response->getTransactionResponse();
-//
-//                if ($tresponse != null && $tresponse->getMessages() != null) {
-//                    echo " Successfully created transaction with Transaction ID: " . $tresponse->getTransId() . "\n";
-//                    echo " Transaction Response Code: " . $tresponse->getResponseCode() . "\n";
-//                    echo " Message Code: " . $tresponse->getMessages()[0]->getCode() . "\n";
-//                    echo " Auth Code: " . $tresponse->getAuthCode() . "\n";
-//                    echo " Description: " . $tresponse->getMessages()[0]->getDescription() . "\n";
-//                } else {
-//                    echo "Transaction Failed \n";
-//                    if ($tresponse->getErrors() != null) {
-//                        echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
-//                        echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
-//                    }
-//                }
-//                // Or, print errors if the API request wasn't successful
-//            } else {
-//                echo "Transaction Failed \n";
-//                $tresponse = $response->getTransactionResponse();
-//
-//                if ($tresponse != null && $tresponse->getErrors() != null) {
-//                    echo " Error Code  : " . $tresponse->getErrors()[0]->getErrorCode() . "\n";
-//                    echo " Error Message : " . $tresponse->getErrors()[0]->getErrorText() . "\n";
-//                } else {
-//                    echo " Error Code  : " . $response->getMessages()->getMessage()[0]->getCode() . "\n";
-//                    echo " Error Message : " . $response->getMessages()->getMessage()[0]->getText() . "\n";
-//                }
-//            }
-//        } else {
-//            echo  "No response returned \n";
-//        }
 
         return $response;
     }

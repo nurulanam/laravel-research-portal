@@ -12,7 +12,11 @@ class ResearcherBilling extends Model
         'user_id',
         'project_id',
         'response_code',
+        'auth_code',
         'transaction_id',
         'message_code'
     ];
+    public function project(){
+        return $this->hasOne(Projects::class, 'user_id', 'id');
+    }
 }

@@ -18,6 +18,7 @@ class CreateResearcherBillingsTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('project_id');
             $table->string('response_code')->nullable();
+            $table->string('auth_code')->nullable();
             $table->string('transaction_id')->nullable();
             $table->string('message_code')->nullable();
 

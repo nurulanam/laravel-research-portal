@@ -12,9 +12,35 @@
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="text-dark py-4">Billing History</h4>
             </div>
-            <div class="alert alert-success d-flex align-items-center" role="alert">
-                <i class="fa-solid fa-circle-exclamation fa-2x text-dark-blue me-3"></i>
-            </div>
         </div>
+    </div>
+    <div class="card shadow-md p-2 rounded-4">
+        <div class="card-body table-responsive p-0">
+            <table class="table table-hover table-borderless">
+                <thead class="border-bottom">
+                    <th>Transaction Id</th>
+                    <th>Project Name</th>
+                    <th>Date & Time</th>
+                </thead>
+                <tbody>
+                @foreach($histories as $history)
+                    <tr>
+                        <td>
+                            {{ '#'.$history->transaction_id }}
+                        </td>
+                        <td>
+                            {{ $history->project->my_project_name }}
+                        </td>
+                        <td>
+                            {{ $history->created_at }}
+                        </td>
+                    </tr>
+                @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="d-flex justify-content-center justify-content-lg-start mt-3">
+        {{ $histories->links() }}
     </div>
 @endsection

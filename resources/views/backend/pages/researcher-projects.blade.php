@@ -7,17 +7,37 @@
 @endsection
 
 @section('mainContent')
+    <button class="remainder position-fixed rounded-circle btn btn-warning border border-2 border-warning-subtle shadow-lg" data-bs-toggle="modal" data-bs-target="#remainderModal">?</button>
+    <!-- remainder Modal -->
+    <div class="modal fade" id="remainderModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content rounded-4">
+                <div class="modal-header rounded-top-4 bg-success-subtle">
+                    <h1 class="modal-title fs-5" id="remainderModalLabel"></h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul>
+                        <li>Once you publish your project. You can't edit that again.</li>
+                        <li>Pricing for participant recruitment and project listings and hosting is as follows:
+                            <ul class="mt-2">
+                                <li>You will be charged based on your per participant incentive. Third Estate Research charges a 50% fee of the incentive you pay to your participants. </li>
+                                <li>Example: if you would like to pay your participants $50.00 each for completing your project, Third Estate Research will be paid $25.00 for recruiting that participant. Your total paid to us, per participant, would be $75.00.</li>
+                                <li>This pricing includes listing your project on our website, and recruiting participants from our database. We will also handle the incentive payouts to all participants upon completion of your study. Payment is due in full upon publishing of your study. </li>
+                            </ul>
+                        </li>
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         <div class="col-12">
             <div class="d-flex justify-content-between align-items-center">
                 <h4 class="text-dark py-4">My Projects</h4>
                 <a  href="{{ route('project.create') }}" class="btn btn-primary"><i class="fa-solid fa-plus me-2"></i>Create a Project</a>
-            </div>
-            <div class="alert alert-success d-flex align-items-center" role="alert">
-                <i class="fa-solid fa-circle-exclamation fa-2x text-dark-blue me-3"></i>
-                <div>
-                    Remember! Once you publish your project. You can't edit that again.
-                </div>
             </div>
         </div>
     </div>
