@@ -17,6 +17,6 @@ class ResearcherBilling extends Model
         'message_code'
     ];
     public function project(){
-        return $this->hasOne(Projects::class, 'user_id', 'id');
+        return $this->hasOne(Projects::class, 'id', 'project_id');
     }
 }

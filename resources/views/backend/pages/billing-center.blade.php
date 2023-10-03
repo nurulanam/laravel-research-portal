@@ -23,13 +23,14 @@
                     <th>Date & Time</th>
                 </thead>
                 <tbody>
+
                 @foreach($histories as $history)
                     <tr>
                         <td>
                             {{ '#'.$history->transaction_id }}
                         </td>
                         <td>
-                            {{ $history->project->my_project_name }}
+                             {{ $history->project->my_project_name }}
                         </td>
                         <td>
                             {{ $history->created_at }}
