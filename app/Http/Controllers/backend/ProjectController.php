@@ -333,7 +333,7 @@ class ProjectController extends Controller
                     $new_researcher_billing->response_code = $tresponse->getResponseCode();
                     $new_researcher_billing->auth_code = $tresponse->getAuthCode();
                     $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                    $new_researcher_billing->message_code = $tresponse->getMessages()[0]->getDescription();
+                    $new_researcher_billing->ref_id = $charge_customer->getRefId();
                     $new_researcher_billing->save();
 
                     $updateProject = Projects::find($project->id);
@@ -371,7 +371,7 @@ class ProjectController extends Controller
                         $new_researcher_billing->response_code = $tresponse->getResponseCode();
                         $new_researcher_billing->auth_code = $tresponse->getAuthCode();
                         $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                        $new_researcher_billing->message_code = $tresponse->getMessages()[0]->getDescription();
+                        $new_researcher_billing->ref_id = $charge_customer->getRefId();
                         $new_researcher_billing->save();
 
                         $updateProject = Projects::find($project->id);
@@ -478,7 +478,7 @@ class ProjectController extends Controller
 
         $request = new AnetAPI\CreateTransactionRequest();
         $request->setMerchantAuthentication($merchantAuthentication);
-        $request->setRefId( $refId);
+        $request->setRefId($refId);
         $request->setTransactionRequest( $transactionRequestType);
         $controller = new AnetController\CreateTransactionController($request);
         $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);

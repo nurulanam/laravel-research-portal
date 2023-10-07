@@ -18,8 +18,9 @@
         <div class="card-body table-responsive p-0">
             <table class="table table-hover table-borderless">
                 <thead class="border-bottom">
-                    <th>Transaction Id</th>
+                    <th>Reference Id</th>
                     <th>Project Name</th>
+                    <th>Status</th>
                     <th>Date & Time</th>
                 </thead>
                 <tbody>
@@ -27,10 +28,13 @@
                 @foreach($histories as $history)
                     <tr>
                         <td>
-                            {{ '#'.$history->transaction_id }}
+                            {{ '#'.$history->ref_id }}
                         </td>
                         <td>
                              {{ $history->project->my_project_name }}
+                        </td>
+                        <td>
+                            <span class="badge bg-success">Success</span>
                         </td>
                         <td>
                             {{ $history->created_at }}
