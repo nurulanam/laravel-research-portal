@@ -24,7 +24,6 @@
                     <th>Date & Time</th>
                 </thead>
                 <tbody>
-
                 @foreach($histories as $history)
                     <tr>
                         <td>
@@ -34,10 +33,12 @@
                              {{ $history->project->my_project_name }}
                         </td>
                         <td>
-                            <span class="badge bg-success">Success</span>
+                            @if($history->response_code == 1)
+                                <span class="badge bg-success">Success</span>
+                            @endif
                         </td>
                         <td>
-                            {{ $history->created_at }}
+                            {{ $history->created_at->format('m-d-Y') }}
                         </td>
                     </tr>
                 @endforeach

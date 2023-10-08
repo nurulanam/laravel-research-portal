@@ -76,9 +76,7 @@
                                     @endforeach
                                 @endforeach
                             @else
-                                <!-- Handle the case where $skillIds is null -->
                                 <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">0 Skills</span>
-                                <!-- You can display a message or take other actions here -->
                             @endif
 
                         </span>

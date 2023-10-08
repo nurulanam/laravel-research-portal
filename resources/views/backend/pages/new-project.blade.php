@@ -588,16 +588,16 @@
                                     </div>
                                     <div class="col-md-8 text-end">
                                         <div class="">
-                                            <input class="form-check-input select-card" type="radio" name="customer-card" value="existing" id="existingCard" checked>
                                             <label class="form-check-label" for="existingCard">
-                                                Existing
+                                                {{ '*********' . Auth::user()->authCutomer->card_digit}}
                                             </label>
+                                            <input class="ms-2 form-check-input select-card" type="radio" name="customer-card" value="existing" id="existingCard" checked>
                                         </div>
                                         <div class="">
-                                            <input class="form-check-input select-card" type="radio" name="customer-card" value="new" id="newCard">
                                             <label class="form-check-label" for="newCard">
                                                 Add New
                                             </label>
+                                            <input class="ms-2 form-check-input select-card" type="radio" name="customer-card" value="new" id="newCard">
                                         </div>
                                     </div>
                                 </div>

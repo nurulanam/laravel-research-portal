@@ -18,6 +18,7 @@ class CreateAuthorizeCustomersTable extends Migration
             $table->unsignedBigInteger('user_id');
             $table->integer('profile_id');
             $table->integer('payment_id');
+            $table->integer('card_digit');
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->timestamps();

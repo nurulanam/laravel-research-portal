@@ -81,4 +81,9 @@ class Projects extends Model
     public function projectQuestions(){
         return $this->hasOne(ProjectHasQuestion::class, 'project_id', 'id');
     }
+
+    public function researcherBilling(){
+        return $this->hasOne(ResearcherBilling::class, 'project_id', 'id');
+    }
+
 }

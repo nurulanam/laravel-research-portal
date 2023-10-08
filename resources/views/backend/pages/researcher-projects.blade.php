@@ -68,7 +68,15 @@
                                 <td class="align-middle">{{ $project->my_project_name }}</td>
                                 <td class="align-middle"><a href="{{ route('project.participants', $project->slug) }}" class="badge bg-success px-2 text-decoration-none"><i class="fa-solid fa-users me-2"></i>{{ count($project->responses) }}</a></td>
                                 <td class="align-middle">@if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif</td>
-                                <td class="align-middle"></td>
+                                <td class="align-middle">
+                                    @if($project->researcherBilling)
+                                        @if($project->researcherBilling->response_code == 1)
+                                            <span class="badge bg-success">Paid</span>
+                                        @endif
+                                    @else
+                                        <span class="badge bg-secondary">Unpaid</span>
+                                    @endif
+                                </td>
                                 <td class="align-middle">
                                     @if($project->status == "publish")
                                         <a class="badge bg-success text-decoration-none">Publish</a>
@@ -81,7 +89,11 @@
                                     @endif
                                 </td>
                                 <td class="align-middle">
-                                    <a href="{{ route('project.edit', $project->slug) }}"><i class="fas fa-edit text-success"></i></a>
+                                    @if($project->status == "publish")
+                                        <a href="#"><i class="fas fa-edit text-danger"></i></a>
+                                    @else
+                                        <a href="{{ route('project.edit', $project->slug) }}"><i class="fas fa-edit text-success"></i></a>
+                                    @endif
                                 </td>
                                 <td class="align-middle">
                                     <a href="{{ route('project.preview', $project->slug) }}"><i class="fa-solid fa-eye text-warning"></i></a>
@@ -112,7 +124,9 @@
                         @endforeach
                         @else
                             <tr class="h-auto">
-                                <td colspan="8" class="text-center"><div class="alert alert-danger" role="alert">Opps.. sorry! you don't have any projects</div></td>
+                                <td colspan="8" class="text-center">
+                                    <div class="alert alert-danger mb-0" role="alert">Opps... sorry! You don't have any projects</div>
+                                </td>
                             </tr>
                         @endif
                         </tbody>

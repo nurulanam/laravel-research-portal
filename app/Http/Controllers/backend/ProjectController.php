@@ -37,8 +37,9 @@ class ProjectController extends Controller
     public function index()
     {
         app()->call([DashboardController::class, 'updateProjectStatus']);
+
         if (Auth::user()->hasRole('researcher')) {
-            $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->with('responses')->paginate(5);
+            $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->with('responses')->with('researcherBilling')->paginate(5);
             return view('backend.pages.researcher-projects', compact('projects'));
 
         }elseif (Auth::user()->hasRole('participant')){
@@ -68,7 +69,7 @@ class ProjectController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
     {
@@ -100,6 +101,10 @@ class ProjectController extends Controller
            'age_range' => 'nullable|array',
            'status' => 'required'
         ]);
+
+//        if ($request->status == 'publish' || $request->status == 'schedule'){
+//            dd($request->status);
+//        }
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
 
@@ -319,52 +324,67 @@ class ProjectController extends Controller
         }
 
         // Creating Researcher project billing
-        if ($request->status == 'publish' || $request->has('schedule_date')){
-            $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
-            $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
+        $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
 
-            if ($find_customer != null){
-                $charge_customer = $this->chargeCustomerProfile($find_customer->profile_id, $find_customer->payment_id, $total_cost);
-                if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
-                    $tresponse = $charge_customer->getTransactionResponse();
-                    $new_researcher_billing = new ResearcherBilling();
-                    $new_researcher_billing->user_id = $user_id;
-                    $new_researcher_billing->project_id = $project->id;
-                    $new_researcher_billing->response_code = $tresponse->getResponseCode();
-                    $new_researcher_billing->auth_code = $tresponse->getAuthCode();
-                    $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                    $new_researcher_billing->ref_id = $charge_customer->getRefId();
-                    $new_researcher_billing->save();
+        if ($find_customer != null && $request->has('status') != 'draft'){
+            $charge_customer = $this->chargeCustomerProfile($find_customer->profile_id, $find_customer->payment_id, $total_cost);
+            if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
+                $tresponse = $charge_customer->getTransactionResponse();
+                $new_researcher_billing = new ResearcherBilling();
+                $new_researcher_billing->user_id = $user_id;
+                $new_researcher_billing->project_id = $project->id;
+                $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                $new_researcher_billing->ref_id = $charge_customer->getRefId();
+                $new_researcher_billing->save();
 
-                    $updateProject = Projects::find($project->id);
-                    $updateProject->status = $request->status;
-                    if ($request->has('schedule_date')){
-                        $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
-                    }
-                    $updateProject->update();
-                }else{
-                    dd($charge_customer);
+                $updateProject = Projects::find($project->id);
+                $updateProject->status = $request->status;
+                if ($request->has('schedule_date')){
+                    $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
                 }
+                $updateProject->update();
             }else{
-                $userType = Auth::user()->getRoleNames();
-                $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
+                $updateProject = Projects::find($project->id);
+                $updateProject->status = 'draft';
+                $updateProject->update();
 
-                if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")){
+                return redirect()->route('project.index')->with('error', 'Payment error. Project drafted');
+            }
+        }elseif($find_customer == null){
+            $request->validate([
+                'card_number' => 'required|numeric',
+                'expiration_year' => 'required|numeric',
+                'expiration_month' => 'required|numeric',
+                'cvv' => 'required|numeric',
+            ]);
 
-                    $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
-                    $profile_id = $customer_profile->getCustomerProfileId();
-                    $payment_id = $payment_profiles[0];
+            $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
+            $card_digit = substr($request->card_number, -4);
 
-                    $new_customer = new AuthorizeCustomer();
-                    $new_customer->user_id = $user_id;
-                    $new_customer->profile_id = $profile_id;
-                    $new_customer->payment_id = $payment_id;
-                    $new_customer->save();
+            $userType = Auth::user()->getRoleNames();
+            $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
 
-                    // charge payment through customer profile
+            if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")) {
+
+                $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
+                $profile_id = $customer_profile->getCustomerProfileId();
+                $payment_id = $payment_profiles[0];
+
+                $new_customer = new AuthorizeCustomer();
+                $new_customer->user_id = $user_id;
+                $new_customer->profile_id = $profile_id;
+                $new_customer->payment_id = $payment_id;
+                $new_customer->card_digit = $card_digit;
+                $new_customer->save();
+
+                // charge payment through customer profile
+                if ($request->has('status') != 'draft'){
                     $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
                     if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
                         $tresponse = $charge_customer->getTransactionResponse();
+
                         $new_researcher_billing = new ResearcherBilling();
                         $new_researcher_billing->user_id = $user_id;
                         $new_researcher_billing->project_id = $project->id;
@@ -376,12 +396,16 @@ class ProjectController extends Controller
 
                         $updateProject = Projects::find($project->id);
                         $updateProject->status = $request->status;
-                        if ($request->has('schedule_date')){
+                        if ($request->has('schedule_date')) {
                             $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
                         }
                         $updateProject->update();
-                    }else{
-                        dd($charge_customer);
+                    } else {
+                        $updateProject = Projects::find($project->id);
+                        $updateProject->status = 'draft';
+                        $updateProject->update();
+
+                        return redirect()->route('project.index')->with('error', 'Payment error. Project drafted');
                     }
                 }
             }
@@ -394,7 +418,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnetAPI\AnetApiResponseType
      */
     public function createCustomerProfile($card_number, $expiration_date, $cvv, $userType)
     {
@@ -452,7 +476,7 @@ class ProjectController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return AnetAPI\AnetApiResponseType
      */
     public function chargeCustomerProfile($profile_id, $payment_id, $amount)
     {
@@ -482,7 +506,6 @@ class ProjectController extends Controller
         $request->setTransactionRequest( $transactionRequestType);
         $controller = new AnetController\CreateTransactionController($request);
         $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
-
 
         return $response;
     }
@@ -520,6 +543,12 @@ class ProjectController extends Controller
         //
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  string  $id
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
+     */
     public function projectParticipants($slug){
         $findProject = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->with('responses', 'responses.project' , 'responses.user', 'responses.user.profile', 'responses.user.skills')->first();
         if (!$findProject){
@@ -540,8 +569,8 @@ class ProjectController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param  string  $slug
+     * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function edit($slug)
     {

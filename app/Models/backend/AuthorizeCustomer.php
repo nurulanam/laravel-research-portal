@@ -12,5 +12,6 @@ class AuthorizeCustomer extends Model
         'user_id',
         'profile_id',
         'payment_id',
+        'card_digit'
     ];
 }

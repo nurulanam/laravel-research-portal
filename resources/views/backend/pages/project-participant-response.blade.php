@@ -102,15 +102,20 @@
                     <div class="d-flex justify-content-center align-items-center my-2">
                         <span>
                             @php
-                                $skillIds = json_decode($response->user->skills->skills);
+                                $skillIds = isset($response->user->skills) ? json_decode($response->user->skills->skills) : null;
                             @endphp
-                            @foreach( $skillIds as $skillId)
-                                @foreach($allSkills as $skill)
-                                    @if($skill->id == $skillId)
-                                        <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1 ">{{ $skill->skill_name }}</span>
-                                    @endif
+
+                            @if (!empty($skillIds))
+                                @foreach($skillIds as $skillId)
+                                    @foreach($allSkills as $skill)
+                                        @if($skill->id == $skillId)
+                                            <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">{{ $skill->skill_name }}</span>
+                                        @endif
+                                    @endforeach
                                 @endforeach
-                            @endforeach
+                            @else
+                                <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">0 Skills</span>
+                            @endif
                         </span>
                     </div>
                     @if($response->status == 'withdrawn')
