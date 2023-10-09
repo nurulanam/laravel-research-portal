@@ -20,7 +20,6 @@ class CreateResearcherBillingsTable extends Migration
             $table->string('response_code')->nullable();
             $table->string('auth_code')->nullable();
             $table->string('transaction_id')->nullable();
-            $table->string('ref_id')->nullable();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');

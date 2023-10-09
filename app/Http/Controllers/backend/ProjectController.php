@@ -19,6 +19,7 @@ use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use App\Models\backend\ResearcherBilling;
 use App\Models\backend\Skill;
+use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -324,8 +325,49 @@ class ProjectController extends Controller
         }
 
         // Creating Researcher project billing
-        $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
+        if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){
+            $request->validate([
+                'card_number' => 'required|numeric',
+                'expiration_year' => 'required|numeric',
+                'expiration_month' => 'required|numeric',
+                'cvv' => 'required|numeric',
+            ]);
+            $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
+            $userType = Auth::user()->getRoleNames();
 
+            $find_customer =  $this->checkCutomerProfile();
+            if ($find_customer){
+                // update customer profile
+                $update_customer_profile = ['profile_id', 'payment_id'];
+                $profile_id = $update_customer_profile->profile_id;
+                $payment_id = $update_customer_profile->payment_id;
+
+                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+            }else{
+                $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
+
+                if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")) {
+
+                    $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
+                    $profile_id = $customer_profile->getCustomerProfileId();
+                    $payment_id = $payment_profiles[0];
+                    $card_digit = substr($request->card_number, -4);
+
+                    $new_customer = new AuthorizeCustomer();
+                    $new_customer->user_id = $user_id;
+                    $new_customer->profile_id = $profile_id;
+                    $new_customer->payment_id = $payment_id;
+                    $new_customer->card_digit = $card_digit;
+                    $new_customer->save();
+                }
+
+                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+            }
+        }else{
+
+        }
+
+        $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
         if ($find_customer != null && $request->has('status') != 'draft'){
             $charge_customer = $this->chargeCustomerProfile($find_customer->profile_id, $find_customer->payment_id, $total_cost);
             if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
@@ -414,6 +456,65 @@ class ProjectController extends Controller
 
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function checkCutomerProfile()
+    {
+        $user_id = Auth::id();
+        $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
+        return $find_customer;
+    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return string[]
+     */
+    public function chargeProjectByStatus($request, $profile_id, $payment_id, $project_id, $total_cost)
+    {
+        $user_id = Auth::id();
+
+        if ($request->status == 'publish' || $request->status == 'schedule'){
+            $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
+
+            if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
+                $tresponse = $charge_customer->getTransactionResponse();
+
+                $new_researcher_billing = new ResearcherBilling();
+                $new_researcher_billing->user_id = $user_id;
+                $new_researcher_billing->project_id = $project_id;
+                $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                $new_researcher_billing->save();
+
+                $updateProject = Projects::find($project_id);
+                $updateProject->status = $request->status;
+                if ($request->has('schedule_date')) {
+                    $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+                }
+                $updateProject->update();
+                return ['success' => 'Project successfully charged and updated.'];
+
+            } else {
+                $updateProject = Projects::find($project_id);
+                $updateProject->status = 'draft';
+                $updateProject->update();
+
+                return ['error' => 'Payment was not successful. Project status set to draft.'];
+            }
+
+        }elseif($request->status == 'draft'){
+            $updateProject = Projects::find($project_id);
+            $updateProject->status = 'draft';
+            $updateProject->update();
+
+            return ['success' => 'Project status set to draft.'];
+        }
+        return ['error' => 'An error occurred or payment was not successful.'];
+    }
 
     /**
      * Store a newly created resource in storage.
