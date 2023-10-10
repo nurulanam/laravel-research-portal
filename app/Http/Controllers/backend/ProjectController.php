@@ -102,10 +102,16 @@ class ProjectController extends Controller
            'age_range' => 'nullable|array',
            'status' => 'required'
         ]);
+        if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){
+            $request->validate([
+                'card_number' => 'required|numeric|regex:/^\d{13,19}$/',
+                'expiration_year' => 'required|numeric|digits:4',
+                'expiration_month' => 'required|numeric|between:1,12',
+                'cvv' => 'required|numeric|digits_between:3,4',
+            ]);
+        }
 
-//        if ($request->status == 'publish' || $request->status == 'schedule'){
-//            dd($request->status);
-//        }
+
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
 
@@ -156,7 +162,7 @@ class ProjectController extends Controller
         // Creating New Company Size belongsToProject
 
         // Check if each element in the $request->company_size array is a string
-        if (is_array($request->company_size)) {
+        if (isset($request->company_size) && is_array($request->company_size)) {
             $filtered_company_sizes = array_filter($request->company_size, 'is_string');
 
             // Convert the array to JSON
@@ -217,7 +223,7 @@ class ProjectController extends Controller
 
         // Creating New Household Income belongsToProject
         // Check if each element in the $request->household_income array is a string
-        if (is_array($request->household_income)) {
+        if (isset($request->household_income) && is_array($request->household_income)) {
             $filtered_household_incomes = array_filter($request->household_income, 'is_string');
 
             // Convert the array to JSON
@@ -228,11 +234,16 @@ class ProjectController extends Controller
             $new_household_income->project_id = $project->id;
             $new_household_income->household_income = $household_income_json;
             $new_household_income->save();
+        }else{
+            $new_household_income = new ProjectHasHouseholdIncome();
+            $new_household_income->project_id = $project->id;
+            $new_household_income->household_income = '[]';
+            $new_household_income->save();
         }
 
         // Creating New Gender belongsToProject
         // Check if each element in the $request->gender array is a string
-        if (is_array($request->gender)) {
+        if (isset($request->gender) && is_array($request->gender)) {
             $filtered_genders = array_filter($request->gender, 'is_string');
 
             // Convert the array to JSON
@@ -243,11 +254,16 @@ class ProjectController extends Controller
             $new_gender->project_id = $project->id;
             $new_gender->gender = $gender_json;
             $new_gender->save();
+        }else{
+            $new_gender = new ProjectHasGender();
+            $new_gender->project_id = $project->id;
+            $new_gender->gender = '[]';
+            $new_gender->save();
         }
 
         // Creating New Education Level belongsToProject
         // Check if each element in the $request->education_level array is a string
-        if (is_array($request->education_level)) {
+        if (isset($request->education_level) && is_array($request->education_level)) {
             $filtered_education_levels = array_filter($request->education_level, 'is_string');
 
             // Convert the array to JSON
@@ -258,11 +274,16 @@ class ProjectController extends Controller
             $new_education_level->project_id = $project->id;
             $new_education_level->education_level = $education_level_json;
             $new_education_level->save();
+        }else{
+            $new_education_level = new ProjectHasEducationLevel();
+            $new_education_level->project_id = $project->id;
+            $new_education_level->education_level = '[]';
+            $new_education_level->save();
         }
 
         // Creating New Ethnicity belongsToProject
         // Check if each element in the $request->ethnicity array is a string
-        if (is_array($request->ethnicity)) {
+        if (isset($request->ethnicity) && is_array($request->ethnicity)) {
             $filtered_ethnicities = array_filter($request->ethnicity, 'is_string');
 
             // Convert the array to JSON
@@ -273,11 +294,16 @@ class ProjectController extends Controller
             $new_ethnicity->project_id = $project->id;
             $new_ethnicity->ethnicity = $ethnicity_json;
             $new_ethnicity->save();
+        }else{
+            $new_ethnicity = new ProjectHasEthnicity();
+            $new_ethnicity->project_id = $project->id;
+            $new_ethnicity->ethnicity = '[]';
+            $new_ethnicity->save();
         }
 
         // Creating New Age Range belongsToProject
         // Check if each element in the $request->age_range array is a string
-        if (is_array($request->age_range)) {
+        if (isset($request->age_range) && is_array($request->age_range)) {
             $filtered_age_ranges = array_filter($request->age_range, 'is_string');
 
             // Convert the array to JSON
@@ -287,6 +313,11 @@ class ProjectController extends Controller
             $new_age_range = new ProjectHasAgeRange();
             $new_age_range->project_id = $project->id;
             $new_age_range->age_range = $age_range_json;
+            $new_age_range->save();
+        }else{
+            $new_age_range = new ProjectHasAgeRange();
+            $new_age_range->project_id = $project->id;
+            $new_age_range->age_range = '[]'; // JSON representation of an empty array
             $new_age_range->save();
         }
 
@@ -326,23 +357,33 @@ class ProjectController extends Controller
 
         // Creating Researcher project billing
         if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){
-            $request->validate([
-                'card_number' => 'required|numeric',
-                'expiration_year' => 'required|numeric',
-                'expiration_month' => 'required|numeric',
-                'cvv' => 'required|numeric',
-            ]);
             $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
             $userType = Auth::user()->getRoleNames();
 
             $find_customer =  $this->checkCutomerProfile();
-            if ($find_customer){
-                // update customer profile
-                $update_customer_profile = ['profile_id', 'payment_id'];
-                $profile_id = $update_customer_profile->profile_id;
-                $payment_id = $update_customer_profile->payment_id;
+            if ($find_customer != null){
+                $profile_id = $find_customer->profile_id;
+                $payment_id = $find_customer->payment_id;
+                $card_digit = substr($request->card_number, -4);
 
-                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                $update_customer_profile = $this->updateCustomerPaymentProfile($profile_id, $payment_id, $request->card_number, $expiration_date, $request->cvv);
+                if (($update_customer_profile != null) && ($update_customer_profile->getMessages()->getResultCode() == "Ok") )
+                {
+                    $update_customer = AuthorizeCustomer::find($user_id);
+                    $update_customer->user_id = $user_id;
+                    $update_customer->card_digit = $card_digit;
+                    $update_customer->update();
+
+                    $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                    if (isset($charge_project_by_status['error'])) {
+                        return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                    } else {
+                        return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
+                    }
+                }elseif(($update_customer_profile == null) || $update_customer_profile->getMessages()->getResultCode() == "Error"){
+                    return redirect()->route('project.index')->with('error', 'Payment was not successful. Project status set to draft.');
+                }
+
             }else{
                 $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
 
@@ -359,101 +400,32 @@ class ProjectController extends Controller
                     $new_customer->payment_id = $payment_id;
                     $new_customer->card_digit = $card_digit;
                     $new_customer->save();
+                }elseif ($customer_profile->getMessages()->getResultCode() == "Error"){
+
                 }
 
                 $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                if (isset($charge_project_by_status['error'])) {
+                    return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                } else {
+                    return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
+                }
             }
         }else{
-
-        }
-
-        $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
-        if ($find_customer != null && $request->has('status') != 'draft'){
-            $charge_customer = $this->chargeCustomerProfile($find_customer->profile_id, $find_customer->payment_id, $total_cost);
-            if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
-                $tresponse = $charge_customer->getTransactionResponse();
-                $new_researcher_billing = new ResearcherBilling();
-                $new_researcher_billing->user_id = $user_id;
-                $new_researcher_billing->project_id = $project->id;
-                $new_researcher_billing->response_code = $tresponse->getResponseCode();
-                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
-                $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                $new_researcher_billing->ref_id = $charge_customer->getRefId();
-                $new_researcher_billing->save();
-
-                $updateProject = Projects::find($project->id);
-                $updateProject->status = $request->status;
-                if ($request->has('schedule_date')){
-                    $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+            $find_customer =  $this->checkCutomerProfile();
+            if ($find_customer != null){
+                $profile_id = $find_customer->profile_id;
+                $payment_id = $find_customer->payment_id;
+                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                if (isset($charge_project_by_status['error'])) {
+                    return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                } else {
+                    return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
                 }
-                $updateProject->update();
             }else{
-                $updateProject = Projects::find($project->id);
-                $updateProject->status = 'draft';
-                $updateProject->update();
 
-                return redirect()->route('project.index')->with('error', 'Payment error. Project drafted');
-            }
-        }elseif($find_customer == null){
-            $request->validate([
-                'card_number' => 'required|numeric',
-                'expiration_year' => 'required|numeric',
-                'expiration_month' => 'required|numeric',
-                'cvv' => 'required|numeric',
-            ]);
-
-            $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
-            $card_digit = substr($request->card_number, -4);
-
-            $userType = Auth::user()->getRoleNames();
-            $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
-
-            if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")) {
-
-                $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
-                $profile_id = $customer_profile->getCustomerProfileId();
-                $payment_id = $payment_profiles[0];
-
-                $new_customer = new AuthorizeCustomer();
-                $new_customer->user_id = $user_id;
-                $new_customer->profile_id = $profile_id;
-                $new_customer->payment_id = $payment_id;
-                $new_customer->card_digit = $card_digit;
-                $new_customer->save();
-
-                // charge payment through customer profile
-                if ($request->has('status') != 'draft'){
-                    $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
-                    if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
-                        $tresponse = $charge_customer->getTransactionResponse();
-
-                        $new_researcher_billing = new ResearcherBilling();
-                        $new_researcher_billing->user_id = $user_id;
-                        $new_researcher_billing->project_id = $project->id;
-                        $new_researcher_billing->response_code = $tresponse->getResponseCode();
-                        $new_researcher_billing->auth_code = $tresponse->getAuthCode();
-                        $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                        $new_researcher_billing->ref_id = $charge_customer->getRefId();
-                        $new_researcher_billing->save();
-
-                        $updateProject = Projects::find($project->id);
-                        $updateProject->status = $request->status;
-                        if ($request->has('schedule_date')) {
-                            $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
-                        }
-                        $updateProject->update();
-                    } else {
-                        $updateProject = Projects::find($project->id);
-                        $updateProject->status = 'draft';
-                        $updateProject->update();
-
-                        return redirect()->route('project.index')->with('error', 'Payment error. Project drafted');
-                    }
-                }
             }
         }
-        return redirect()->route('project.index')->with('success', 'Your Project Added Successfully');
-
     }
 
     /**
@@ -467,54 +439,7 @@ class ProjectController extends Controller
         $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
         return $find_customer;
     }
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @return string[]
-     */
-    public function chargeProjectByStatus($request, $profile_id, $payment_id, $project_id, $total_cost)
-    {
-        $user_id = Auth::id();
 
-        if ($request->status == 'publish' || $request->status == 'schedule'){
-            $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
-
-            if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
-                $tresponse = $charge_customer->getTransactionResponse();
-
-                $new_researcher_billing = new ResearcherBilling();
-                $new_researcher_billing->user_id = $user_id;
-                $new_researcher_billing->project_id = $project_id;
-                $new_researcher_billing->response_code = $tresponse->getResponseCode();
-                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
-                $new_researcher_billing->transaction_id = $tresponse->getTransId();
-                $new_researcher_billing->save();
-
-                $updateProject = Projects::find($project_id);
-                $updateProject->status = $request->status;
-                if ($request->has('schedule_date')) {
-                    $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
-                }
-                $updateProject->update();
-                return ['success' => 'Project successfully charged and updated.'];
-
-            } else {
-                $updateProject = Projects::find($project_id);
-                $updateProject->status = 'draft';
-                $updateProject->update();
-
-                return ['error' => 'Payment was not successful. Project status set to draft.'];
-            }
-
-        }elseif($request->status == 'draft'){
-            $updateProject = Projects::find($project_id);
-            $updateProject->status = 'draft';
-            $updateProject->update();
-
-            return ['success' => 'Project status set to draft.'];
-        }
-        return ['error' => 'An error occurred or payment was not successful.'];
-    }
 
     /**
      * Store a newly created resource in storage.
@@ -611,6 +536,135 @@ class ProjectController extends Controller
         return $response;
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @param  int  $customerProfileId
+     * @param  int  $customerPaymentProfileId
+     * @param  int  $card_number
+     * @param  string  $expiration_date
+     * @param  int  $cvv
+     * @return AnetAPI\AnetApiResponseType
+     */
+    function updateCustomerPaymentProfile($customerProfileId, $customerPaymentProfileId, $card_number, $expiration_date, $cvv)
+    {
+        /* Create a merchantAuthenticationType object with authentication details
+           retrieved from the constants file */
+        $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
+        $merchantAuthentication->setName(env('MERCHANT_LOGIN_ID'));
+        $merchantAuthentication->setTransactionKey(env('MERCHANT_TRANSACTION_KEY'));
+
+        // Set the transaction's refId
+        $refId = 'ref' . time();
+
+        $request = new AnetAPI\GetCustomerPaymentProfileRequest();
+        $request->setMerchantAuthentication($merchantAuthentication);
+        $request->setRefId( $refId);
+        $request->setCustomerProfileId($customerProfileId);
+        $request->setCustomerPaymentProfileId($customerPaymentProfileId);
+
+        $controller = new AnetController\GetCustomerPaymentProfileController($request);
+        $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+        if (($response != null) && ($response->getMessages()->getResultCode() == "Ok"))
+        {
+            $billto = new AnetAPI\CustomerAddressType();
+            $billto = $response->getPaymentProfile()->getbillTo();
+
+            $creditCard = new AnetAPI\CreditCardType();
+            $creditCard->setCardNumber($card_number);
+            $creditCard->setExpirationDate($expiration_date);
+            $creditCard->setCardCode($cvv);
+
+            $paymentCreditCard = new AnetAPI\PaymentType();
+            $paymentCreditCard->setCreditCard($creditCard);
+            $paymentprofile = new AnetAPI\CustomerPaymentProfileExType();
+            $paymentprofile->setBillTo($billto);
+            $paymentprofile->setCustomerPaymentProfileId($customerPaymentProfileId);
+            $paymentprofile->setPayment($paymentCreditCard);
+
+            // We're updating the billing address but everything has to be passed in an update
+            // For card information you can pass exactly what comes back from an GetCustomerPaymentProfile
+            // if you don't need to update that info
+
+            // Update the Customer Payment Profile object
+            $paymentprofile->setBillTo($billto);
+
+            // Submit a UpdatePaymentProfileRequest
+            $request = new AnetAPI\UpdateCustomerPaymentProfileRequest();
+            $request->setMerchantAuthentication($merchantAuthentication);
+            $request->setCustomerProfileId($customerProfileId);
+            $request->setPaymentProfile( $paymentprofile );
+
+            $controller = new AnetController\UpdateCustomerPaymentProfileController($request);
+            $response = $controller->executeWithApiResponse( \net\authorize\api\constants\ANetEnvironment::SANDBOX);
+
+            return $response;
+        }
+        return $response;
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return string[]
+     */
+    public function chargeProjectByStatus($request, $profile_id, $payment_id, $project_id, $total_cost)
+    {
+        $user_id = Auth::id();
+
+        if ($request->status == 'publish' || $request->status == 'schedule'){
+            $charge_customer = $this->chargeCustomerProfile($profile_id, $payment_id, $total_cost);
+
+            if (($charge_customer != null) && $charge_customer->getMessages()->getResultCode() == "Ok") {
+                $tresponse = $charge_customer->getTransactionResponse();
+
+                $new_researcher_billing = new ResearcherBilling();
+                $new_researcher_billing->user_id = $user_id;
+                $new_researcher_billing->project_id = $project_id;
+                $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                $new_researcher_billing->save();
+
+                if ($tresponse->getResponseCode() == 1){
+                    $updateProject = Projects::find($project_id);
+                    $updateProject->status = $request->status;
+                    if ($request->has('schedule_date')) {
+                        $updateProject->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
+                    }
+                    $updateProject->update();
+                    return ['success' => 'Project successfully charged and updated.'];
+                }elseif($tresponse->getResponseCode() == 2){
+                    return ['error' => 'Payment declined. Project status set to draft.'];
+                }elseif($tresponse->getResponseCode() == 3){
+                    return ['error' => 'Duplicate transaction failed.'];
+                }
+
+            } else {
+                $tresponse = $charge_customer->getTransactionResponse();
+                $new_researcher_billing = new ResearcherBilling();
+                $new_researcher_billing->user_id = $user_id;
+                $new_researcher_billing->project_id = $project_id;
+                $new_researcher_billing->response_code = $tresponse->getResponseCode();
+                $new_researcher_billing->auth_code = $tresponse->getAuthCode();
+                $new_researcher_billing->transaction_id = $tresponse->getTransId();
+                $new_researcher_billing->save();
+
+                $updateProject = Projects::find($project_id);
+                $updateProject->status = 'draft';
+                $updateProject->update();
+
+                return ['error' => 'Payment was not successful. Project status set to draft.'];
+            }
+        }elseif($request->status == 'draft'){
+            $updateProject = Projects::find($project_id);
+            $updateProject->status = 'draft';
+            $updateProject->update();
+
+            return ['success' => 'Project status set to draft.'];
+        }
+        return ['error' => 'An error occurred or payment was not successful.'];
+    }
     public function createSlug($title)
     {
         // Generate the initial slug from the project title
@@ -754,8 +808,8 @@ class ProjectController extends Controller
             return back()->with('error', 'Sorry! Project not found');
         }
 
-        if ($project->status == 'publish'){
-            return back()->with('error', 'Once You Publish Project You Can\'t Update That');
+        if ($project->status == 'publish' || $project->status == 'schedule'){
+            return back()->with('error', 'You Can\'t update project anymore');
         }
 
         // Project Cost Calculation
@@ -879,6 +933,7 @@ class ProjectController extends Controller
 
             // Save the JSON data in the database using the model
             $new_gender = ProjectHasGender::where('project_id', '=', $project->id)->first();
+
             $new_gender->gender = $gender_json;
             $new_gender->update();
         }
@@ -956,6 +1011,7 @@ class ProjectController extends Controller
             $new_project_question->questions = $json_questions;
             $new_project_question->update();
         }
+
 
         return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
 

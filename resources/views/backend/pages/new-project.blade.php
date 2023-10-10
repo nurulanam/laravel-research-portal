@@ -609,6 +609,9 @@
                                         <div class="col-md-6">Card Number <span class="text-danger">*</span></div>
                                         <div class="col-md-6 text-end">
                                             <input type="number" name="card_number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>
+                                            @error('card_number')
+                                            <p class="text-danger">{{ $message }}</p>
+                                            @enderror
                                         </div>
                                     </div>
 

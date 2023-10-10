@@ -18,24 +18,32 @@
         <div class="card-body table-responsive p-0">
             <table class="table table-hover table-borderless">
                 <thead class="border-bottom">
-                    <th>Reference Id</th>
+                    <th>Transaction id</th>
                     <th>Project Name</th>
                     <th>Status</th>
-                    <th>Date & Time</th>
+                    <th>Date</th>
                 </thead>
                 <tbody>
                 @foreach($histories as $history)
                     <tr>
                         <td>
-                            {{ '#'.$history->ref_id }}
+                            {{ '#'.$history->transaction_id }}
                         </td>
                         <td>
                              {{ $history->project->my_project_name }}
                         </td>
                         <td>
-                            @if($history->response_code == 1)
-                                <span class="badge bg-success">Success</span>
-                            @endif
+                            @switch($history->response_code)
+                                @case(1)
+                                    <span class="badge bg-success">Approved</span>
+                                    @break
+                                @case(2)
+                                    <span class="badge bg-danger">Declined</span>
+                                    @break
+                                @case(3)
+                                    <span class="badge bg-info">Error</span>
+                                    @break
+                            @endswitch
                         </td>
                         <td>
                             {{ $history->created_at->format('m-d-Y') }}

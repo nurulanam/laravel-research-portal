@@ -18,7 +18,7 @@
                 </div>
                 <div class="modal-body">
                     <ul>
-                        <li>Once you publish your project. You can't edit that again.</li>
+                        <li>Once you publish or set schedule your project. You can't edit that again.</li>
                         <li>Pricing for participant recruitment and project listings and hosting is as follows:
                             <ul class="mt-2">
                                 <li>You will be charged based on your per participant incentive. Third Estate Research charges a 50% fee of the incentive you pay to your participants. </li>
@@ -70,12 +70,21 @@
                                 <td class="align-middle">@if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif</td>
                                 <td class="align-middle">
                                     @if($project->researcherBilling)
-                                        @if($project->researcherBilling->response_code == 1)
-                                            <span class="badge bg-success">Paid</span>
-                                        @endif
+                                        @switch($project->researcherBilling->response_code)
+                                            @case(1)
+                                                <span class="badge bg-success">Approved</span>
+                                                @break
+                                            @case(2)
+                                                <span class="badge bg-danger">Declined</span>
+                                                @break
+                                            @case(3)
+                                                <span class="badge bg-info">Error</span>
+                                                @break
+                                        @endswitch
                                     @else
                                         <span class="badge bg-secondary">Unpaid</span>
                                     @endif
+
                                 </td>
                                 <td class="align-middle">
                                     @if($project->status == "publish")
