@@ -679,19 +679,111 @@
                     <div class="form-section" >
                         <div class="row">
                             <div class="col-12 col-lg-8 offset-lg-2 shadow rounded p-4 my-3">
-                                <div class="row">
-                                    <div class="col-md-4"><b>Total Incentive</b></div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">Total Incentive</div>
                                     <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalIncentive"></span> USD</p>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4"><b>Total Service Fees</b></div>
+                                <div class="row mb-2">
+                                    <div class="col-md-4">Total Service Fees</div>
                                     <div class="col-md-8 text-end">
                                         <p class="m-0">$<span id="totalServiceFrees"></span> USD</p>
                                     </div>
                                 </div>
+                                @php
+                                    $auth_customer = isset(Auth::user()->authCutomer) ? Auth::user()->authCutomer : null;
+                                    $expiration_months = [
+                                         'January',
+                                         'February',
+                                         'March',
+                                         'April',
+                                         'May',
+                                         'June',
+                                         'July',
+                                         'August',
+                                         'September',
+                                         'October',
+                                         'November',
+                                         'December'
+                                         ];
+                                @endphp
+                                @if($auth_customer)
+                                    <div class="row mb-2">
+                                        <div class="col-md-4">
+                                            <p>Select Card</p>
+                                        </div>
+                                        <div class="col-md-8 text-end">
+                                            <div class="">
+                                                <label class="form-check-label" for="existingCard">
+                                                    {{ '*********' . Auth::user()->authCutomer->card_digit}}
+                                                </label>
+                                                <input class="ms-2 form-check-input select-card" type="radio" name="customer_card" value="existing" id="existingCard" checked>
+                                            </div>
+                                            <div class="">
+                                                <label class="form-check-label" for="newCard">
+                                                    Add New
+                                                </label>
+                                                <input class="ms-2 form-check-input select-card" type="radio" name="customer_card" value="new" id="newCard">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-info">
 
+                                    </div>
+                                @else
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">Card Number <span class="text-danger">*</span></div>
+                                        <div class="col-md-6 text-end">
+                                            <input type="number" name="card_number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>
+                                            @error('card_number')
+                                            <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">Expiration Year <span class="text-danger">*</span></div>
+                                        <div class="col-md-6 text-end">
+                                            <select class="form-select" name="expiration_year" required>
+                                                <option value="">Please Choose A Year</option>
+                                                @foreach (range(now()->year, now()->year + 15) as $expiration_year)
+                                                    <option value="{{ $expiration_year }}"
+                                                            @if (old('expiration_year') == $expiration_year) selected @endif
+                                                    >{{ $expiration_year }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('expiration_year')
+                                            <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">Expiration Month <span class="text-danger">*</span></div>
+                                        <div class="col-md-6 text-end">
+                                            <select class="form-select" name="expiration_month" required>
+                                                <option value="">Please Choose A Month</option>
+                                                @foreach ($expiration_months as $key => $expiration_month)
+                                                    <option value="{{ str_pad($key + 1, 2, '0', STR_PAD_LEFT) }}"
+                                                            @if (old('expiration_month') == str_pad($key + 1, 2, '0', STR_PAD_LEFT)) selected @endif
+                                                    >{{ $expiration_month }}</option>
+                                                @endforeach
+                                            </select>
+                                            @error('expiration_month')
+                                            <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-md-6">Cvv <span class="text-danger">*</span></div>
+                                        <div class="col-md-6 text-end">
+                                            <input type="number" name="cvv" class="form-control cvv" value="{{ old('cvv') }}" placeholder="123" required>
+                                            @error('cvv')
+                                            <p class="text-danger">{{ $message }}</p>
+                                            @enderror
+                                        </div>
+                                    </div>
+                                @endif
                                 <hr class="py-30">
                                 <div class="row">
                                     <div class="col-md-4"><h4><b>Total Cost</b></h4></div>
@@ -713,7 +805,9 @@
                             </div>
                         </div>
 
-
+                        <div class="creditCards position-fixed top-50 translate-middle-y">
+                            <img src="{{ asset('/backend/img/card-authorizenet.png') }}" alt="">
+                        </div>
                     </div>
                     <div class="form-navigation mt-3">
                         <button type="button" class="previous btn btn-primary btn-custom float-start"><span class="me-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
@@ -825,6 +919,7 @@
                 }
 
                 $('.skills-box').select2({
+                    tags: true,
                     minimumInputLength: 2,
                     maximumSelectionLength: 25,
                     delay: 300,
@@ -1029,6 +1124,61 @@
                 $('#main_title').html('Project Title');
             }
         });
+        $('.select-card').on('click', function (){
+            var cardVal = $(this).val();
+            if (cardVal == 'new'){
+                $('.card-info').html('\
+            <div class="row mb-2">\
+                <div class="col-md-6">Card Number <span class="text-danger">*</span></div>\
+            <div class="col-md-6 text-end">\
+                <input type="number" name="card_number" class="form-control card_number" value="{{ old('card_number') }}" placeholder="5424000000000000" required>\
+            </div>\
+        </div>\
+            <div class="row mb-2">\
+                <div class="col-md-6">Expiration Year <span class="text-danger">*</span></div>\
+                <div class="col-md-6 text-end">\
+                    <select class="form-select" name="expiration_year" required>\
+                        <option value="">Please Choose A Year</option>\
+                        @foreach (range(now()->year, now()->year + 15) as $expiration_year)\
+                        <option value="{{ $expiration_year }}"\
+                                @if (old('expiration_year') == $expiration_year) selected @endif\
+                        >{{ $expiration_year }}</option>\
+                        @endforeach\
+                    </select>\
+                    @error('expiration_year')\
+                    <p class="text-danger">{{ $message }}</p>\
+                    @enderror\
+                </div>\
+            </div>\
+            <div class="row mb-2">\
+                <div class="col-md-6">Expiration Month <span class="text-danger">*</span></div>\
+                <div class="col-md-6 text-end">\
+                    <select class="form-select" name="expiration_month" required>\
+                    <option value="">Please Choose A Month</option>\
+                    @foreach ($expiration_months as $key => $expiration_month)\
+                    <option value="{{ str_pad($key + 1, 2, '0', STR_PAD_LEFT) }}"\
+                            @if (old('expiration_month') == str_pad($key + 1, 2, '0', STR_PAD_LEFT)) selected @endif\
+                    >{{ $expiration_month }}</option>\
+                    @endforeach\
+                    </select>\
+                    @error('expiration_month')\
+                    <p class="text-danger">{{ $message }}</p>\
+                    @enderror\
+                </div>\
+            </div>\
+            <div class="row mb-2">\
+                <div class="col-md-6">Cvv <span class="text-danger">*</span></div>\
+                <div class="col-md-6 text-end">\
+                    <input type="number" name="cvv" class="form-control cvv" value="{{ old('cvv') }}" placeholder="123" required>\
+                        @error('cvv')\
+                        <p class="text-danger">{{ $message }}</p>\
+                    @enderror\
+                </div>\
+            </div>');
+            }else if(cardVal == 'existing'){
+                $('.card-info').html('');
+            }
+        });
     </script>
     <script>
         $(document).ready( function() {
@@ -1203,7 +1353,7 @@
         }
         function questionTypeCheckbox( id ){
             let show ='<div class="checkbox-answer pt-2" id="checkboxAnswer'+ id +'">\
-                <div class="row align-items-top py-2 checkboxAnsweItem="'+ id +'">\
+                <div class="row align-items-top py-2">\
                 <div class="col-1">\
                 <p class="serial_nom m-0">1</p>\
         </div>\

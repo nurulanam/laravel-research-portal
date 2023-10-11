@@ -137,11 +137,11 @@
 
                         <div class="form-navigation mt-4">
                             <button type="button" class="previous btn btn-primary btn-custom float-start"><span
-                                    class="mr-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
+                                    class="me-2"><i class="fas fa-chevron-left"></i></span> Previous</button>
                             <button type="button" class="next btn btn-primary btn-custom float-end">Next <span
-                                    class="ml-2"><i class="fas fa-chevron-right"></i></span></button>
-                            <a href="{{ route('project.index') }}" class="btn btn-success mx-1 publish-btn btn-custom float-end">Done</a>
-
+                                    class="ms-2"><i class="fas fa-chevron-right"></i></span></button>
+                            <button type="submit" class="btn p-0 float-end"><a
+                                    href="{{ route('project.index') }}" class="btn btn-success mx-1 publish-btn btn-custom">Done <span class="ms-2"><i class="fa-solid fa-check"></i></span></a></button>
                         </div>
                     </form>
                 </div>

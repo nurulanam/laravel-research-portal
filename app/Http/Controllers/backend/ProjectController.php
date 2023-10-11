@@ -102,7 +102,7 @@ class ProjectController extends Controller
            'age_range' => 'nullable|array',
            'status' => 'required'
         ]);
-        if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){
+        if ($request->customer_card === 'new' ){
             $request->validate([
                 'card_number' => 'required|numeric|regex:/^\d{13,19}$/',
                 'expiration_year' => 'required|numeric|digits:4',
@@ -200,7 +200,7 @@ class ProjectController extends Controller
         $new_location->save();
 
         // Creating New Skills belongsToProject also creating new skills
-        if ($request->skills !== null){
+        if ($request->skills !== null) {
             $skillIds = [];
 
             foreach ($request->skills as $skill){
@@ -218,6 +218,11 @@ class ProjectController extends Controller
             $new_skills = new ProjectHasSkill();
             $new_skills->project_id = $project->id;
             $new_skills->skills = $json_skills;
+            $new_skills->save();
+        }else{
+            $new_skills = new ProjectHasSkill();
+            $new_skills->project_id = $project->id;
+            $new_skills->skills = '[]';
             $new_skills->save();
         }
 
@@ -701,7 +706,7 @@ class ProjectController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
+     * @param  string  $slug
      * @return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\View\Factory|\Illuminate\Contracts\View\View|\Illuminate\Http\RedirectResponse
      */
     public function projectParticipants($slug){
@@ -799,6 +804,15 @@ class ProjectController extends Controller
             'age_range' => 'nullable|array',
             'status' => 'required'
         ]);
+        if ($request->customer_card === 'new' ){
+            $request->validate([
+                'card_number' => 'required|numeric|regex:/^\d{13,19}$/',
+                'expiration_year' => 'required|numeric|digits:4',
+                'expiration_month' => 'required|numeric|between:1,12',
+                'cvv' => 'required|numeric|digits_between:3,4',
+            ]);
+        }
+
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
 
@@ -831,12 +845,7 @@ class ProjectController extends Controller
         $project->total_incentive = $total_participant_incentive;
         $project->total_service_fee = $total_service_fee;
         $project->total_coast = $total_cost;
-        $project->status = $request->status;
-
-        if ($request->has('schedule_date')){
-            $project->published_at = Carbon::createFromFormat('Y-m-d\TH:i', $request->schedule_date);
-        }
-
+        $project->status = 'draft';
         $project->update();
 
         // Creating New Project Topics belongsToProject
@@ -1013,8 +1022,75 @@ class ProjectController extends Controller
         }
 
 
-        return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
+        // Creating Researcher project billing
+        if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){
+            $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
+            $userType = Auth::user()->getRoleNames();
 
+            $find_customer =  $this->checkCutomerProfile();
+            if ($find_customer != null){
+                $profile_id = $find_customer->profile_id;
+                $payment_id = $find_customer->payment_id;
+                $card_digit = substr($request->card_number, -4);
+
+                $update_customer_profile = $this->updateCustomerPaymentProfile($profile_id, $payment_id, $request->card_number, $expiration_date, $request->cvv);
+                if (($update_customer_profile != null) && ($update_customer_profile->getMessages()->getResultCode() == "Ok") )
+                {
+                    $update_customer = AuthorizeCustomer::find($user_id);
+                    $update_customer->user_id = $user_id;
+                    $update_customer->card_digit = $card_digit;
+                    $update_customer->update();
+
+                    $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                    if (isset($charge_project_by_status['error'])) {
+                        return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                    } else {
+                        return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
+                    }
+                }elseif(($update_customer_profile == null) || $update_customer_profile->getMessages()->getResultCode() == "Error"){
+                    return redirect()->route('project.index')->with('error', 'Payment was not successful. Project status set to draft.');
+                }
+
+            }else{
+                $customer_profile = $this->createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
+
+                if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")) {
+
+                    $payment_profiles = $customer_profile->getCustomerPaymentProfileIdList();
+                    $profile_id = $customer_profile->getCustomerProfileId();
+                    $payment_id = $payment_profiles[0];
+                    $card_digit = substr($request->card_number, -4);
+
+                    $new_customer = new AuthorizeCustomer();
+                    $new_customer->user_id = $user_id;
+                    $new_customer->profile_id = $profile_id;
+                    $new_customer->payment_id = $payment_id;
+                    $new_customer->card_digit = $card_digit;
+                    $new_customer->save();
+                }elseif ($customer_profile->getMessages()->getResultCode() == "Error"){
+
+                }
+
+                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                if (isset($charge_project_by_status['error'])) {
+                    return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                } else {
+                    return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
+                }
+            }
+        }else{
+            $find_customer =  $this->checkCutomerProfile();
+            if ($find_customer != null){
+                $profile_id = $find_customer->profile_id;
+                $payment_id = $find_customer->payment_id;
+                $charge_project_by_status = $this->chargeProjectByStatus($request, $profile_id, $payment_id, $project->id ,$total_cost);
+                if (isset($charge_project_by_status['error'])) {
+                    return redirect()->route('project.index')->with('error', $charge_project_by_status['error']);
+                } else {
+                    return redirect()->route('project.index')->with('success', 'Your Project Updated Successfully');
+                }
+            }
+        }
     }
 
     /**

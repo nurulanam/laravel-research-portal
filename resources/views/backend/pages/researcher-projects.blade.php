@@ -98,7 +98,7 @@
                                     @endif
                                 </td>
                                 <td class="align-middle">
-                                    @if($project->status == "publish")
+                                    @if($project->status == "publish" || $project->status == "schedule")
                                         <a href="#"><i class="fas fa-edit text-danger"></i></a>
                                     @else
                                         <a href="{{ route('project.edit', $project->slug) }}"><i class="fas fa-edit text-success"></i></a>
