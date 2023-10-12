@@ -78,27 +78,74 @@
                 <div class="card-body text-center">
                     <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
                     <p class="font-15 text-secondary">{{ $response->user->profile->job_title }}</p>
-                    <div class="d-flex justify-content-center my-2">
-                        <i class="fa-solid fa-user text-primary pt-1 me-3"></i>
-                        <span>
-                            @switch($response->user->profile->gender)
-                                @case('male')
-                                    Male
-                                    @break
-                                @case('female')
-                                    Female
-                                    @break
-                                @case('non-binary')
-                                    Non Binary
-                                    @break
-                                @case('prefer-not-to-say')
-                                    Prefer Not To Say
-                                    @break
-                                @default
-                                    Not Updated
-                            @endswitch
-                        </span>
-                    </div>
+                    @php
+                        $dateOfBirth = \Carbon\Carbon::parse($response->user->profile->date_of_birth);
+                        $age = $dateOfBirth->age;
+                    @endphp
+                    <table class="table">
+                        <thead>
+                            <th class="text-start">Gender</th>
+                            <th class="text-start">Age</th>
+                            <th class="text-end">Education Level</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-start">
+                                    @switch($response->user->profile->gender)
+                                        @case('male')
+                                            Male
+                                            @break
+                                        @case('female')
+                                            Female
+                                            @break
+                                        @case('non-binary')
+                                            Non Binary
+                                            @break
+                                        @case('prefer-not-to-say')
+                                            Prefer Not To Say
+                                            @break
+                                        @default
+                                            Not Updated
+                                    @endswitch
+                                </td>
+                                <td class="text-start">{{ $age }}</td>
+                                <td class="text-end">
+                                    @if (!empty($response->user->profile))
+                                        @switch($response->user->profile->education_level)
+                                            @case('less-than-a-high-school-diploma')
+                                                Less Than a High School Diploma
+                                                @break
+                                            @case('high-school-diploma-or-equivalent')
+                                                High School Diploma or Equivalent
+                                                @break
+                                            @case('some-college-no-degree')
+                                                Some College No Degree
+                                                @break
+                                            @case('associate-degree')
+                                                Associate Degree
+                                                @break
+                                            @case('bachelors-degree')
+                                                Bachelor's Degree
+                                                @break
+                                            @case('masters-degree')
+                                                Master's Degree
+                                                @break
+                                            @case('professional-degree')
+                                                Professional Degree
+                                                @break
+                                            @case('doctorate')
+                                                Doctorate
+                                                @break
+                                            @default
+                                                Update
+                                        @endswitch
+                                    @else
+                                        Update
+                                    @endif
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                     <div class="d-flex justify-content-center align-items-center my-2">
                         <span>
                             @php

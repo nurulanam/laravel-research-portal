@@ -741,8 +741,8 @@ class ProjectController extends Controller
         if (!$project){
             return redirect()->route('project.index')->with('error', 'Sorry! Project not found');
         }
-        if ($project->status == 'publish'){
-            return redirect()->route('project.index')->with('error', 'Once you publish project you can\'t update that');
+        if ($project->status == 'publish' || $project->status == 'schedule'){
+            return redirect()->route('project.index')->with('error', 'You Can\'t update project anymore');
         }
         $projectLocations = json_decode($project->projectLocations->locations, true);
         $projectQuestions = json_decode($project->projectQuestions->questions, true);
@@ -812,7 +812,7 @@ class ProjectController extends Controller
                 'cvv' => 'required|numeric|digits_between:3,4',
             ]);
         }
-
+//        dd($request);
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
 
@@ -910,9 +910,16 @@ class ProjectController extends Controller
                 $findSkill = Skill::where('skill_name', $skill)->first();
                 if ($findSkill) {
                     $skillIds[] = $findSkill->id;
+                }else {
+                    // If the skill is not found, create a new skill and add its ID to $skillIds.
+                    $newSkill = new Skill();
+                    $newSkill->skill_name = $skill;
+                    $newSkill->save();
+                    $skillIds[] = $newSkill->id;
                 }
             }
             $json_skills = json_encode($skillIds);
+//            dd($json_skills);
             $new_skills = ProjectHasSkill::where('project_id', '=', $project->id)->first();
             $new_skills->skills = $json_skills;
             $new_skills->update();

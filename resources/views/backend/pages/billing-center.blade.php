@@ -17,7 +17,7 @@
     <div class="card shadow-md p-2 rounded-4">
         <div class="card-body table-responsive p-0">
             <table class="table table-hover table-borderless">
-                <thead class="border-bottom">
+                <thead class="border-bottom font-15 text-uppercase">
                     <th>Transaction id</th>
                     <th>Project Name</th>
                     <th>Status</th>

@@ -130,27 +130,23 @@
                     @foreach ($projects as $key => $project)
                         <div class="card p-4 mb-3 rounded-4 shadow-md">
                             <div class="d-flex justify-content-between align-items-centerl">
-                                <a href="#" type="button" data-bs-toggle="modal" data-id="{{ $project->id }}"
-                                   data-bs-target=".project-details-modal"
-                                    class="text-primary show-details text-capitalize text-decoration-none modal-project-title">
+                                <a href="#" type="button" data-id="{{ $project->id }}" class="text-primary show-details text-capitalize text-decoration-none modal-project-title">
                                     <h4>
                                         {{ $project->study_title }}</h4>
                                 </a>
 
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-
-                                    </button>
+                                    <button type="button" class="btn btn-primary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false"></button>
                                     <ul class="dropdown-menu">
-                                        <buttnpn type="button" class="dropdown-item copyProjectLink" data-slug="{{ $project->slug }}" href="#"><i class="fas fa-clone text-primary me-2"></i>
-                                            Copy Project link</buttnpn>
+                                        <button type="button" class="dropdown-item copyProjectLink" data-slug="{{ $project->slug }}" data-id="{{ $project->id }}" href="#"><i class="fas fa-clone text-primary me-2"></i>
+                                            Copy Project link</button>
                                         <a class="dropdown-item" href="#"><i class="fas fa-eye-slash text-primary me-2"></i>
                                             Hide Project</a>
                                     </ul>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-start align-items-center">
-                                <p class="text-primary font-weight-bold mb-0">${{ $project->total_incentive }}</p>
+                                <p class="text-primary font-weight-bold mb-0">${{ $project->participant_incentive }}</p>
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
                                 <p class="text-dark mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
                                 @if($project->required_time)
@@ -182,9 +178,7 @@
 
                             </div>
                             <p class="text-dark mt-2 mb-0">{{ Str::limit($project->study_description, 300) }} <a
-                                    href="#" type="button" class="btn btn-sm text-primary show-details"
-                                    data-bs-toggle="modal" data-id="{{ $project->id }}"
-                                    data-bs-target=".project-details-modal">[ See Details ]</a></p>
+                                    href="#" type="button" class="btn btn-sm text-primary show-details" data-id="{{ $project->id }}">[ See Details ]</a></p>
                         </div>
                     @endforeach
                 @else
@@ -197,8 +191,6 @@
                             {{ $projects->links() }}
                         </div>
                 @endif
-
-
                 <div class="modal fade project-details-modal" tabindex="-1" role="dialog"
                     aria-labelledby="myLargeModalLabel" aria-hidden="true">
                     <div class="modal-dialog modal-xl float-lg-end w-100 me-lg-3">
@@ -278,13 +270,31 @@
                                             </div>
                                             <div class="card-body">
                                                 <p class="text-dark text-uppercase font-weight-500">Project Budget:
-                                                    $<span class="project-total-incentive"></span></p>
+                                                    $<span class="project-incentive"></span></p>
                                                 <hr>
                                                 <div class="my-2 project-skills"></div>
                                                 <div class="my-2 project-industries"></div>
                                                 <div class="my-2 project-topics"></div>
                                             </div>
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal fade project-error-modal" tabindex="-1" role="dialog"
+                     aria-labelledby="projectErrorModal" aria-hidden="true">
+                    <div class="modal-dialog modal-xl float-lg-end w-100 me-lg-3">
+                        <div class="modal-content rounded-4">
+                            <div class="modal-header border-0">
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body px-lg-5 " style="min-height: 86vh; min-width: 100%">
+                                <div class="card bg-danger">
+                                    <div class="card-body">
+                                        <h3 class="text-capitalize text-white">Opps... Sorry! Project not found.</h3>
+                                        <p class="text-light">Unfortunately, we couldn't find the project you're looking for in our database. Please check the project URL or try another search.</p>
                                     </div>
                                 </div>
                             </div>
@@ -341,14 +351,22 @@
                     minTime.removeClass("border-danger");
                 }
             }
+
+            // show project by url id
+            var baseUrl = window.location.href;
+            var urlId = /\?id=(\d+)/.exec(baseUrl);
+            if (urlId){
+
+                showProjectModal(urlId[1]);
+            }
         });
         $('.copyProjectLink').on('click', function (){
-            var slug = $(this).data('slug');
-            var url = window.location.origin + '/dashboard/project-apply/' + slug;
+            var id = $(this).data('id');
+            var idUrl = window.location.origin + '/dashboard/?id=' + id
 
             // Create a temporary input element to copy the URL to the clipboard
             var tempInput = document.createElement('input');
-            tempInput.value = url;
+            tempInput.value = idUrl;
             document.body.appendChild(tempInput);
             tempInput.select();
             document.execCommand('copy');
@@ -363,7 +381,10 @@
 
     <script>
         $('.show-details').on('click', function() {
-            let projectId = $(this).data('id'); // 'data-id' attribute contains the projectId
+            showProjectModal($(this).data('id'));
+        });
+        function showProjectModal(id){
+            let projectId = id; // 'data-id' attribute contains the projectId
             let userId = "{{ Auth::id() }}"; // Assuming you have a way to get the authenticated user's ID
 
             // URL with placeholders ':projectId' and ':id' replaced by variables
@@ -383,9 +404,8 @@
                 },
                 dataType: 'JSON',
                 success: function(response) {
-                    console.log(response)
-
-                    if (response) {
+                    if (response.data != 'error') {
+                        $('.project-details-modal').modal('show');
                         $('.project-title').html(response.data.study_title);
 
                         if (response.applied){
@@ -396,7 +416,7 @@
                             $(".project-apply").attr('href', '/dashboard/project-apply/' + response.data.slug);
                         }
                         $('.project-full-details').html(response.data.study_description);
-                        $('.project-total-incentive').html(response.data.total_incentive);
+                        $('.project-incentive').html(response.data.participant_incentive);
                         var projectSkillsDiv = $('.project-skills');
                         var projectIndustriesDiv = $('.project-industries');
                         var projectTopicsDiv = $('.project-topics');
@@ -484,6 +504,8 @@
                             $('.total-response').html('0');
 
                         }
+                    }else if(response.data == 'error'){
+                        $('.project-error-modal').modal('show');
                     }
                 },
                 error: function(xhr, status, error) {
@@ -503,6 +525,6 @@
                 };
                 return date.toLocaleDateString(undefined, options);
             }
-        });
+        }
     </script>
 @endsection

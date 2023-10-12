@@ -43,7 +43,7 @@ class ApiController extends Controller
         $industries = config('app.industries');
 
 
-        if ($projectInfo) {
+        if ($projectInfo != null && $projectInfo->status == 'publish') {
             $findProjectSkills = ProjectHasSkill::where('project_id', $projectInfo->id)->first();
             $findProjectIndustries = ProjectHasIndustry::where('project_id', $projectInfo->id)->first();
 
@@ -85,6 +85,10 @@ class ApiController extends Controller
             }
 
             return response()->json($response);
+        }else{
+            return response()->json([
+                'data' => 'error'
+            ]);
         }
     }
 

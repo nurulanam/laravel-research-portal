@@ -65,7 +65,7 @@
                                 $serialNumber = ($projects->currentPage() - 1) * $projects->perPage() + $key + 1;
                             @endphp
                             <tr>
-                                <td class="align-middle">{{ $project->my_project_name }}</td>
+                                <td class="align-middle"><a href="{{ route('project.participants', $project->slug) }}" class="link-dark text-decoration-none">{{ $project->my_project_name }}</a></td>
                                 <td class="align-middle"><a href="{{ route('project.participants', $project->slug) }}" class="badge bg-success px-2 text-decoration-none"><i class="fa-solid fa-users me-2"></i>{{ count($project->responses) }}</a></td>
                                 <td class="align-middle">@if($project->project_type == 'remote') Remote @elseif('in-person') In Person @endif</td>
                                 <td class="align-middle">

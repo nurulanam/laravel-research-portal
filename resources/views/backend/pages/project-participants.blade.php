@@ -85,7 +85,7 @@
                     @else
                     <div class="d-flex justify-content-center align-items-center mt-4">
                         <a href="{{ route('project.participant.response', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
-                            <i class="fa-solid fa-eye me-1"></i><span>Response</span>
+                            <i class="fa-solid fa-eye me-1"></i><span>Details</span>
                         </a>
                         @if($response->status == 'submitted')
                         <a href="{{ route('project.hire', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
