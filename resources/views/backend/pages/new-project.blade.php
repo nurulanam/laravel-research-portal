@@ -944,7 +944,7 @@
                                                 <div class="col-md-8 text-end">
                                                     <div class="">
                                                         <label class="form-check-label" for="existingCard">
-                                                            {{ '*********' . Auth::user()->authCutomer->card_digit}}
+                                                            {{ 'XXXXXXXXXXXX' . Auth::user()->authCutomer->card_digit}}
                                                         </label>
                                                         <input class="ms-2 form-check-input select-card" type="radio"
                                                                name="customer_card" value="existing" id="existingCard"

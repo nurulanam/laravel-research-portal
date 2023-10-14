@@ -173,6 +173,11 @@ class ProjectController extends Controller
             $new_company_size->project_id = $project->id;
             $new_company_size->company_size = $company_sizes_json;
             $new_company_size->save();
+        }else{
+            $new_company_size = new ProjectHasCompanySize();
+            $new_company_size->project_id = $project->id;
+            $new_company_size->company_size = '[]';
+            $new_company_size->save();
         }
 
         // Creating New Cities Size belongsToProject
@@ -374,8 +379,7 @@ class ProjectController extends Controller
                 $update_customer_profile = $this->updateCustomerPaymentProfile($profile_id, $payment_id, $request->card_number, $expiration_date, $request->cvv);
                 if (($update_customer_profile != null) && ($update_customer_profile->getMessages()->getResultCode() == "Ok") )
                 {
-                    $update_customer = AuthorizeCustomer::find($user_id);
-                    $update_customer->user_id = $user_id;
+                    $update_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
                     $update_customer->card_digit = $card_digit;
                     $update_customer->update();
 
@@ -438,7 +442,7 @@ class ProjectController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function checkCutomerProfile()
+    public static function checkCutomerProfile()
     {
         $user_id = Auth::id();
         $find_customer = AuthorizeCustomer::where('user_id', '=', $user_id)->first();
@@ -451,7 +455,7 @@ class ProjectController extends Controller
      *
      * @return AnetAPI\AnetApiResponseType
      */
-    public function createCustomerProfile($card_number, $expiration_date, $cvv, $userType)
+    public static function createCustomerProfile($card_number, $expiration_date, $cvv, $userType)
     {
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
@@ -509,7 +513,7 @@ class ProjectController extends Controller
      *
      * @return AnetAPI\AnetApiResponseType
      */
-    public function chargeCustomerProfile($profile_id, $payment_id, $amount)
+    public  function chargeCustomerProfile($profile_id, $payment_id, $amount)
     {
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
@@ -551,7 +555,7 @@ class ProjectController extends Controller
      * @param  int  $cvv
      * @return AnetAPI\AnetApiResponseType
      */
-    function updateCustomerPaymentProfile($customerProfileId, $customerPaymentProfileId, $card_number, $expiration_date, $cvv)
+    public static function updateCustomerPaymentProfile($customerProfileId, $customerPaymentProfileId, $card_number, $expiration_date, $cvv)
     {
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
