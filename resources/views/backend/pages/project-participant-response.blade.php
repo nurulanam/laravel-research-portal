@@ -78,6 +78,25 @@
                 <div class="card-body text-center">
                     <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
                     <p class="font-15 text-secondary">{{ $response->user->profile->job_title }}</p>
+                    <div class="d-flex justify-content-center align-items-center my-2">
+                        <span>
+                            @php
+                                $skillIds = isset($response->user->skills) ? json_decode($response->user->skills->skills) : null;
+                            @endphp
+
+                            @if (!empty($skillIds))
+                                @foreach($skillIds as $skillId)
+                                    @foreach($allSkills as $skill)
+                                        @if($skill->id == $skillId)
+                                            <span class="badge bg-dark-blue py-2 px-3 rounded-pill text-capitalize my-1">{{ $skill->skill_name }}</span>
+                                        @endif
+                                    @endforeach
+                                @endforeach
+                            @else
+                                <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">0 Skills</span>
+                            @endif
+                        </span>
+                    </div>
                     @php
                         $dateOfBirth = \Carbon\Carbon::parse($response->user->profile->date_of_birth);
                         $age = $dateOfBirth->age;
@@ -146,25 +165,6 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="d-flex justify-content-center align-items-center my-2">
-                        <span>
-                            @php
-                                $skillIds = isset($response->user->skills) ? json_decode($response->user->skills->skills) : null;
-                            @endphp
-
-                            @if (!empty($skillIds))
-                                @foreach($skillIds as $skillId)
-                                    @foreach($allSkills as $skill)
-                                        @if($skill->id == $skillId)
-                                            <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">{{ $skill->skill_name }}</span>
-                                        @endif
-                                    @endforeach
-                                @endforeach
-                            @else
-                                <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">0 Skills</span>
-                            @endif
-                        </span>
-                    </div>
                     @if($response->status == 'withdrawn')
                     @else
                         <div class="d-flex justify-content-center align-items-center mt-4">

@@ -26,7 +26,7 @@
     <div class="row">
         @foreach($findProject->responses as $response)
         <div class="col-12 col-md-6 col-lg-4 my-2 my-lg-0">
-            <div class="card h-100 @if($response->status == 'withdrawn') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative  @endif rounded-4 shadow-md py-3">
+            <div class="card h-100 @if($response->status == 'withdrawn') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative  @endif rounded-4 shadow-md p-4">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
@@ -71,7 +71,7 @@
                                 @foreach($skillIds as $skillId)
                                     @foreach($allSkills as $skill)
                                         @if($skill->id == $skillId)
-                                            <span class="badge bg-dark-blue py-2 px-3 rounded-pill my-1">{{ $skill->skill_name }}</span>
+                                            <span class="badge bg-dark-blue text-capitalize py-2 px-3 rounded-pill my-1">{{ $skill->skill_name }}</span>
                                         @endif
                                     @endforeach
                                 @endforeach

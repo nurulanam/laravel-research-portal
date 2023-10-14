@@ -138,32 +138,40 @@
                     <th>Date</th>
                 </thead>
                 <tbody>
-                @foreach($histories as $history)
-                    <tr>
-                        <td>
-                            {{ '#'.$history->transaction_id }}
-                        </td>
-                        <td>
-                             {{ $history->project->my_project_name }}
-                        </td>
-                        <td>
-                            @switch($history->response_code)
-                                @case(1)
-                                    <span class="badge bg-success">Approved</span>
-                                    @break
-                                @case(2)
-                                    <span class="badge bg-danger">Declined</span>
-                                    @break
-                                @case(3)
-                                    <span class="badge bg-info">Error</span>
-                                    @break
-                            @endswitch
-                        </td>
-                        <td>
-                            {{ $history->created_at->format('m-d-Y') }}
+                @if(count($histories) > 0)
+                    @foreach($histories as $history)
+                        <tr>
+                            <td>
+                                {{ '#'.$history->transaction_id }}
+                            </td>
+                            <td>
+                                 {{ $history->project->my_project_name }}
+                            </td>
+                            <td>
+                                @switch($history->response_code)
+                                    @case(1)
+                                        <span class="badge bg-success">Approved</span>
+                                        @break
+                                    @case(2)
+                                        <span class="badge bg-danger">Declined</span>
+                                        @break
+                                    @case(3)
+                                        <span class="badge bg-info">Error</span>
+                                        @break
+                                @endswitch
+                            </td>
+                            <td>
+                                {{ $history->created_at->format('m-d-Y') }}
+                            </td>
+                        </tr>
+                    @endforeach
+                @else
+                    <tr class="h-auto">
+                        <td colspan="8" class="text-center">
+                            <div class="alert alert-danger mb-0" role="alert">Opps... sorry! You don't have any transactions yet.</div>
                         </td>
                     </tr>
-                @endforeach
+                @endif
                 </tbody>
             </table>
         </div>
