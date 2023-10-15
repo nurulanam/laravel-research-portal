@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Events\ParticipantRejected;
 use App\Events\ProjectHired;
+use App\Listeners\NotifyParticipantRejected;
 use App\Models\Listeners\NotifyProjectHired;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -23,6 +25,9 @@ class EventServiceProvider extends ServiceProvider
         ProjectHired::class => [
             NotifyProjectHired::class,
         ],
+        ParticipantRejected::class => [
+            NotifyParticipantRejected::class,
+        ]
     ];
 
     /**

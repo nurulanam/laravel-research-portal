@@ -64,6 +64,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.delete');
         Route::get('/project-hire/{slug}/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
+        Route::get('/project-reject/{slug}/{id}', [ProjectHireController::class, 'projectReject'])->name('project.reject');
 
         //Authorize Customer
         Route::post('/customer-profile', [CustomerProfileController::class,  'store'])->name('customer.profile.store');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Events\ParticipantRejected;
 use App\Events\ProjectHired;
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasResponse;
@@ -23,9 +24,9 @@ class ProjectHireController extends Controller
 
     public function projectHire($slug , $id){
         $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
-        if ($project){
+        if (isset($project)){
             $response = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
-            if ($response){
+            if (isset($response)){
                 if ($response->status == 'submitted'){
                     ProjectHired::dispatch($project->id, $id);
                     $response->status = 'invited';
@@ -33,6 +34,26 @@ class ProjectHireController extends Controller
                     return redirect()->back()->with('success', 'Project invitation send successfully');
                 }else{
                     return redirect()->back()->with('error','Sorry! Already Invited');
+                }
+            }else {
+                return redirect()->back()->with('error','Response not found.');
+            }
+        }else {
+            return redirect()->back()->with('error','Project not found.');
+        }
+    }
+    public function projectReject($slug , $id){
+        $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        if (isset($project)){
+            $response = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
+            if (isset($response)){
+                if ($response->status == 'submitted'){
+                    ParticipantRejected::dispatch($project->id, $id);
+                    $response->status = 'rejected';
+                    $response->update();
+                    return redirect()->back()->with('success', 'Participant rejected successfully');
+                }else{
+                    return redirect()->back()->with('error','Sorry! Already rejected');
                 }
             }else {
                 return redirect()->back()->with('error','Response not found.');

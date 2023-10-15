@@ -54,10 +54,17 @@
                                     @endif
                                 </td>
                                 <td class="align-middle">
+                                    @if($response->status == "submitted")
                                         <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#withdrawConfim{{ $response->id }}">
                                             <i class="fa-solid fa-trash-alt text-white me-0 me-md-2"></i>
                                             <span class="d-none d-md-inline-block">Withdraw</span>
                                         </button>
+                                    @elseif($response->status == "invited")
+                                        <div class="d-flex align-items-center gap-3">
+                                            <button class="btn btn-sm btn-primary"><i class="fa-solid fa-check me-2"></i>Accept</button>
+                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Deny</button>
+                                        </div>
+                                    @endif
                                     <!-- Modal -->
                                     <div class="modal fade" id="withdrawConfim{{ $response->id }}" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                         <div class="modal-dialog modal-dialog-centered">
@@ -68,9 +75,9 @@
                                                 <div class="modal-footer py-2">
                                                     <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal"><i class="fa-solid fa-ban me-2"></i>Cancel</button>
                                                     <form action="{{ route('project.withdraw.response', $response->id) }}" method="POST">
-                                                        @csrf
-                                                        @method('put')
-                                                        <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Withdraw</button>
+                                                            @csrf
+                                                            @method('put')
+                                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Withdraw</button>
                                                     </form>
                                                 </div>
                                             </div>
@@ -81,7 +88,7 @@
                         @endforeach
                         @else
                             <tr class="h-auto">
-                                <td colspan="5" class="text-center"><div class="alert alert-danger" role="alert">Opps.. Sorry! No Projects Found</div></td>
+                                <td colspan="5" class="text-center"><div class="alert alert-danger" role="alert">Opps... Sorry! No Projects Found</div></td>
                             </tr>
                         @endif
 
