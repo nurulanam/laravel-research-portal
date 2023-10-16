@@ -10,7 +10,7 @@ use App\Http\Controllers\backend\ProjectApplyController;
 use App\Http\Controllers\backend\ProjectHireController;
 use App\Http\Controllers\backend\CustomerProfileController;
 use App\Http\Controllers\backend\BillingController;
-
+use App\Http\Controllers\backend\ProjectHasMessageController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -50,6 +50,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     Route::middleware('role:researcher|participant')->group(function (){
         // Project
         Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
+
+        // Project Messages
+        Route::resource('/messages', ProjectHasMessageController::class);
     });
     Route::middleware('role:participant')->group(function (){
         // Project

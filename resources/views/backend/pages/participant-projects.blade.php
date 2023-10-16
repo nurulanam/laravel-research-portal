@@ -62,7 +62,7 @@
                                     @elseif($response->status == "invited")
                                         <div class="d-flex align-items-center gap-3">
                                             <button class="btn btn-sm btn-primary"><i class="fa-solid fa-check me-2"></i>Accept</button>
-                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-trash-alt me-2"></i>Deny</button>
+                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-xmark me-2"></i>Deny</button>
                                         </div>
                                     @endif
                                     <!-- Modal -->
