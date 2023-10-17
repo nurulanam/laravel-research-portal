@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Events\ParticipantHireAccepted;
 use App\Events\ParticipantRejected;
 use App\Events\ProjectHired;
+use App\Listeners\NotifyParticipantHireAccepted;
 use App\Listeners\NotifyParticipantRejected;
 use App\Models\Listeners\NotifyProjectHired;
 use Illuminate\Auth\Events\Registered;
@@ -27,6 +29,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         ParticipantRejected::class => [
             NotifyParticipantRejected::class,
+        ],
+        ParticipantHireAccepted::class => [
+            NotifyParticipantHireAccepted::class,
         ]
     ];
 

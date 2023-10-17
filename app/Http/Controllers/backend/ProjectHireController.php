@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\backend;
 
+use App\Events\ParticipantHireAccepted;
 use App\Events\ParticipantRejected;
 use App\Events\ProjectHired;
 use App\Http\Controllers\Controller;
@@ -61,6 +62,21 @@ class ProjectHireController extends Controller
         }else {
             return redirect()->back()->with('error','Project not found.');
         }
+    }
+     public function projectAccept($id){
+         $findResponse = ProjectHasResponse::where('id', '=', $id)->where('user_id', '=', Auth::id())->first();
+         if (isset($findResponse)){
+             if ($findResponse->status == 'invited'){
+                 $findResponse->status = 'hired';
+                 $findResponse->update();
+                 ParticipantHireAccepted::dispatch($findResponse->project->my_project_name, $findResponse->user_id, $findResponse->project->user_id);
+                 return redirect()->route('project.index')->with('success', 'You are hired successfully');
+             }else{
+                 return redirect()->back()->with('error', 'Sorry! Already hired');
+             }
+         }else{
+             return redirect()->route('project.index')->with('error', 'Your response not found');
+         }
     }
 
 
