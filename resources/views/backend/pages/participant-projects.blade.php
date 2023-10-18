@@ -43,14 +43,14 @@
                                         <a class="badge bg-success text-decoration-none">Submitted</a>
                                     @elseif($response->status == "invited")
                                         <a class="badge bg-primary text-decoration-none">Invited</a>
-                                    @elseif($response->status == "scheduled")
-                                        <a class="badge bg-warning text-decoration-none">Scheduled</a>
-                                    @elseif($response->status == "attended")
-                                        <a class="badge bg-secondary text-decoration-none">Attended</a>
+                                    @elseif($response->status == "hired")
+                                        <a class="badge bg-success text-decoration-none">Hired</a>
+                                    @elseif($response->status == "rejected")
+                                        <a class="badge bg-danger text-decoration-none">Rejected</a>
+                                    @elseif($response->status == "denied")
+                                        <a class="badge bg-danger text-decoration-none">Denied</a>
                                     @elseif($response->status == "paid")
-                                        <a class="badge bg-warning text-decoration-none">Paid</a>
-                                    @elseif($response->status == "cancelled")
-                                        <a class="badge bg-danger text-decoration-none">Cancelled</a>
+                                        <a class="badge bg-danger text-decoration-none">Paid</a>
                                     @endif
                                 </td>
                                 <td class="align-middle">
@@ -66,7 +66,11 @@
                                                 @csrf
                                                 <button class="btn btn-sm btn-primary"><i class="fa-solid fa-check me-2"></i>Accept</button>
                                             </form>
-                                            <button class="btn btn-sm btn-danger"><i class="fa-solid fa-xmark me-2"></i>Deny</button>
+                                            <form action="{{ route('project.deny', $response->id) }}" method="POST">
+                                                @method('put')
+                                                @csrf
+                                                <button class="btn btn-sm btn-danger"><i class="fa-solid fa-xmark me-2"></i>Deny</button>
+                                            </form>
                                         </div>
                                     @endif
                                     <!-- Modal -->

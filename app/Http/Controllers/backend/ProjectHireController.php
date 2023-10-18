@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\backend;
 
 use App\Events\ParticipantHireAccepted;
+use App\Events\ParticipantHireDenied;
 use App\Events\ParticipantRejected;
 use App\Events\ProjectHired;
 use App\Http\Controllers\Controller;
@@ -73,6 +74,21 @@ class ProjectHireController extends Controller
                  return redirect()->route('project.index')->with('success', 'You are hired successfully');
              }else{
                  return redirect()->back()->with('error', 'Sorry! Already hired');
+             }
+         }else{
+             return redirect()->route('project.index')->with('error', 'Your response not found');
+         }
+    }
+    public function projectDeny($id){
+         $findResponse = ProjectHasResponse::where('id', '=', $id)->where('user_id', '=', Auth::id())->first();
+         if (isset($findResponse)){
+             if ($findResponse->status == 'invited'){
+                 $findResponse->status = 'denied';
+                 $findResponse->update();
+                 ParticipantHireDenied::dispatch($findResponse->project->my_project_name, $findResponse->user_id, $findResponse->project->user_id);
+                 return redirect()->route('project.index')->with('success', 'You are successfully denied the project');
+             }else{
+                 return redirect()->back()->with('error', 'Sorry! Already denied');
              }
          }else{
              return redirect()->route('project.index')->with('error', 'Your response not found');

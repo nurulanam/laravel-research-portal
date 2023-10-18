@@ -66,15 +66,23 @@
             </div>
         </div>
         <div class="col-12 col-lg-4 order-0 order-lg-1 my-3 my-lg-0">
-            <div class="card rounded-4 shadow-md p-4">
+            <div class="card rounded-4 shadow-md p-4 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired') bg-success-subtle position-relative  @endif">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
                     <img src="{{ asset('/backend/img/profile/undraw_profile.svg') }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @endif
-                @if($response->status == 'withdrawn')
-                    <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Withdrawn</span>
-                @endif
+                    @if($response->status == 'withdrawn')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Withdrawn</span>
+                    @elseif($response->status == 'rejected')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Rejected</span>
+                    @elseif($response->status == 'denied')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Denied</span>
+                    @elseif($response->status == 'invited')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Invited</span>
+                    @elseif($response->status == 'hired')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-success">Hired</span>
+                    @endif
                 <div class="card-body text-center">
                     <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
                     <p class="font-15 text-secondary">{{ $response->user->profile->job_title }}</p>
@@ -98,14 +106,20 @@
                         </span>
                     </div>
                     @php
-                        $dateOfBirth = \Carbon\Carbon::parse($response->user->profile->date_of_birth);
-                        $age = $dateOfBirth->age;
+                        if (isset($response->user->profile->date_of_birth)){
+                            $dateOfBirth = \Carbon\Carbon::parse($response->user->profile->date_of_birth);
+                            $age = $dateOfBirth->age;
+                        }else{
+                            $age = 'Unknown';
+                        }
+
+
                     @endphp
-                    <table class="table">
+                    <table class="table @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') table-danger @elseif($response->status == 'invited') table-primary @elseif($response->status == 'hired') table-success @endif">
                         <thead>
                             <th class="text-start">Gender</th>
                             <th class="text-start">Age</th>
-                            <th class="text-end">Education Level</th>
+                            <th class="text-start">Education Level</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -124,11 +138,11 @@
                                             Prefer Not To Say
                                             @break
                                         @default
-                                            Not Updated
+                                            Unknown
                                     @endswitch
                                 </td>
                                 <td class="text-start">{{ $age }}</td>
-                                <td class="text-end">
+                                <td class="text-start">
                                     @if (!empty($response->user->profile))
                                         @switch($response->user->profile->education_level)
                                             @case('less-than-a-high-school-diploma')
@@ -156,7 +170,7 @@
                                                 Doctorate
                                                 @break
                                             @default
-                                                Update
+                                                Unknown
                                         @endswitch
                                     @else
                                         Update
@@ -165,17 +179,23 @@
                             </tr>
                         </tbody>
                     </table>
-                    @if($response->status == 'withdrawn')
-                    @else
-                        <div class="d-flex justify-content-center align-items-center mt-4">
-                            <a href="#" class="btn btn-primary btn-sm mx-1">
-                                <i class="fa-solid fa-check me-1"></i><span>Hire</span>
-                            </a>
-                            <a href="#" class="btn btn-danger btn-sm mx-1">
-                                <i class="fa-solid fa-trash-alt me-1"></i><span>Reject</span>
-                            </a>
-                        </div>
-                    @endif
+                    <div class="card-footer @if($response->status == 'invited') bg-primary-subtle @elseif($response->status == 'hired') bg-success-subtle border-0 @elseif($response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle border-0 @else bg-white @endif">
+                        @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied' || $response->status == 'hired')
+                            <div class="d-flex justify-content-center align-items-center pt-3">
+                            </div>
+                        @else
+                            <div class="d-flex justify-content-center align-items-center pt-3">
+                                @if($response->status == 'submitted')
+                                    <a href="{{ route('project.hire', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
+                                        <i class="fa-solid fa-check me-1"></i><span>Hire</span>
+                                    </a>
+                                @endif
+                                <a href="{{ route('project.reject', [$response->project->slug, $response->user_id]) }}" class="btn btn-danger btn-sm mx-1">
+                                    <i class="fa-solid fa-trash-alt me-1"></i><span>Reject</span>
+                                </a>
+                            </div>
+                        @endif
+                    </div>
                 </div>
             </div>
         </div>

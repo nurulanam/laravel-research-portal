@@ -58,6 +58,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         // Project
         Route::put('/project/response/withdraw/{id}', [ProjectController::class, 'withdrawResponse'])->name('project.withdraw.response');
         Route::put('/project-accept/{id}', [ProjectHireController::class, 'projectAccept'])->name('project.accept');
+        Route::put('/project-deny/{id}', [ProjectHireController::class, 'projectDeny'])->name('project.deny');
     });
     Route::middleware('role:researcher')->group(function (){
         // Project

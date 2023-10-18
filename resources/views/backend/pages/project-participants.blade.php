@@ -26,7 +26,7 @@
     <div class="row">
         @foreach($findProject->responses as $response)
         <div class="col-12 col-md-6 col-lg-4 my-2 my-lg-0">
-            <div class="card h-100 @if($response->status == 'withdrawn' || $response->status == 'rejected') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative  @endif rounded-4 shadow-md p-4">
+            <div class="card shadow-md h-100 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired') bg-success-subtle position-relative  @endif rounded-4 shadow-md p-4">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
@@ -36,8 +36,12 @@
                         <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Withdrawn</span>
                     @elseif($response->status == 'rejected')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Rejected</span>
+                    @elseif($response->status == 'denied')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Denied</span>
                     @elseif($response->status == 'invited')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Invited</span>
+                    @elseif($response->status == 'hired')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-success">Hired</span>
                     @endif
                 <div class="card-body text-center">
                     <h2 class="font-22 font-weight-500 mt-2 mb-2">{{ $response->user->first_name.' '.$response->user->last_name }}</h2>
@@ -85,9 +89,13 @@
                     </div>
 
                 </div>
-                <div class="card-footer @if($response->status == 'invited') bg-primary-subtle @elseif($response->status == 'rejected') bg-danger-subtle border-0 @else bg-white @endif">
-                    @if($response->status == 'withdrawn' || $response->status == 'rejected')
-                        <div class="d-flex justify-content-center align-items-center pt-3"></div>
+                <div class="card-footer @if($response->status == 'invited') bg-primary-subtle @elseif($response->status == 'hired') bg-success-subtle @elseif($response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle @else bg-white @endif">
+                    @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied' || $response->status == 'hired')
+                        <div class="d-flex justify-content-center align-items-center pt-3">
+                            <a href="{{ route('project.participant.response', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
+                                <i class="fa-solid fa-eye me-1"></i><span>Details</span>
+                            </a>
+                        </div>
                     @else
                         <div class="d-flex justify-content-center align-items-center pt-3">
                             <a href="{{ route('project.participant.response', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
