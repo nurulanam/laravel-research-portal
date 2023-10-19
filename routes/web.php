@@ -55,6 +55,7 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/messages', [ProjectHasMessageController::class, 'index'])->name('messages.index');
         Route::post('/messages/', [ProjectHasMessageController::class, 'store'])->name('messages.store');
         Route::post('/messages-show/', [ProjectHasMessageController::class, 'show'])->name('messages.show');
+        Route::post('/messages-refresh/', [ProjectHasMessageController::class, 'refresh'])->name('messages.refresh');
     });
     Route::middleware('role:participant')->group(function (){
         // Project
