@@ -19,15 +19,12 @@ class ApiController extends Controller
     public function skillsApi(Request $request){
         $search = $request->search;
 
-//        $skills = Skill::orderby('skill_name', 'asc')->select('id', 'skill_name')->where('skill_name', 'like', '%' . $search . '%')->get()->toArray();
         $query = Skill::orderBy('skill_name', 'asc');
 
         $skills = $query->where(function ($query) use ($search) {
-            // Check if the search term is numeric (i.e., 'id' search)
             if (is_numeric($search)) {
                 $query->where('id', $search);
             } else {
-                // Otherwise, assume it's a 'skill_name' search
                 $query->where('skill_name', 'like', '%' . $search . '%');
             }
         })->select('id', 'skill_name')->get()->toArray();
@@ -38,10 +35,8 @@ class ApiController extends Controller
 
     public function projectShowApi($projectId , $userId)
     {
-
         $projectInfo = Projects::find($projectId);
         $industries = config('app.industries');
-
 
         if ($projectInfo != null && $projectInfo->status == 'publish') {
             $findProjectSkills = ProjectHasSkill::where('project_id', $projectInfo->id)->first();

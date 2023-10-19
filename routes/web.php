@@ -52,7 +52,9 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project', [ProjectController::class, 'index'])->name('project.index');
 
         // Project Messages
-        Route::resource('/messages', ProjectHasMessageController::class);
+        Route::get('/messages', [ProjectHasMessageController::class, 'index'])->name('messages.index');
+        Route::post('/messages/', [ProjectHasMessageController::class, 'store'])->name('messages.store');
+        Route::post('/messages-show/', [ProjectHasMessageController::class, 'show'])->name('messages.show');
     });
     Route::middleware('role:participant')->group(function (){
         // Project
