@@ -14,10 +14,10 @@
                     <h5 class="text-white mb-0">All Messages</h5>
                 </div>
                 <div class="card-body p-0" style="overflow-y: scroll">
-                    <ul class="list-group project-group bg-white" style="height: 100%; ">
+                    <ul class="list-group project-group bg-white rounded-0" style="height: 100%; ">
                         @if(count($projects) > 0)
                             @foreach($projects as $project)
-                                <li class="list-group-item project-item list-group-item-action py-3 border-0 border-bottom d-flex justify-content-between align-items-center" data-id="{{$project->id}}" data-name="@if(Auth::user()->hasRole('researcher')) {{ $project->my_project_name }} @elseif(Auth::user()->hasRole('participant')) {{ $project->study_title }} @endif">
+                                <li class="list-group-item project-item list-group-item-action font-15 py-3 border-0 border-bottom d-flex justify-content-between align-items-center" data-id="{{$project->id}}" data-name="@if(Auth::user()->hasRole('researcher')) {{ $project->my_project_name }} @elseif(Auth::user()->hasRole('participant')) {{ $project->study_title }} @endif">
                                     <div class="fw-normal">@if(Auth::user()->hasRole('researcher')) {{ Str::limit($project->my_project_name, 40) }} @elseif(Auth::user()->hasRole('participant')) {{ Str::limit($project->study_title, 40) }} @endif</div>
                                     <span class="badge bg-primary rounded-pill"></span>
                                 </li>
@@ -47,7 +47,7 @@
                             <div class="w-100">
                                 <textarea class="form-control" rows="1" cols="1" id="message" required data-parsley-error-message="Please write your message." placeholder="Write your message here..."></textarea>
                             </div>
-                            <button type="button" class="btn btn-primary" id="send">Send</button>
+                            <button type="button" class="btn btn-primary flex-shrink-0" id="send">Send<span class="ms-2"><i class="fa-solid fa-paper-plane"></i></span></button>
                         </div>
                     </form>
                 </div>
@@ -161,14 +161,14 @@
                             if(data.user_id === userId){
                                 var message = '<div class="row" data-msg="'+data.id+'">\
                                     <div class="d-flex justify-content-end align-items-end gap-2">\
-                                        <p class="flex-shrink-0 order-2 text-end" style="min-width: 8%">'+data.user.first_name+'</p>\
+                                        <p class="flex-shrink-0 order-2 text-end" style="min-width: 8%">'+data.user.first_name+' '+data.user.last_name.charAt(0)+'.</p>\
                                         <p class="order-1 d-inline-block bg-primary text-white p-2 rounded-3" style="max-width: 82%">'+data.message+'</p>\
                                     </div>\
                                     </div>';
                             }else{
                                 var message = '<div class="row" data-msg="'+data.id+'">\
                                     <div class="d-flex justify-content-start align-items-end gap-2">\
-                                        <p class="flex-shrink-0 text-start" style="min-width: 8%">'+data.user.first_name+'</p>\
+                                        <p class="flex-shrink-0 text-start" style="min-width: 8%">'+data.user.first_name+' '+data.user.last_name.charAt(0)+'.</p>\
                                         <p class="d-inline-block bg-secondary-subtle p-2 rounded-3" style="max-width: 82%">'+data.message+'</p>\
                                     </div>\
                                     </div>';
@@ -206,14 +206,14 @@
                             if(data.user_id === userId){
                                 var message = '<div class="row" data-msg="'+data.id+'">\
                                     <div class="d-flex justify-content-end align-items-end gap-2">\
-                                        <p class="flex-shrink-0 order-2" style="min-width: 8%">'+data.user.first_name+'</p>\
+                                        <p class="flex-shrink-0 order-2" style="min-width: 8%">'+data.user.first_name+' '+data.user.last_name.charAt(0)+'.</p>\
                                         <p class="order-1 d-inline-block bg-primary text-white p-2 rounded-3" style="max-width: 82%">'+data.message+'</p>\
                                     </div>\
                                     </div>';
                             }else{
                                 var message = '<div class="row" data-msg="'+data.id+'">\
                                     <div class="d-flex justify-content-start align-items-end gap-2">\
-                                        <p class="flex-shrink-0" style="min-width: 8%">'+data.user.first_name+'</p>\
+                                        <p class="flex-shrink-0" style="min-width: 8%">'+data.user.first_name+' '+data.user.last_name.charAt(0)+'.</p>\
                                         <p class="d-inline-block bg-secondary-subtle p-2 rounded-3" style="max-width: 82%">'+data.message+'</p>\
                                     </div>\
                                     </div>';
