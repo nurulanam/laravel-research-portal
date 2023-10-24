@@ -120,6 +120,9 @@ input.small::placeholder{
     color:red;
     font-size: 13px;
     margin: 0 !important;
+    list-style: none;
+    text-align: start;
+    padding: 0px;
 }
 
 

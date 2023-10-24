@@ -10,6 +10,8 @@ use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class ProjectHireController extends Controller
@@ -68,12 +70,12 @@ class ProjectHireController extends Controller
          $findResponse = ProjectHasResponse::where('id', '=', $id)->where('user_id', '=', Auth::id())->first();
          if (isset($findResponse)){
              if ($findResponse->status == 'invited'){
-                 $findResponse->status = 'hired';
+                 $findResponse->status = 'accepted';
                  $findResponse->update();
                  ParticipantHireAccepted::dispatch($findResponse->project->my_project_name, $findResponse->user_id, $findResponse->project->user_id);
-                 return redirect()->route('project.index')->with('success', 'You are hired successfully');
+                 return redirect()->route('project.index')->with('success', 'You accepted successfully');
              }else{
-                 return redirect()->back()->with('error', 'Sorry! Already hired');
+                 return redirect()->back()->with('error', 'Sorry! Already accepted');
              }
          }else{
              return redirect()->route('project.index')->with('error', 'Your response not found');
@@ -96,6 +98,37 @@ class ProjectHireController extends Controller
     }
 
 
+    /**
+     * Send Zoom meeting link to participant
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+    */
+    public function sendZoomLink(Request $request)
+    {
+        $request->validate(
+            [
+                'meeting_type' => 'required',
+                'schedule_date_time' => 'nullable',
+                'meeting_id' => 'required|numeric',
+                'passcode' => 'required|string',
+            ]
+        );
+        if ($request->meeting_type == 'schedule'){
+            $request->validate(
+                [
+                    'schedule_date_time' => 'required|date'
+                ]
+            );
+            $carbonDateTime = Carbon::parse($request->schedule_date_time);
+            $formattedDateTime = $carbonDateTime->format('M d, Y h:i A T');
+            dd($formattedDateTime);
+        }
+
+
+        dd($request);
+
+    }
     /**
      * Show the form for creating a new resource.
      *

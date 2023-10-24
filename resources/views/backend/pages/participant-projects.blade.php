@@ -43,6 +43,8 @@
                                         <a class="badge bg-success text-decoration-none">Submitted</a>
                                     @elseif($response->status == "invited")
                                         <a class="badge bg-primary text-decoration-none">Invited</a>
+                                    @elseif($response->status == "accepted")
+                                        <a class="badge bg-success text-decoration-none">Accepted</a>
                                     @elseif($response->status == "hired")
                                         <a class="badge bg-success text-decoration-none">Hired</a>
                                     @elseif($response->status == "rejected")
