@@ -13,8 +13,7 @@ class ProjectHasResponse extends Model
     protected $fillable =[
         'project_id',
         'user_id',
-        'user_response',
-        'qualification'
+        'user_response'
     ];
     public function project()
     {

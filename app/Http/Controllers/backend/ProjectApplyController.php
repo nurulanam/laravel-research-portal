@@ -58,20 +58,18 @@ class ProjectApplyController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      *
      */
     public function store(Request $request, $slug)
     {
         $findProject = Projects::where('slug', $slug)->first();
 
-
         if ($findProject) {
             $findQuestions = ProjectHasQuestion::where('project_id', $findProject->id)->first();
             if ($findQuestions) {
                 $questions = json_decode($findQuestions->questions, true);
                 $userResponses = [];
-                $disqualifyFlag = false; // Flag to track if any response disqualifies the user
 
                 foreach ($questions as $key => $question) {
                     $questionType = $question['question_type'][0];
@@ -83,18 +81,11 @@ class ProjectApplyController extends Controller
                     }
 
                     if ($questionType === 'checkbox' && isset($question['answer_qualify'])) {
-                        $expectedAnswers = $question['answer_qualify'];
                         $selectedIndexes = [];
 
-                        if (!empty($expectedAnswers)) {
-                            foreach ($userResponse as $index => $value) {
-                                if (isset($expectedAnswers[$index]) && $expectedAnswers[$index] === 'disqualify') {
-                                    $disqualifyFlag = true;
-                                }
-
-                                if (isset($question['answer'][$index])) {
-                                    $selectedIndexes[] = $index;
-                                }
+                        foreach ($userResponse as $index => $value) {
+                            if (isset($question['answer'][$index])) {
+                                $selectedIndexes[] = $index;
                             }
                         }
                         $userResponse = $selectedIndexes;
@@ -108,14 +99,10 @@ class ProjectApplyController extends Controller
                     ];
                 }
 
-                // Set the overall qualification to 'disqualify' if any disqualification occurs
-                $overallQualification = $disqualifyFlag ? 'disqualify' : 'qualify';
-
                 $userResponseModel = new ProjectHasResponse();
                 $userResponseModel->project_id = $findProject->id;
                 $userResponseModel->user_id = auth()->user()->id; // Assuming you have authenticated users
                 $userResponseModel->user_response = json_encode($userResponses);
-                $userResponseModel->qualification = $overallQualification; // Set the 'qualification' directly in $userResponseModel
 
                 $userResponseModel->save();
                 return redirect()->route('dashboard.index')->with('success', 'Response Submitted');
