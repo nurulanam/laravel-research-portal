@@ -42,7 +42,7 @@ class ParticipantRejectedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Project rejection')
-            ->greeting('Hey'. ' ' .$notifiable->first_name.',')
+            ->greeting("Hello, $notifiable->first_name")
             ->line('Your submission on '.$this->projectName.' has been rejected. To join a new project:')
             ->action('Click Here', url('/dashboard'));
     }

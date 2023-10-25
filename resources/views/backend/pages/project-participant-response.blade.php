@@ -66,7 +66,7 @@
             </div>
         </div>
         <div class="col-12 col-lg-4 order-0 order-lg-1 my-3 my-lg-0">
-            <div class="card rounded-4 shadow-md p-4 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired') bg-success-subtle position-relative  @endif">
+            <div class="card rounded-4 shadow-md p-4 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired' || $response->status == 'accepted' || $response->status == 'scheduled') bg-success-subtle position-relative  @endif">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else
@@ -80,6 +80,10 @@
                         <span class="position-absolute top-0 start-0 m-2 badge bg-danger">Denied</span>
                     @elseif($response->status == 'invited')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-primary">Invited</span>
+                    @elseif($response->status == 'accepted')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-success">Accepted</span>
+                    @elseif($response->status == 'scheduled')
+                        <span class="position-absolute top-0 start-0 m-2 badge bg-success">Scheduled</span>
                     @elseif($response->status == 'hired')
                         <span class="position-absolute top-0 start-0 m-2 badge bg-success">Hired</span>
                     @endif
@@ -115,7 +119,7 @@
 
 
                     @endphp
-                    <table class="table @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') table-danger @elseif($response->status == 'invited') table-primary @elseif($response->status == 'hired') table-success @endif">
+                    <table class="table @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') table-danger @elseif($response->status == 'invited') table-primary @elseif($response->status == 'hired' || $response->status == 'accepted' || $response->status == 'scheduled') table-success @endif">
                         <thead>
                             <th class="text-start">Gender</th>
                             <th class="text-start">Age</th>
@@ -179,13 +183,76 @@
                             </tr>
                         </tbody>
                     </table>
-                    <div class="card-footer @if($response->status == 'invited') bg-primary-subtle @elseif($response->status == 'hired') bg-success-subtle border-0 @elseif($response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle border-0 @else bg-white @endif">
-                        @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied' || $response->status == 'hired')
-                            <div class="d-flex justify-content-center align-items-center pt-3">
-                            </div>
-                        @else
-                            <div class="d-flex justify-content-center align-items-center pt-3">
+                    <div class="card-footer @if($response->status == 'invited') bg-primary-subtle @elseif($response->status == 'hired' || $response->status == 'accepted' || $response->status == 'scheduled') bg-success-subtle border-0 @elseif($response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle border-0 @else bg-white @endif">
+                        <div class="d-flex justify-content-center align-items-center pt-3">
+                            @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied' || $response->status == 'hired')
+                            @else
                                 @if($response->status == 'submitted')
+                                    <a href="{{ route('project.invite', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
+                                        <i class="fa-solid fa-check me-1"></i><span>Invite</span>
+                                    </a>
+                                @elseif($response->status == 'accepted')
+                                    <button type="button" class="btn btn-primary btn-sm mx-1 zoom-btn" data-id="{{ $response->id }}" data-bs-toggle="modal" data-bs-target="#zoomModal{{ $response->id }}">
+                                        <i class="fa-solid fa-bell"></i> Zoom Meeting
+                                    </button>
+                                    <div class="modal fade" id="zoomModal{{ $response->id }}" tabindex="-1" aria-labelledby="zoomModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-dark-blue text-white">
+                                                    <h1 class="modal-title fs-5" id="zoomModalLabel">Send Zoom Meeting</h1>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body text-start">
+                                                    <form action="{{ route('project.send.zoom', [$response->project->slug, $response->user_id]) }}" method="post" class="zoom-meeting-form">
+                                                        @csrf
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-5">Meeting ID <span class="text-danger">*</span>
+                                                            </div>
+                                                            <div class="col-md-7 text-end">
+                                                                <input type="number" name="meeting_id" class="form-control" placeholder="123 1234 1234" required data-parsley-error-message="Please enter your meeting id.">
+                                                                @error('meeting_id')
+                                                                <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-5">Passcode <span class="text-danger">*</span>
+                                                            </div>
+                                                            <div class="col-md-7 text-end">
+                                                                <input type="text" name="passcode" class="form-control" placeholder="1234" required="" data-parsley-error-message="Please enter your security passcode.">
+                                                                @error('passcode')
+                                                                <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-5">Date & Time<span class="text-danger">*</span>
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <input type="datetime-local" name="schedule_date_time" class="form-control" required data-parsley-error-message="Please add schedule date">
+                                                                @error('schedule_date_time')
+                                                                <p class="text-danger">{{ $message }}</p>
+                                                                @enderror
+                                                            </div>
+                                                        </div>
+                                                        <div class="row mb-3">
+                                                            <div class="col-md-5">
+                                                            </div>
+                                                            <div class="col-md-7">
+                                                                <button class="btn btn-primary"><span class="me-2"><i class="fa-solid fa-check"></i></span> Send</button>
+                                                            </div>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                                <div class="modal-footer text-start">
+                                                    <div class="alert alert-success" role="alert">
+                                                        <b>Note:</b>  First log in to your <a href="https://zoom.us/" target="_blank">Zoom</a> account, schedule your meeting. Start the meeting at the scheduled time.
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @elseif($response->status == 'scheduled')
                                     <a href="{{ route('project.hire', [$response->project->slug, $response->user_id]) }}" class="btn btn-primary btn-sm mx-1">
                                         <i class="fa-solid fa-check me-1"></i><span>Hire</span>
                                     </a>
@@ -193,12 +260,22 @@
                                 <a href="{{ route('project.reject', [$response->project->slug, $response->user_id]) }}" class="btn btn-danger btn-sm mx-1">
                                     <i class="fa-solid fa-trash-alt me-1"></i><span>Reject</span>
                                 </a>
-                            </div>
-                        @endif
+                           @endif
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
+@endsection
+
+@section('extraJs')
+    <script src="{{ asset('backend/js/parsley.min.js') }}"></script>
+    <script>
+        $(document).ready(function (){
+            $('.zoom-meeting-form').parsley().validate();
+        })
+
+    </script>
 @endsection

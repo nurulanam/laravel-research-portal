@@ -4,8 +4,10 @@ namespace App\Http\Controllers\backend;
 
 use App\Events\ParticipantHireAccepted;
 use App\Events\ParticipantHireDenied;
+use App\Events\ParticipantInvited;
 use App\Events\ParticipantRejected;
-use App\Events\ProjectHired;
+use App\Events\ParticipantZoomLinkSend;
+use App\Events\ParticipantHired;
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;
@@ -26,13 +28,13 @@ class ProjectHireController extends Controller
         //
     }
 
-    public function projectHire($slug , $id){
+    public function projectInvite($slug , $id){
         $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
         if (isset($project)){
             $response = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
             if (isset($response)){
                 if ($response->status == 'submitted'){
-                    ProjectHired::dispatch($project->id, $id);
+                    ParticipantInvited::dispatch($project->id, $id);
                     $response->status = 'invited';
                     $response->update();
                     return redirect()->back()->with('success', 'Project invitation send successfully');
@@ -102,33 +104,66 @@ class ProjectHireController extends Controller
      * Send Zoom meeting link to participant
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-    */
-    public function sendZoomLink(Request $request)
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function sendZoomLink(Request $request, $slug, $id)
     {
         $request->validate(
             [
-                'meeting_type' => 'required',
-                'schedule_date_time' => 'nullable',
                 'meeting_id' => 'required|numeric',
                 'passcode' => 'required|string',
+                'schedule_date_time' => 'required|date'
             ]
         );
-        if ($request->meeting_type == 'schedule'){
-            $request->validate(
-                [
-                    'schedule_date_time' => 'required|date'
-                ]
-            );
-            $carbonDateTime = Carbon::parse($request->schedule_date_time);
-            $formattedDateTime = $carbonDateTime->format('M d, Y h:i A T');
-            dd($formattedDateTime);
+        $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        if (isset($project)) {
+            $findResponse = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
+            if (isset($findResponse)) {
+                $carbonDateTime = Carbon::parse($request->schedule_date_time);
+                $formattedDateTime = $carbonDateTime->format('M d, Y h:i A T');
+                if ($findResponse->status == 'accepted') {
+                    ParticipantZoomLinkSend::dispatch($findResponse, $request->meeting_id, $request->passcode, $formattedDateTime);
+                    $findResponse->status = 'scheduled';
+                    $findResponse->update();
+                    return redirect()->back()->with('success', 'Participant invited successfully for meeting');
+                } else {
+                    return redirect()->back()->with('error', 'Sorry can\'t send meeting invitation for now');
+                }
+            }else {
+                return redirect()->back()->with('error','Response not found.');
+            }
+        }else{
+            return redirect()->back()->with('error', 'Sorry request invalid');
         }
-
-
-        dd($request);
-
     }
+    /**
+     * Hire participant for project
+     *
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\RedirectResponse
+     */
+
+    public function projectHire($slug, $id){
+        $project = Projects::where('slug', '=', $slug)->where('user_id', '=', Auth::id())->first();
+        if (isset($project)){
+            $response = ProjectHasResponse::where('project_id', '=', $project->id)->where('user_id', '=', $id)->first();
+            if (isset($response)){
+                if ($response->status == 'scheduled'){
+                    ParticipantHired::dispatch($project->id, $id);
+                    $response->status = 'hired';
+                    $response->update();
+                    return redirect()->back()->with('success', 'Participant hired send successfully');
+                }else{
+                    return redirect()->back()->with('error','Sorry! Already hired');
+                }
+            }else {
+                return redirect()->back()->with('error','Response not found.');
+            }
+        }else {
+            return redirect()->back()->with('error','Project not found.');
+        }
+    }
+
     /**
      * Show the form for creating a new resource.
      *

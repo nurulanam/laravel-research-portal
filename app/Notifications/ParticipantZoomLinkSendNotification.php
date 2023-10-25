@@ -10,15 +10,22 @@ use Illuminate\Notifications\Notification;
 class ParticipantZoomLinkSendNotification extends Notification
 {
     use Queueable;
+    public $project_name;
+    public $meeting_id;
+    public $passcode;
+    public $schedule_date;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($project_name, $meeting_id, $passcode, $schedule_date)
     {
-        //
+        $this->project_name = $project_name;
+        $this->meeting_id = $meeting_id;
+        $this->passcode = $passcode;
+        $this->schedule_date = $schedule_date;
     }
 
     /**
@@ -41,9 +48,13 @@ class ParticipantZoomLinkSendNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->line('The introduction to the notification.')
-                    ->action('Notification Action', url('/'))
-                    ->line('Thank you for using our application!');
+            ->subject('Project Zoom Meeting')
+            ->greeting("Hello, $notifiable->first_name")
+            ->line("You are invited to a Zoom meeting for the project: $this->project_name.")
+            ->line("Meeting ID: $this->meeting_id")
+            ->line("Passcode: $this->passcode")
+            ->line("Scheduled Date: $this->schedule_date")
+            ->action('Join Meeting', 'https://zoom.us/join');
     }
 
     /**

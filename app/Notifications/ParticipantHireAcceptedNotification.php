@@ -44,11 +44,11 @@ class ParticipantHireAcceptedNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject('Participant hired')
-            ->greeting('Hey'. ' ' .$notifiable->first_name.',')
-            ->line('Great news! '.$this->participant->first_name. ' '.$this->participant->last_name.' has confirmed to join your project:'. $this->projectName)
-            ->line('Want to chat with all participants?')
-            ->action('Click Here', url('/dashboard/messages'));
+            ->subject('Participant accepted')
+            ->greeting("Hello, $notifiable->first_name")
+            ->line('Great news! '.$this->participant->first_name. ' '.$this->participant->last_name.' has accepted to join your project:'. $this->projectName)
+            ->line('Schedule a zoom meeting.')
+            ->action('Schedule Meeting', 'https://zoom.us/join');
     }
 
     /**

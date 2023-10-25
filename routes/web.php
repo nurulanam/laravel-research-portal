@@ -71,9 +71,10 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
         Route::delete('/project/{slug}', [ProjectController::class, 'destroy'])->name('project.delete');
-        Route::get('/project-hire/{slug}/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
+        Route::get('/project-invite/{slug}/{id}', [ProjectHireController::class, 'projectInvite'])->name('project.invite');
         Route::get('/project-reject/{slug}/{id}', [ProjectHireController::class, 'projectReject'])->name('project.reject');
-        Route::post('/project-zoom/{id}', [ProjectHireController::class, 'sendZoomLink'])->name('project.send.zoom');
+        Route::post('/project-zoom/{slug}/{id}', [ProjectHireController::class, 'sendZoomLink'])->name('project.send.zoom');
+        Route::get('/project-hire/{slug}/{id}', [ProjectHireController::class, 'projectHire'])->name('project.hire');
 
         //Authorize Customer
         Route::post('/customer-profile', [CustomerProfileController::class,  'store'])->name('customer.profile.store');

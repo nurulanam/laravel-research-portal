@@ -14,14 +14,22 @@ class ParticipantZoomLinkSend
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
+    public $response;
+    public $meeting_id;
+    public $passcode;
+    public $schedule_date;
+
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct($response, $meeting_id, $passcode, $schedule_date)
     {
-        //
+        $this->response = $response;
+        $this->meeting_id = $meeting_id;
+        $this->passcode = $passcode;
+        $this->schedule_date = $schedule_date;
     }
 
     /**

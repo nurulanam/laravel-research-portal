@@ -45,7 +45,7 @@ class ParticipantHireDeniedNotification extends Notification
     {
         return (new MailMessage)
             ->subject('Participant Denied')
-            ->greeting('Hey'. ' ' .$notifiable->first_name.',')
+            ->greeting("Hello, $notifiable->first_name")
             ->line('Sorry! '.$this->participant->first_name. ' '.$this->participant->last_name.' has denied to join your project:'. $this->projectName)
             ->line('Want to chat with other participants?')
             ->action('Click Here', url('/dashboard/messages'));

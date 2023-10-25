@@ -11,10 +11,9 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class ProjectHired
+class ParticipantInvited
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
-
     public $response;
     /**
      * Create a new event instance.

@@ -7,11 +7,10 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class ProjectHiredNotification extends Notification
+class ParticipantInvitedNotification extends Notification
 {
     use Queueable;
     public $projectName;
-
     /**
      * Create a new notification instance.
      *
@@ -42,11 +41,11 @@ class ProjectHiredNotification extends Notification
     public function toMail($notifiable)
     {
         return (new MailMessage)
-                    ->subject('New project invitation')
-                    ->greeting('Hey'. ' ' .$notifiable->first_name.',')
-                    ->line('You have been invited to join a new project:'.' '.$this->projectName)
-                    ->line('Please log in to your account to accept the invitation.')
-                    ->action('Check Project', url('/dashboard/project'));
+            ->subject('New project invitation')
+            ->greeting("Hello, $notifiable->first_name")
+            ->line('You have been invited to join a new project:'.' '.$this->projectName)
+            ->line('Please log in to your account to accept the invitation.')
+            ->action('Check Project', url('/dashboard/project'));
     }
 
     /**

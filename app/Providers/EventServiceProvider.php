@@ -4,12 +4,16 @@ namespace App\Providers;
 
 use App\Events\ParticipantHireAccepted;
 use App\Events\ParticipantHireDenied;
+use App\Events\ParticipantInvited;
 use App\Events\ParticipantRejected;
-use App\Events\ProjectHired;
+use App\Events\ParticipantZoomLinkSend;
+use App\Events\ParticipantHired;
 use App\Listeners\NotifyParticipantHireAccepted;
 use App\Listeners\NotifyParticipantHireDenied;
+use App\Listeners\NotifyParticipantInvited;
 use App\Listeners\NotifyParticipantRejected;
-use App\Models\Listeners\NotifyProjectHired;
+use App\Listeners\NotifyParticipantZoomLinkSend;
+use App\Models\Listeners\NotifyParticipantHired;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -26,8 +30,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-        ProjectHired::class => [
-            NotifyProjectHired::class,
+        ParticipantHired::class => [
+            NotifyParticipantHired::class,
         ],
         ParticipantRejected::class => [
             NotifyParticipantRejected::class,
@@ -37,6 +41,12 @@ class EventServiceProvider extends ServiceProvider
         ],
         ParticipantHireDenied::class => [
             NotifyParticipantHireDenied::class,
+        ],
+        ParticipantZoomLinkSend::class => [
+            NotifyParticipantZoomLinkSend::class,
+        ],
+        ParticipantInvited::class => [
+            NotifyParticipantInvited::class,
         ]
     ];
 
