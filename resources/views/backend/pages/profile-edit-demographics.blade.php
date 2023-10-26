@@ -2,12 +2,11 @@
 @section('extraMeta')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
-@section('title', 'Profile')
+@section('title', 'Edit Demographics')
 @section('extraCss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
+    <link rel="stylesheet" href="{{ asset('backend/css/select2.min.css') }}">
 @endsection
 @section('mainContent')
-
 
     @include('backend.includes.user-banner')
 

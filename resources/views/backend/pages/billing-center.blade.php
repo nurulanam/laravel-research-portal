@@ -1,11 +1,5 @@
 @extends('backend.dashboardMaster')
-@section('extraMeta')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
-@section('title', 'Create New Project')
-@section('extraCss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
-@endsection
+@section('title', 'Billing Center')
 @section('mainContent')
     <div class="row">
         <div class="col-12">

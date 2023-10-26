@@ -1,7 +1,7 @@
 @extends('backend.dashboardMaster')
 @section('extraMeta')
 @endsection
-@section('title', $findProject->project_title)
+@section('title', $findProject->my_project_name)
 @section('extraCss')
     <style>
         .form-section {
@@ -31,7 +31,7 @@
                 <div class="card-body p-4">
                     <div class="row align-items-center">
                         <div class="col-12 col-md-9">
-                            <h1 class="text-white font-25">{{ $findProject->study_title }}</h1>
+                            <h1 class="text-white font-25">{{ $findProject->my_project_name }}</h1>
                         </div>
                         <div class="col-12 col-md-3">
                             @php $totalQuestion = count($questions) @endphp
@@ -79,7 +79,7 @@
                                         </span>{{ $question->question_name[0] }}</h2>
                                     <div class="form-group mt-3">
                                         <textarea name="{{ $question->question_type[0] }}[{{ $q }}][]" class="form-control" rows="5"
-                                            placeholder="Your Answer" @if ($question->required[0]) required @endif></textarea>
+                                            placeholder="Your Answer" @if (isset($question->required[0]) && $question->required[0] !== null) required @endif></textarea>
                                     </div>
                                 </div>
                                 @php
@@ -93,7 +93,7 @@
                                         <input type="text"
                                             name="{{ $question->question_type[0] }}[{{ $q }}][]"
                                             class="form-control" placeholder="Your Answer"
-                                            @if ($question->required[0]) required @endif>
+                                            @if (isset($question->required[0]) && $question->required[0] !== null) required @endif>
                                     </div>
                                 </div>
                                 @php
@@ -107,7 +107,7 @@
                                         <input type="number"
                                             name="{{ $question->question_type[0] }}[{{ $q }}][]"
                                             class="form-control" placeholder="Your Answer In Number Only"
-                                            @if ($question->required[0]) required @endif>
+                                            @if (isset($question->required[0]) && $question->required[0] !== null) required @endif>
                                     </div>
                                 </div>
                                 @php

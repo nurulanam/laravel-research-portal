@@ -26,7 +26,7 @@
     <div class="row">
         @foreach($findProject->responses as $response)
         <div class="col-12 col-md-6 col-lg-4 my-2 my-lg-0">
-            <div class="card shadow-md h-100 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired' || $response->status == 'accepted' || $response->status == 'scheduled') bg-success-subtle position-relative  @endif rounded-4 shadow-md p-4">
+            <div class="card shadow-md h-100 @if($response->status == 'withdrawn' || $response->status == 'rejected' || $response->status == 'denied') bg-danger-subtle position-relative @elseif($response->status == 'invited') bg-primary-subtle position-relative @elseif($response->status == 'hired' || $response->status == 'accepted' || $response->status == 'scheduled') bg-success-subtle position-relative  @endif rounded-4 p-4">
                 @if(!empty($response->user->profile->user_avatar))
                     <img src="{{ asset('/backend/img/profile/'. $response->user->profile->user_avatar ) }}" alt="profile avater" class="mx-auto border border-2 border-dark rounded-circle object-fit-cover" style="height: 80px; width: 80px">
                 @else

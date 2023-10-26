@@ -2,9 +2,9 @@
 @section('extraMeta')
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
-@section('title', 'Create New Project')
+@section('title', "Edit $project->my_project_name")
 @section('extraCss')
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css"/>
+    <link rel="stylesheet" href="{{ asset('backend/css/select2.min.css') }}">
 @endsection
 @section('mainContent')
     <div class="row">
@@ -824,7 +824,7 @@
 @endsection
 @section('extraJs')
     <script src="{{ asset('backend/js/parsley.min.js') }}"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+    <script src="{{ asset('backend/js/select2.min.js') }}"></script>
 
     <script>
         $(document).ready(function() {

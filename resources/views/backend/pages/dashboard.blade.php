@@ -3,9 +3,6 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
 @endsection
 @section('title', 'Dashboard')
-@section('extraCss')
-
-@endsection
 @section('mainContent')
     <div class="row">
         <div class="col-12 col-md-6">
@@ -140,8 +137,6 @@
                                     <ul class="dropdown-menu">
                                         <button type="button" class="dropdown-item copyProjectLink" data-slug="{{ $project->slug }}" data-id="{{ $project->id }}" href="#"><i class="fas fa-clone text-primary me-2"></i>
                                             Copy Project link</button>
-                                        <a class="dropdown-item" href="#"><i class="fas fa-eye-slash text-primary me-2"></i>
-                                            Hide Project</a>
                                     </ul>
                                 </div>
                             </div>
@@ -255,7 +250,7 @@
                                                                 class="fas fa-clipboard-list text-primary me-2"></i><span>Responses:
                                                                 <span class="total-response">0</span></span></p>
                                                         <p class="text-dark mb-2"><i
-                                                                class="fas fa-clipboard-check text-primary me-2"></i><span>Hired: <span class="">0</span></span></p>
+                                                                class="fas fa-clipboard-check text-primary me-2"></i><span>Hired: <span class="total-hired">0</span></span></p>
                                                     </div>
                                                 </div>
                                             </div>
@@ -502,7 +497,11 @@
                             $('.total-response').html(response.totalResponse);
                         }else{
                             $('.total-response').html('0');
-
+                        }
+                        if (response.totalHired){
+                            $('.total-hired').html(response.totalHired);
+                        }else{
+                            $('.total-hired').html('0');
                         }
                     }else if(response.data == 'error'){
                         $('.project-error-modal').modal('show');

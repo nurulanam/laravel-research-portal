@@ -7,7 +7,6 @@
     <link rel="icon" type="image/x-icon" href="{{ asset('backend/img/favicon.png') }}">
 
     <!-- Custom fonts for this template-->
-    @include('backend.includes.fonts')
 
     <!-- Custom styles for this template-->
     @include('backend.includes.css')

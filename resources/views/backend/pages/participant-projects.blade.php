@@ -1,11 +1,5 @@
 @extends('backend.dashboardMaster')
-@section('extraMeta')
-    <meta name="csrf-token" content="{{ csrf_token() }}">
-@endsection
-@section('title', 'Researcher Projects')
-@section('extraCss')
-
-@endsection
+@section('title', 'Participant Projects')
 @section('mainContent')
     <div class="row">
         <div class="col-12">
@@ -45,6 +39,8 @@
                                         <a class="badge bg-primary text-decoration-none">Invited</a>
                                     @elseif($response->status == "accepted")
                                         <a class="badge bg-success text-decoration-none">Accepted</a>
+                                    @elseif($response->status == "scheduled")
+                                        <a class="badge bg-success text-decoration-none">Scheduled</a>
                                     @elseif($response->status == "hired")
                                         <a class="badge bg-success text-decoration-none">Hired</a>
                                     @elseif($response->status == "rejected")
@@ -101,7 +97,6 @@
                                 <td colspan="5" class="text-center"><div class="alert alert-danger" role="alert">Opps... Sorry! No Projects Found</div></td>
                             </tr>
                         @endif
-
                         </tbody>
 
                     </table>
@@ -110,7 +105,6 @@
             <div class="d-flex justify-content-center justify-content-lg-start mt-3">
                 {{ $findProjectHasResponse->links() }}
             </div>
-
         </div>
     </div>
 @endsection

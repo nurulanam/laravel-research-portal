@@ -1,7 +1,7 @@
 @extends('backend.dashboardMaster')
 @section('extraMeta')
 @endsection
-@section('title', $findProject->project_title)
+@section('title', "$findProject->study_title")
 @section('extraCss')
     <style>
         .form-section {

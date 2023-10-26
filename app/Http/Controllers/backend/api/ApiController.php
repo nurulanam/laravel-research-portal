@@ -72,8 +72,19 @@ class ApiController extends Controller
                 $projectTopics = json_decode($findProjectTopics->project_topic);
                 $response['topics'] = $projectTopics;
             }
-            if ($findResponse){
-                $response['totalResponse'] = count($findResponse);
+            if ($findResponse->isNotEmpty()) {
+                $totalResponse = $findResponse->count();
+
+                // Use the where method to filter the responses with status 'hired'
+                $totalHired = $findResponse->where('status', 'hired')->count();
+
+                $response['totalResponse'] = $totalResponse;
+                $response['totalHired'] = $totalHired;
+
+            } else {
+                $response['totalResponse'] = 0;
+                $response['totalHired'] = 0;
+
             }
             if ($findParticipant){
                 $response['applied'] = $findParticipant;
