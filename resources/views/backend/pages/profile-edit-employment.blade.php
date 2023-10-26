@@ -429,7 +429,7 @@
                                             <option value="">Select Your Industry</option>
                                             @foreach ($industries as $key => $industry)
                                                 <option value="{{ $key }}"
-                                                        @if (!empty($profileIndustry))
+                                                        @if (isset($profileIndustry))
                                                             @if ($profileIndustry == $key)
                                                                 selected="selected"
                                                     @endif

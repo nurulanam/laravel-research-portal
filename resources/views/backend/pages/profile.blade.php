@@ -406,7 +406,7 @@
                                     </div>
                                     <div class="col-12 col-md-6 col-lg-3 mb-3">
                                         <p class="fw-medium text-secondary">
-                                            @if (!empty($profileIndustry) && isset($industries[$profileIndustry]))
+                                            @if (isset($profileIndustry) && isset($industries[$profileIndustry]))
                                                 <span class="badge bg-primary rounded-pill px-3 py-2 me-2 mb-2 text-capitalize">{{ $industries[$profileIndustry] }}</span>
                                             @else
                                                 Update
