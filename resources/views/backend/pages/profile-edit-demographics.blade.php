@@ -41,7 +41,7 @@
 
                     <div class="d-flex justify-content-between">
                         <p class="fw-medium">Skills</p>
-                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
                     </div>
                     <div>
                         @if(!empty($userSkills))
@@ -60,7 +60,7 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-3">
                                     <p class="font-22 fw-bold">Contact Details</p>
-                                    <a href="{{ route('profile.edit.contact') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.edit.contact') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                    <a href="{{ route('profile.edit.contact') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.contact') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -466,7 +466,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Employment</p>
-                                <a href="{{ route('profile.edit.employment') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.edit.employment') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                <a href="{{ route('profile.edit.employment') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.employment') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
 
                             </div>
                             <div class="row">

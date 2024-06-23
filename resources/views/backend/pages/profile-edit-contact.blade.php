@@ -41,7 +41,7 @@
                     @if(Auth::user()->hasRole('participant'))
                     <div class="d-flex justify-content-between">
                         <p class="fw-medium">Skills</p>
-                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the contact?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
                     </div>
                     <div>
                         @if(!empty($userSkills))
@@ -64,7 +64,7 @@
                             <div class="d-md-flex justify-content-md-between mb-3">
                                 <p class="font-22 fw-bold">Contact Details</p>
                                 <div class="d-flex">
-                                    <a href="{{ route('profile.index') }}" class="btn btn-danger btn-sm me-2" onclick="return confirm('Are you sure you want to cancel editing the contact?') ? window.location.href = '{{ route('profile.index') }}' : false;">
+                                    <a href="{{ route('profile.index') }}" class="btn btn-danger btn-sm me-2" onclick="return confirm('Are you sure you want to cancel editing??') ? window.location.href = '{{ route('profile.index') }}' : false;">
                                         <i class="fa-solid fa-arrow-up-from-bracket fa-rotate-270 me-2"></i><span>Back</span>
                                     </a>
                                     <button class="btn btn-primary btn-sm"><i class="fa-solid fa-check me-2"></i><span>Save</span></button>
@@ -175,7 +175,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Demographics</p>
-                                <a href="{{ route('profile.edit.demographics') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the contact?') ? window.location.href = '{{ route('profile.edit.demographics') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                <a href="{{ route('profile.edit.demographics') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing??') ? window.location.href = '{{ route('profile.edit.demographics') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
 
                             </div>
                             <div class="row">
@@ -377,7 +377,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Employment</p>
-                                <a href="{{ route('profile.edit.employment') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing the contact?') ? window.location.href = '{{ route('profile.edit.employment') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                <a href="{{ route('profile.edit.employment') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.employment') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
 
                             </div>
                             <div class="row">
