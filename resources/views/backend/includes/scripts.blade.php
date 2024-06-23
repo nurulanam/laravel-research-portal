@@ -8,6 +8,15 @@
             $('[data-bs-toggle="tooltip"]').tooltip()
         });
     })
+    $('.confirm-btn').on('click', function(){
+        var confirm = $(this);
+        var url = confirm.data('url');
+        var confirmModal = $('#confirmEditModal');
+        var confirmButton = $('#confirmEditModal #btnLeave');
+
+        confirmButton.attr('href', url);
+        console.log(confirmButton);
+    });
 
     @if (Session::has('success'))
         toastr.options.closeButton = true;
