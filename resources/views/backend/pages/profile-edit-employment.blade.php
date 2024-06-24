@@ -41,7 +41,7 @@
                     @if(Auth::user()->hasRole('participant'))
                     <div class="d-flex justify-content-between">
                         <p class="fw-medium">Skills</p>
-                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                        <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.skill') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
                     </div>
                     <div>
                         @if(!empty($userSkills))
@@ -61,7 +61,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Contact Details</p>
-                                <a href="{{ route('profile.edit.contact') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.contact') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.contact') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -157,7 +157,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Demographics</p>
-                                <a href="{{ route('profile.edit.demographics') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.demographics') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.demographics') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -361,7 +361,7 @@
                             <div class="d-md-flex justify-content-md-between mb-3">
                                 <p class="font-22 fw-bold">Employment</p>
                                 <div class="d-flex align-items-center">
-                                    <a href="{{ route('profile.index') }}" class="btn btn-danger btn-sm me-2" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.index') }}' : false;">
+                                    <a href="#" class="btn btn-danger btn-sm me-2 confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.index') }}">
                                         <i class="fa-solid fa-arrow-up-from-bracket fa-rotate-270 me-2"></i><span>Back</span>
                                     </a>
                                     <button class="btn btn-primary btn-sm"><i class="fa-solid fa-check me-2"></i><span>Save</span></button>
@@ -559,6 +559,7 @@
     </div>
 
 @endsection
+@include('backend.includes.confirmedit')
 @section('extraJs')
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
     <script>

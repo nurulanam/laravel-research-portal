@@ -41,7 +41,7 @@
 
                     <div class="d-flex justify-content-between">
                         <p class="fw-medium">Skills</p>
-                        <a href="{{ route('profile.edit.skill') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.skill') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                        <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.skill') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
                     </div>
                     <div>
                         @if(!empty($userSkills))
@@ -60,7 +60,8 @@
                             <div class="card-body">
                                 <div class="d-flex justify-content-between mb-3">
                                     <p class="font-22 fw-bold">Contact Details</p>
-                                    <a href="{{ route('profile.edit.contact') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.contact') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
+                                    <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.contact') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
+
                                 </div>
                                 <div class="row">
                                     <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -173,14 +174,15 @@
                                                     @endif</p>
 
                                 <div class="d-flex">
-                                    <a href="{{ route('profile.index') }}" class="btn btn-danger btn-sm me-2" @if (!empty($profileInfo))
+                                    <a  class="btn btn-danger btn-sm me-2 confirm-btn"  @if (!empty($profileInfo))
                                         @if ($profileInfo->status == 'deactivate')
+                                            href="{{ route('profile.index') }}" 
                                         @elseif($profileInfo->status == 'active')
-                                            onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.index') }}' : false;"
-                                                @endif
-                                                @elseif(empty($profileInfo))
-                                                    onclick="return confirm('Are you sure you want to cancel editing the demographics?') ? window.location.href = '{{ route('profile.index') }}' : false;"
-                                                        @endif >
+                                            href="#" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.index') }}"
+                                        @endif
+                                        @elseif(empty($profileInfo))
+                                            href="{{ route('profile.index') }}"
+                                        @endif >
                                         <i class="fa-solid fa-arrow-up-from-bracket fa-rotate-270 me-2"></i><span>Back</span>
                                     </a>
                                     @if (!empty($profileInfo))
@@ -466,8 +468,7 @@
                         <div class="card-body">
                             <div class="d-flex justify-content-between mb-3">
                                 <p class="font-22 fw-bold">Employment</p>
-                                <a href="{{ route('profile.edit.employment') }}" class="btn" onclick="return confirm('Are you sure you want to cancel editing?') ? window.location.href = '{{ route('profile.edit.employment') }}' : false;"><i class="fa-solid fa-pen text-secondary"></i></a>
-
+                                <a href="#" class="btn confirm-btn" data-bs-toggle="modal" data-bs-target="#confirmEditModal" data-url="{{ route('profile.edit.employment') }}"><i class="fa-solid fa-pen text-secondary"></i></a>
                             </div>
                             <div class="row">
                                 <div class="col-12 col-md-6 col-lg-3 mb-2 mb-md-3">
@@ -607,5 +608,6 @@
     </div>
 
 @endsection
+@include('backend.includes.confirmedit')
 @section('extraJs')
 @endsection
