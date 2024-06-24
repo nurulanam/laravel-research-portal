@@ -3,10 +3,10 @@
   <div class="modal-dialog">
     <div class="modal-content text-center">
       <div class="modal-body">
-      Changes you made may not be saved.
+      Changes you made may not be saved!
       </div>
       <div class="modal-footer justify-content-center border-top-0">
-        <a href="" class="btn btn-danger" id="btnLeave">Leave Page</a>
+        <a href="" class="btn btn-danger" id="btnLeave">Leave page</a>
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Stay on page</button>
       </div>
     </div>
