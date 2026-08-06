@@ -5,11 +5,13 @@ A Laravel-based platform that connects **Researchers** running market/UX researc
 ## Features
 
 ### Accounts & Roles
+
 - Dual registration flows for **Researchers** and **Participants** (`/register/researcher`, `/register/participant`)
-- Role-based access control via `spatie/laravel-permission` (`researcher` / `participant` roles)
-- Standard Laravel Breeze auth: login, email verification, password reset/confirmation
+- Role-based access control (`researcher` / `participant` roles)
+- Login, email verification, and password reset/confirmation
 
 ### Participant Profiles
+
 - Avatar upload
 - Contact details
 - Demographics (age, gender, ethnicity, education, household income, location)
@@ -17,36 +19,39 @@ A Laravel-based platform that connects **Researchers** running market/UX researc
 - Skills tagging
 
 ### Research Projects (Studies)
-- Full project CRUD for researchers (create, edit, preview, delete)
+
+- Full project management for researchers (create, edit, preview, delete)
 - Rich targeting criteria per project: skills, industries, company size, household income, gender, education level, ethnicity, age range, and location
 - Custom screener questions per project
 
 ### Screening & Recruitment
+
 - Participants browse open projects and submit screener responses
 - Participants can withdraw a submitted response
 - Researchers review responses and invite, reject, or hire participants
 - Zoom meeting links sent to hired participants; participants can accept or decline the invite
 
 ### Messaging
+
 - In-app chat between a researcher and a participant, scoped to a project
 
 ### Billing
-- Credit card profile management via **Authorize.Net**
+
+- Credit card profile management via Authorize.Net
 - Per-project billing/payment history for researchers
 
 ### API
+
 - Lightweight internal API for skills lookup/autocomplete and project detail retrieval
 
 ## Tech Stack
 
-- **Framework:** Laravel 8 (PHP ^7.3 | ^8.0)
-- **Auth scaffolding:** Laravel Breeze (Blade views)
+- **Framework:** Laravel 8 (PHP)
 - **Frontend:** Blade, Alpine.js, Tailwind CSS, built with Laravel Mix
 - **Authorization:** Spatie Laravel Permission
 - **API auth:** Laravel Sanctum
 - **Payments:** Authorize.Net PHP SDK
 - **Images:** Intervention Image
-- **Debugging:** Laravel Telescope
 - **Database:** MySQL
 
 ## Requirements
@@ -55,12 +60,11 @@ A Laravel-based platform that connects **Researchers** running market/UX researc
 - Composer
 - Node.js & npm
 - MySQL
-- A Mailhog instance (or other SMTP server) for local mail testing
 
 ## Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/nurulanam/laravel-research-portal.git
 cd laravel-research-portal
 
 composer install
@@ -70,13 +74,11 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-Configure your database and mail settings in `.env`, then run migrations:
+Configure your database, mail, and payment provider settings in `.env`, then run migrations:
 
 ```bash
 php artisan migrate
 ```
-
-Add your Authorize.Net API credentials (not present in `.env.example` by default — check `app/Http/Controllers/backend/ProjectController.php` and `CustomerProfileController.php` for how they're consumed) before testing the billing flow.
 
 Build frontend assets:
 
@@ -93,8 +95,6 @@ php artisan serve
 
 ## Testing
 
-The project uses PHPUnit. Currently only the default Breeze auth tests (`tests/Feature/Auth/*`) and stock example tests are in place — no custom feature tests for Projects, Billing, or Messaging exist yet.
-
 ```bash
 php artisan test
 ```
@@ -110,8 +110,3 @@ Key tables (see `database/migrations/`):
 - `project_has_questions`, `project_has_responses` — screener questions and participant answers
 - `project_has_messages` — in-project chat
 - `researcher_billings`, `authorize_customers` — billing history and stored payment profiles
-
-## Notes
-
-- No Docker or CI configuration currently exists in this repository.
-- `laravel/sail` is listed as a dev dependency but is not yet set up (no `docker-compose.yml`).
