@@ -1,64 +1,117 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400"></a></p>
+# Research Portal
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A Laravel-based platform that connects **Researchers** running market/UX research studies with **Participants** who take part in them. Researchers create research projects, target participants using detailed demographic and firmographic criteria, screen and hire candidates, message them, and pay for the engagement via integrated credit-card billing.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Accounts & Roles
+- Dual registration flows for **Researchers** and **Participants** (`/register/researcher`, `/register/participant`)
+- Role-based access control via `spatie/laravel-permission` (`researcher` / `participant` roles)
+- Standard Laravel Breeze auth: login, email verification, password reset/confirmation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Participant Profiles
+- Avatar upload
+- Contact details
+- Demographics (age, gender, ethnicity, education, household income, location)
+- Employment history and industry
+- Skills tagging
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Research Projects (Studies)
+- Full project CRUD for researchers (create, edit, preview, delete)
+- Rich targeting criteria per project: skills, industries, company size, household income, gender, education level, ethnicity, age range, and location
+- Custom screener questions per project
 
-## Learning Laravel
+### Screening & Recruitment
+- Participants browse open projects and submit screener responses
+- Participants can withdraw a submitted response
+- Researchers review responses and invite, reject, or hire participants
+- Zoom meeting links sent to hired participants; participants can accept or decline the invite
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Messaging
+- In-app chat between a researcher and a participant, scoped to a project
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 1500 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Billing
+- Credit card profile management via **Authorize.Net**
+- Per-project billing/payment history for researchers
 
-## Laravel Sponsors
+### API
+- Lightweight internal API for skills lookup/autocomplete and project detail retrieval
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Tech Stack
 
-### Premium Partners
+- **Framework:** Laravel 8 (PHP ^7.3 | ^8.0)
+- **Auth scaffolding:** Laravel Breeze (Blade views)
+- **Frontend:** Blade, Alpine.js, Tailwind CSS, built with Laravel Mix
+- **Authorization:** Spatie Laravel Permission
+- **API auth:** Laravel Sanctum
+- **Payments:** Authorize.Net PHP SDK
+- **Images:** Intervention Image
+- **Debugging:** Laravel Telescope
+- **Database:** MySQL
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+## Requirements
 
-## Contributing
+- PHP ^7.3 or ^8.0
+- Composer
+- Node.js & npm
+- MySQL
+- A Mailhog instance (or other SMTP server) for local mail testing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Installation
 
-## Code of Conduct
+```bash
+git clone <repository-url>
+cd laravel-research-portal
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+composer install
+npm install
 
-## Security Vulnerabilities
+cp .env.example .env
+php artisan key:generate
+```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Configure your database and mail settings in `.env`, then run migrations:
 
-## License
+```bash
+php artisan migrate
+```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+Add your Authorize.Net API credentials (not present in `.env.example` by default — check `app/Http/Controllers/backend/ProjectController.php` and `CustomerProfileController.php` for how they're consumed) before testing the billing flow.
+
+Build frontend assets:
+
+```bash
+npm run dev    # development
+npm run prod   # production build
+```
+
+Serve the application:
+
+```bash
+php artisan serve
+```
+
+## Testing
+
+The project uses PHPUnit. Currently only the default Breeze auth tests (`tests/Feature/Auth/*`) and stock example tests are in place — no custom feature tests for Projects, Billing, or Messaging exist yet.
+
+```bash
+php artisan test
+```
+
+## Database Structure
+
+Key tables (see `database/migrations/`):
+
+- `users`, `profiles` — accounts and extended profile data
+- `skills`, `user_has_skills`, `user_has_industries` — participant skill/industry taxonomy
+- `projects` — research studies
+- `project_has_skills`, `project_has_industries`, `project_has_company_sizes`, `project_has_household_incomes`, `project_has_genders`, `project_has_education_levels`, `project_has_ethnicities`, `project_has_age_ranges`, `project_has_locations`, `project_has_project_topics` — project targeting criteria
+- `project_has_questions`, `project_has_responses` — screener questions and participant answers
+- `project_has_messages` — in-project chat
+- `researcher_billings`, `authorize_customers` — billing history and stored payment profiles
+
+## Notes
+
+- No Docker or CI configuration currently exists in this repository.
+- `laravel/sail` is listed as a dev dependency but is not yet set up (no `docker-compose.yml`).
