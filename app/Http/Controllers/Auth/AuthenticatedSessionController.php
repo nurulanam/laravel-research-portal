@@ -6,41 +6,35 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class AuthenticatedSessionController extends Controller
 {
     /**
-     * Display the login view.
+     * The account types that may sign in through these routes.
      *
-     * @return \Illuminate\View\View
+     * @var array<int, string>
      */
-    public function create($type)
-    {
-        if ($type == 'researcher'){
-            return view('auth.researcher-login');
-        }elseif ($type == 'participant'){
-            return view('auth.participant-login');
-        }
-    }
+    public const ACCOUNT_TYPES = ['researcher', 'participant'];
 
-//    public function researcherLogin()
-//    {
-//        return view('auth.researcher-login');
-//    }
-//    public function participantLogin()
-//    {
-//        return view('auth.participant-login');
-//    }
+    /**
+     * Display the login view for the requested account type.
+     */
+    public function create(string $type): View
+    {
+        return view("auth.{$type}-login", ['accountType' => $type]);
+    }
 
     /**
      * Handle an incoming authentication request.
      *
-     * @param  \App\Http\Requests\Auth\LoginRequest  $request
-     * @return \Illuminate\Http\RedirectResponse
+     * The credentials are only accepted when the account actually holds the
+     * role of the route being used, so a participant cannot sign in through
+     * the researcher login (and vice versa).
      */
-    public function store(LoginRequest $request)
+    public function store(LoginRequest $request, string $type)
     {
-        $request->authenticate();
+        $request->authenticate($type);
 
         $request->session()->regenerate();
 
@@ -49,9 +43,6 @@ class AuthenticatedSessionController extends Controller
 
     /**
      * Destroy an authenticated session.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\RedirectResponse
      */
     public function destroy(Request $request)
     {

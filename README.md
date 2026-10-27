@@ -7,6 +7,7 @@ A Laravel-based platform that connects **Researchers** running market/UX researc
 ### Accounts & Roles
 
 - Dual registration flows for **Researchers** and **Participants** (`/register/researcher`, `/register/participant`)
+- Account-type aware authentication: the URL decides the account type, `/register/researcher` always creates a researcher, and an account can only sign in through the login form matching its role (`/login/researcher` vs `/login/participant`)
 - Role-based access control (`researcher` / `participant` roles)
 - Login, email verification, and password reset/confirmation
 
