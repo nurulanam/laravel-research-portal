@@ -16,6 +16,10 @@
                                 <div class="text-center">
                                     <img src="{{ asset('backend/img/logo.png') }}" alt="">
                                     <h1 class="h4 text-gray-900 my-4">Participants Login</h1>
+                                    <p class="small text-muted mb-3">
+                                        This form signs in <strong>participant</strong> accounts only.
+                                        <a href="{{ route('login', 'researcher') }}" class="font-weight-500 text-decoration-none">Sign in as a researcher</a>
+                                    </p>
                                     <x-auth-session-status class="mb-4" :status="session('status')" />
                                     <form action="{{ route('login', 'participant') }}" method="POST" class="user">
                                         @csrf

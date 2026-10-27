@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
@@ -13,10 +14,8 @@ class LoginRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
-     *
-     * @return bool
      */
-    public function authorize()
+    public function authorize(): bool
     {
         return true;
     }
@@ -24,14 +23,10 @@ class LoginRequest extends FormRequest
     /**
      * Get the validation rules that apply to the request.
      *
-     * @return array
+     * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
-//        return [
-//            'email' => ['required', 'string', 'email'],
-//            'password' => ['required', 'string'],
-//        ];
         return [
             'email' => ['required', 'string', 'email', 'exists:users'],
             'password' => ['required', 'string'],
@@ -39,28 +34,35 @@ class LoginRequest extends FormRequest
     }
 
     /**
-     * Attempt to authenticate the request's credentials.
-     *
-     * @return void
+     * Attempt to authenticate the request's credentials for the given account
+     * type. Accounts are only signed in when they hold the matching role.
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate()
+    public function authenticate(?string $accountType = null): void
     {
         $this->ensureIsNotRateLimited();
 
         if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());
 
-//            throw ValidationException::withMessages([
-//                'email' => trans('auth.failed'),
-//            ]);
             throw ValidationException::withMessages([
-                'email.required' => 'The email is required.',
-                'email.email' => 'The email needs to have a valid format.',
-                'email.string' => 'The email needs to have a valid format.',
-                'email.exists' => 'The email is not registered in the system.',
-                'password' => 'Please recheck your passowrd',
+                'email' => trans('auth.failed'),
+            ]);
+        }
+
+        if (! $this->accountHasAccess($accountType)) {
+            // The credentials are valid but belong to the other account type,
+            // so the session must not be kept.
+            Auth::guard('web')->logout();
+
+            $this->session()->invalidate();
+            $this->session()->regenerateToken();
+
+            RateLimiter::hit($this->throttleKey());
+
+            throw ValidationException::withMessages([
+                'email' => $this->wrongAccountTypeMessage($accountType),
             ]);
         }
 
@@ -68,13 +70,47 @@ class LoginRequest extends FormRequest
     }
 
     /**
+     * Determine if the authenticated user may use the given account type.
+     */
+    protected function accountHasAccess(?string $accountType): bool
+    {
+        if ($accountType === null) {
+            return true;
+        }
+
+        /** @var User|null $user */
+        $user = Auth::user();
+
+        if ($user === null) {
+            return false;
+        }
+
+        // Accounts without any role yet are allowed in so the rest of the
+        // application stays usable; they simply have no dashboard access.
+        if ($user->roles()->doesntExist()) {
+            return true;
+        }
+
+        return $user->hasRole($accountType);
+    }
+
+    /**
+     * Build the validation message shown when an account tries to sign in
+     * through the wrong login form.
+     */
+    protected function wrongAccountTypeMessage(?string $accountType): string
+    {
+        $otherType = $accountType === 'researcher' ? 'participant' : 'researcher';
+
+        return "These credentials do not belong to a {$accountType} account. Please use the {$otherType} login instead.";
+    }
+
+    /**
      * Ensure the login request is not rate limited.
-     *
-     * @return void
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function ensureIsNotRateLimited()
+    public function ensureIsNotRateLimited(): void
     {
         if (! RateLimiter::tooManyAttempts($this->throttleKey(), 5)) {
             return;
@@ -94,11 +130,9 @@ class LoginRequest extends FormRequest
 
     /**
      * Get the rate limiting throttle key for the request.
-     *
-     * @return string
      */
-    public function throttleKey()
+    public function throttleKey(): string
     {
-        return Str::lower($this->input('email')).'|'.$this->ip();
+        return Str::transliterate(Str::lower((string) $this->input('email')).'|'.$this->ip());
     }
 }

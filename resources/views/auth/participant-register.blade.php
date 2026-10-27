@@ -58,10 +58,11 @@
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror
                                         </div>
-                                        <div class="form-group mb-3 d-none">
-                                            <div class="form-check small d-flex align-items-center">
-                                                <input type="radio" name="role" value="participant" class="form-check-input" id="participant" checked>
-                                                <label class="form-check-label pt-1 ms-2" for="participant">I'm Participant</label>
+                                        <div class="form-group mb-3">
+                                            <input type="hidden" name="role" value="participant">
+                                            <div class="border rounded-pill bg-light text-center small py-2 px-3">
+                                                Creating a <strong>participant</strong> account
+                                                <a href="{{ route('register', 'researcher') }}" class="font-weight-500 text-decoration-none ms-1">Register as a researcher</a>
                                             </div>
                                             @error('role')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
