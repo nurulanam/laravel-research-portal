@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Listeners;
+namespace App\Listeners;
 
 use App\Events\ParticipantHired;
 use App\Notifications\ParticipantHiredNotification;

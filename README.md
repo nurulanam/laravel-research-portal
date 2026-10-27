@@ -46,19 +46,20 @@ A Laravel-based platform that connects **Researchers** running market/UX researc
 
 ## Tech Stack
 
-- **Framework:** Laravel 8 (PHP)
-- **Frontend:** Blade, Alpine.js, Tailwind CSS, built with Laravel Mix
-- **Authorization:** Spatie Laravel Permission
-- **API auth:** Laravel Sanctum
+- **Framework:** Laravel 13 (PHP 8.3+)
+- **Frontend:** Blade, Alpine.js, Tailwind CSS 4, built with Vite
+- **Authorization:** Spatie Laravel Permission 8
+- **API auth:** Laravel Sanctum 4
 - **Payments:** Authorize.Net PHP SDK
-- **Images:** Intervention Image
+- **Images:** Intervention Image 4 (`intervention/image-laravel`)
 - **Database:** MySQL
+- **Tooling:** Laravel Tinker, Pint, Pail, Sail, PHPUnit 12, Telescope (local only)
 
 ## Requirements
 
-- PHP ^7.3 or ^8.0
+- PHP ^8.3 (with the `gd` extension for image processing)
 - Composer
-- Node.js & npm
+- Node.js 20+ & npm
 - MySQL
 
 ## Installation
@@ -83,21 +84,30 @@ php artisan migrate
 Build frontend assets:
 
 ```bash
-npm run dev    # development
-npm run prod   # production build
+npm run dev      # Vite dev server (with hot reload)
+npm run build    # production build
 ```
 
 Serve the application:
 
 ```bash
 php artisan serve
+php artisan pail  # tail logs (optional)
 ```
 
 ## Testing
 
 ```bash
 php artisan test
+# or
+composer test
 ```
+
+## Upgrading
+
+This application was upgraded from Laravel 8 to Laravel 13. See
+[UPGRADING.md](UPGRADING.md) for the full list of changes and the steps to run
+after pulling this release.
 
 ## Database Structure
 
