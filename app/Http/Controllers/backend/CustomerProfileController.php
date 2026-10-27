@@ -5,17 +5,10 @@ namespace App\Http\Controllers\backend;
 use App\Http\Controllers\Controller;
 use App\Models\backend\AuthorizeCustomer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\backend\ProjectController;
 
 class CustomerProfileController extends Controller
 {
-    public $user_id;
-    public function __construct()
-    {
-        $this->user_id = Auth::id();
-    }
-
     public function store(Request $request)
     {
         $request->validate([
@@ -25,7 +18,7 @@ class CustomerProfileController extends Controller
             'cvv' => 'required|numeric|digits_between:3,4',
         ]);
         $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
-        $userType = Auth::user()->getRoleNames();
+        $userType = $request->user()->getRoleNames();
 
         $customer_profile = ProjectController::createCustomerProfile($request->card_number, $expiration_date, $request->cvv, $userType[0]);
         if (($customer_profile != null) && ($customer_profile->getMessages()->getResultCode() == "Ok")) {
@@ -36,13 +29,13 @@ class CustomerProfileController extends Controller
             $card_digit = substr($request->card_number, -4);
 
             $new_customer = new AuthorizeCustomer();
-            $new_customer->user_id = Auth::id();
+            $new_customer->user_id = $request->user()->id;
             $new_customer->profile_id = $profile_id;
             $new_customer->payment_id = $payment_id;
             $new_customer->card_digit = $card_digit;
             $new_customer->save();
             return redirect()->back()->with('success', 'Your card saved successfully');
-        }elseif ($customer_profile->getMessages()->getResultCode() == "Error"){
+        } elseif ($customer_profile !== null && $customer_profile->getMessages()->getResultCode() == "Error") {
             $errorMessages = $customer_profile->getMessages()->getMessage();
             return redirect()->back()->with('error', $errorMessages[0]->getText());
         }
@@ -57,7 +50,7 @@ class CustomerProfileController extends Controller
             'expiration_month' => 'required|numeric|between:1,12',
             'cvv' => 'required|numeric|digits_between:3,4',
         ]);
-        $user_id = Auth::id();
+        $user_id = $request->user()->id;
         $expiration_date = $request->expiration_year.'-'.$request->expiration_month;
         $find_customer = ProjectController::checkCutomerProfile();
         if ($find_customer != null){

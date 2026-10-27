@@ -36,7 +36,7 @@ class ProjectController extends Controller
      */
     public function index()
     {
-        app()->call([DashboardController::class, 'updateProjectStatus']);
+        DashboardController::updateProjectStatus();
 
         if (Auth::user()->hasRole('researcher')) {
             $projects = Projects::where('user_id', '=', Auth::id())->orderByDesc('created_at')->with('responses')->with('researcherBilling')->paginate(5);
@@ -109,7 +109,6 @@ class ProjectController extends Controller
                 'cvv' => 'required|numeric|digits_between:3,4',
             ]);
         }
-
 
         // User Info  schedule_date' => 'nullable|date_format:Y-m-d\TH:i',
         $user_id = Auth::id();
@@ -448,7 +447,6 @@ class ProjectController extends Controller
         return $find_customer;
     }
 
-
     /**
      * Store a newly created resource in storage.
      *
@@ -505,7 +503,6 @@ class ProjectController extends Controller
 
         return $response;
     }
-
 
     /**
      * Store a newly created resource in storage.
@@ -693,17 +690,6 @@ class ProjectController extends Controller
         }
 
         return $slug;
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -1030,7 +1016,6 @@ class ProjectController extends Controller
             $new_project_question->questions = $json_questions;
             $new_project_question->update();
         }
-
 
         // Creating Researcher project billing
         if ($request->filled('card_number', 'expiration_year', 'expiration_month', 'cvv')){

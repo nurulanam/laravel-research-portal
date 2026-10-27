@@ -4,9 +4,8 @@ namespace App\Models\backend;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\backend\Skill;
 
-class userHasSkills extends Model
+class UserHasSkills extends Model
 {
     use HasFactory;
     protected $fillable = [

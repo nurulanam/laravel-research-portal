@@ -5,7 +5,6 @@ namespace App\Listeners;
 use App\Events\ParticipantHired;
 use App\Notifications\ParticipantHiredNotification;
 use Illuminate\Support\Facades\Notification;
-use Illuminate\Support\Facades\Mail;
 
 class NotifyParticipantHired
 {

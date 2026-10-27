@@ -16,6 +16,6 @@ class ResearcherBilling extends Model
         'transaction_id',
     ];
     public function project(){
-        return $this->hasOne(Projects::class, 'id', 'project_id');
+        return $this->belongsTo(Projects::class, 'project_id', 'id');
     }
 }

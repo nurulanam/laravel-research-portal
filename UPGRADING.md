@@ -138,3 +138,33 @@ php artisan test
   `CACHE_STORE` and `SESSION_DRIVER`. This app keeps `sync`/`file`/`file` as in
   the previous configuration.
 - Telescope is only registered when `APP_ENV=local`.
+
+## Framework migrations added by the Laravel 13 upgrade
+
+Laravel 11 and newer default the cache, session and queue stores to the
+`database` driver, and the Laravel 8 skeleton this project started from never
+shipped migrations for those tables. `php artisan migrate` therefore failed as
+soon as the Spatie Permission migration tried to clear the permission cache:
+
+```
+SQLSTATE[42S02]: Base table or view not found: 1146 Table 'research.cache' doesn't exist
+```
+
+The following migrations now ship with the app (all of them are idempotent, so
+they are safe to run on partially migrated databases):
+
+| Migration | Tables |
+| --- | --- |
+| `0001_01_01_000001_create_cache_table.php` | `cache`, `cache_locks` |
+| `0001_01_01_000002_create_jobs_table.php` | `jobs`, `job_batches`, `failed_jobs` (only if missing) |
+| `0001_01_01_000003_create_sessions_table.php` | `sessions` |
+
+Extra clean-up migrations for existing installations:
+
+| Migration | Purpose |
+| --- | --- |
+| `2026_10_27_000000_rename_password_resets_to_password_reset_tokens.php` | renames `password_resets` to `password_reset_tokens` |
+| `2026_10_27_000001_add_expires_at_to_personal_access_tokens_table.php` | adds `expires_at` for Sanctum 4 token expiry |
+
+Run `php artisan migrate` after pulling these changes. If you keep using the
+`file`/`redis` drivers, the new tables simply stay empty.
