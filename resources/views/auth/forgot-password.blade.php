@@ -34,7 +34,7 @@
                                     </form>
                                         <div class="d-flex justify-content-between pt-4 small">
                                         <p>Don't have an account?</p>
-                                        <a href="{{ route('register') }}" class="font-weight-500 text-decoration-none">Register Here</a>
+                                        <a href="{{ route('register', 'participant') }}" class="font-weight-500 text-decoration-none">Register Here</a>
                                     </div>
                                 </div>
                             </div>

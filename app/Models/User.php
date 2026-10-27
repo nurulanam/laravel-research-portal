@@ -7,6 +7,7 @@ use App\Models\backend\Profile;
 use App\Models\backend\userHasSkills;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
@@ -14,7 +15,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, HasRoles, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -39,24 +40,29 @@ class User extends Authenticatable implements MustVerifyEmail
     ];
 
     /**
-     * The attributes that should be cast.
+     * Get the attributes that should be cast.
      *
-     * @var array<string, string>
+     * @return array<string, string>
      */
-    protected $casts = [
-        'email_verified_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+        ];
+    }
 
-
-    public function profile(){
+    public function profile(): HasOne
+    {
         return $this->hasOne(Profile::class, 'user_id', 'id');
     }
-    public function skills(){
+
+    public function skills(): HasOne
+    {
         return $this->hasOne(userHasSkills::class, 'user_id', 'id');
     }
 
-    public function authCutomer(){
+    public function authCutomer(): HasOne
+    {
         return $this->hasOne(AuthorizeCustomer::class, 'user_id', 'id');
     }
-
 }

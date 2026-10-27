@@ -19,7 +19,6 @@ use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use App\Models\backend\ResearcherBilling;
 use App\Models\backend\Skill;
-use http\Env\Response;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -460,8 +459,8 @@ class ProjectController extends Controller
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName(env('MERCHANT_LOGIN_ID'));
-        $merchantAuthentication->setTransactionKey(env('MERCHANT_TRANSACTION_KEY'));
+        $merchantAuthentication->setName(config('services.authorizenet.login_id'));
+        $merchantAuthentication->setTransactionKey(config('services.authorizenet.transaction_key'));
 
         // Set the transaction's refId
         $refId = 'ref' . time();
@@ -518,8 +517,8 @@ class ProjectController extends Controller
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName(env('MERCHANT_LOGIN_ID'));
-        $merchantAuthentication->setTransactionKey(env('MERCHANT_TRANSACTION_KEY'));
+        $merchantAuthentication->setName(config('services.authorizenet.login_id'));
+        $merchantAuthentication->setTransactionKey(config('services.authorizenet.transaction_key'));
 
         // Set the transaction's refId
         $refId = 'ref' . time();
@@ -560,8 +559,8 @@ class ProjectController extends Controller
         /* Create a merchantAuthenticationType object with authentication details
            retrieved from the constants file */
         $merchantAuthentication = new AnetAPI\MerchantAuthenticationType();
-        $merchantAuthentication->setName(env('MERCHANT_LOGIN_ID'));
-        $merchantAuthentication->setTransactionKey(env('MERCHANT_TRANSACTION_KEY'));
+        $merchantAuthentication->setName(config('services.authorizenet.login_id'));
+        $merchantAuthentication->setTransactionKey(config('services.authorizenet.transaction_key'));
 
         // Set the transaction's refId
         $refId = 'ref' . time();

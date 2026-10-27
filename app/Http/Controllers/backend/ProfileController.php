@@ -9,8 +9,8 @@ use App\Models\backend\UserHasIndustry;
 use App\Models\backend\userHasSkills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use File;
-use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\File;
+use Intervention\Image\Laravel\Facades\Image;
 
 class ProfileController extends Controller
 {
@@ -265,10 +265,11 @@ class ProfileController extends Controller
                 $message = 'Profile Picture Updated';
             }
 
-            $avatar = Image::make($file);
-            $avatar->resize(400, 400, function ($image) {
-                $image->aspectRatio();
-            })->save($img_host_path . $fileName);
+            // Intervention Image 4: decode the upload and scale it down to fit
+            // within 400x400 while preserving the aspect ratio.
+            Image::decode($file)
+                ->scaleDown(width: 400, height: 400)
+                ->save($img_host_path . $fileName);
 
             $find_profile->user_avatar = $fileName;
             $find_profile->save();

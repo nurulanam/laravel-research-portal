@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
-use App\Models\backend\Industry;
 use App\Models\backend\ProjectHasIndustry;
 use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;

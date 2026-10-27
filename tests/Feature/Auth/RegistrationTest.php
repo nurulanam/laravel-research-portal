@@ -3,7 +3,6 @@
 namespace Tests\Feature\Auth;
 
 use App\Models\User;
-use App\Providers\RouteServiceProvider;
 use Database\Seeders\RoleSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -15,7 +14,7 @@ class RegistrationTest extends TestCase
 
     public function test_registration_screen_can_be_rendered()
     {
-        $response = $this->get('/register');
+        $response = $this->get('/register/researcher');
         $response->assertStatus(200);
     }
 
@@ -23,7 +22,7 @@ class RegistrationTest extends TestCase
     {
         $this->seed(RoleSeeder::class);
 
-        $response = $this->post('/register', [
+        $response = $this->post('/register/researcher', [
             'first_name' => 'Test',
             'last_name' => 'User',
             'email' => 'test@example.com',
@@ -40,6 +39,6 @@ class RegistrationTest extends TestCase
         $user->assignRole($researcherRole);
 
         $this->assertAuthenticated();
-        $response->assertRedirect(RouteServiceProvider::HOME);
+        $response->assertRedirect('/dashboard');
     }
 }
