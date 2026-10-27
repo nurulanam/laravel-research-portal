@@ -110,10 +110,9 @@
                         </span>
                     </div>
                     @php
-                        if (isset($response->user->profile->date_of_birth)){
-                            $dateOfBirth = \Carbon\Carbon::parse($response->user->profile->date_of_birth);
-                            $age = $dateOfBirth->age;
-                        }else{
+                        if (isset($response->user->profile->date_of_birth)) {
+                            $age = \Illuminate\Support\Carbon::parse($response->user->profile->date_of_birth)->age;
+                        } else {
                             $age = 'Unknown';
                         }
 

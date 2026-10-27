@@ -4,19 +4,22 @@ namespace App\Http\Controllers\backend;
 
 use App\Http\Controllers\Controller;
 use App\Models\backend\ProjectHasIndustry;
-use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;
 use App\Models\backend\UserHasIndustry;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
-class dashboardController extends Controller
+class DashboardController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Industry reference data used by the participant dashboard filters.
      *
-     * @return \Illuminate\Http\Response
+     * @var array<int, string>
+     */
+    public $industries = [];
+
+    /**
+     * Display a listing of the resource.
      */
     public function index(Request $request)
     {
@@ -88,72 +91,6 @@ class dashboardController extends Controller
             return view('backend.pages.dashboard');
         }
 
-
-    }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 
     public static function updateProjectStatus()

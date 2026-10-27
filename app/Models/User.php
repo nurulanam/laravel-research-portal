@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\backend\AuthorizeCustomer;
 use App\Models\backend\Profile;
-use App\Models\backend\userHasSkills;
+use App\Models\backend\UserHasSkills;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasOne;
@@ -58,7 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function skills(): HasOne
     {
-        return $this->hasOne(userHasSkills::class, 'user_id', 'id');
+        return $this->hasOne(UserHasSkills::class, 'user_id', 'id');
     }
 
     public function authCutomer(): HasOne

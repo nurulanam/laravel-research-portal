@@ -44,7 +44,7 @@
                                             <label for="" class="col-form-label text-dark">Confirm Password</label>
                                         </div>
                                         <div class="col-md-8">
-                                            <input type="password" name="confirm_password" value="{{ old('confirm_password') }}"  class="form-control" placeholder="Confirm Password">
+                                            <input type="password" name="confirm_password" value="{{ old('confirm_password') }}" class="form-control" placeholder="Confirm Password">
                                             @error('confirm_password')
                                             <p class="text-danger font-13 py-2">{{ $message }}</p>
                                             @enderror

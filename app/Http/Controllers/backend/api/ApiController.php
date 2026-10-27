@@ -10,8 +10,6 @@ use App\Models\backend\ProjectHasSkill;
 use App\Models\backend\Projects;
 use App\Models\backend\Skill;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
 
 class ApiController extends Controller
 {

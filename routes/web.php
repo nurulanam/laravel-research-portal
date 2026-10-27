@@ -65,8 +65,10 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
     });
     Route::middleware('role:researcher')->group(function (){
         // Project
-        Route::resource('/project', ProjectController::class)->except('index', 'withdrawResponse');
-        Route::get('/project/edit/{slug}', [ProjectController::class, 'edit'])->name('project.preview')->name('project.edit');
+        // Only the endpoints that are addressed by id are delegated to the
+        // resource controller; everything else is keyed by the project slug.
+        Route::resource('/project', ProjectController::class)->only(['create', 'store', 'update']);
+        Route::get('/project/edit/{slug}', [ProjectController::class, 'edit'])->name('project.edit');
         Route::get('/project/preview/{slug}', [ProjectController::class, 'projectPreview'])->name('project.preview');
         Route::get('/project/{slug}/participants', [ProjectController::class, 'projectParticipants'])->name('project.participants');
         Route::get('/project/{slug}/response/{id}', [ProjectController::class, 'showParticipantResponse'])->name('project.participant.response');
@@ -84,11 +86,16 @@ Route::prefix('/dashboard')->middleware(['auth', 'verified', 'role:researcher|pa
         Route::get('/billing-center', [BillingController::class, 'index'])->name('billing.index');
     });
     Route::middleware('role:participant')->group(function () {
-        Route::resource('/project-apply/', ProjectApplyController::class);
+        // Application / screener routes. These are declared explicitly instead of
+        // with Route::resource() because the resource "show" route would shadow
+        // GET /project-apply/{slug}.
+        Route::get('/project-apply', [ProjectApplyController::class, 'index'])->name('project-apply.index');
         Route::get('/project-apply/{slug}', [ProjectApplyController::class, 'projectScreener'])->name('project.screener');
         Route::post('/project-apply/{slug}', [ProjectApplyController::class, 'store'])->name('project-apply.store');
     });
-    // Reset Password
-    Route::resource('/change-password', ChangePasswordController::class);
+
+    // Change password
+    Route::get('/change-password', [ChangePasswordController::class, 'index'])->name('change-password.index');
+    Route::post('/change-password', [ChangePasswordController::class, 'store'])->name('change-password.store');
 });
 require __DIR__.'/auth.php';
