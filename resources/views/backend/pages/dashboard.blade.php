@@ -143,7 +143,7 @@
                             <div class="d-flex justify-content-start align-items-center">
                                 <p class="text-primary font-weight-bold mb-0">${{ $project->participant_incentive }}</p>
                                 <i class="fas fa-grip-lines-vertical mx-2"></i>
-                                <p class="text-dark mb-0">@if($project->published_at) {{ \Carbon\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Carbon\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
+                                <p class="text-dark mb-0">@if($project->published_at) {{ \Illuminate\Support\Carbon::parse($project->published_at)->diffForHumans() }} @else {{ \Illuminate\Support\Carbon::parse($project->updated_at)->diffForHumans() }}  @endif</p>
                                 @if($project->required_time)
                                     <i class="fas fa-grip-lines-vertical mx-2"></i>
                                     <p class="text-dark mb-0">{{ $project->required_time }} Minutes</p>

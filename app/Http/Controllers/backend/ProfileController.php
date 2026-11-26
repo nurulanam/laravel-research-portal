@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\backend\Profile;
 use App\Models\backend\Skill;
 use App\Models\backend\UserHasIndustry;
-use App\Models\backend\userHasSkills;
+use App\Models\backend\UserHasSkills;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
@@ -29,7 +29,6 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-
     public function index()
     {
         $us_states = $this->us_states;
@@ -40,8 +39,7 @@ class ProfileController extends Controller
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
 
         $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
-
+        $findUserSkills = UserHasSkills::where('user_id', '=', $user_id)->first();
 
         if (!empty($findProfileIndustry) && !empty($findUserSkills)){
             $profileIndustry = json_decode($findProfileIndustry['industry']);
@@ -63,15 +61,6 @@ class ProfileController extends Controller
         $user_id = Auth::id();
         return Profile::where('user_id', '=' , $user_id)->first();
     }
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
     public function editContact(){
 
         $us_states = $this->us_states;
@@ -81,8 +70,7 @@ class ProfileController extends Controller
 
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
         $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
-
+        $findUserSkills = UserHasSkills::where('user_id', '=', $user_id)->first();
 
         if (!empty($findProfileIndustry) && !empty($findUserSkills)){
             $profileIndustry = json_decode($findProfileIndustry['industry']);
@@ -109,8 +97,7 @@ class ProfileController extends Controller
 
             $profileInfo = Profile::where('user_id', '=', $user_id)->first();
             $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-            $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
-
+            $findUserSkills = UserHasSkills::where('user_id', '=', $user_id)->first();
 
             if (!empty($findProfileIndustry) && !empty($findUserSkills)) {
                 $profileIndustry = json_decode($findProfileIndustry['industry']);
@@ -131,7 +118,6 @@ class ProfileController extends Controller
             return redirect()->route('profile.index')->with('error', 'Your Don\'t Have Permission');
         }
 
-
     }
     public function editEmployment(){
         $us_states = $this->us_states;
@@ -141,8 +127,7 @@ class ProfileController extends Controller
 
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
         $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
-
+        $findUserSkills = UserHasSkills::where('user_id', '=', $user_id)->first();
 
         if (!empty($findProfileIndustry) && !empty($findUserSkills)){
             $profileIndustry = json_decode($findProfileIndustry['industry']);
@@ -168,8 +153,7 @@ class ProfileController extends Controller
 
         $profileInfo = Profile::where('user_id', '=' , $user_id)->first();
         $findProfileIndustry = UserHasIndustry::where('user_id', '=', $user_id)->first();
-        $findUserSkills = userHasSkills::where('user_id', '=', $user_id)->first();
-
+        $findUserSkills = UserHasSkills::where('user_id', '=', $user_id)->first();
 
         if (!empty($findProfileIndustry) && !empty($findUserSkills)){
             $profileIndustry = json_decode($findProfileIndustry['industry']);
@@ -214,14 +198,14 @@ class ProfileController extends Controller
         }
 
         $json = json_encode($skillIds);
-        $findUserSkill = userHasSkills::where('user_id', '=', $user_id)->first();
+        $findUserSkill = UserHasSkills::where('user_id', '=', $user_id)->first();
 
         if ($findUserSkill !== null){
             $findUserSkill->skills = $json;
             $findUserSkill->update();
             return redirect()->route('profile.index')->with('success', 'Your Skills Updated');
         }elseif ($findUserSkill == null){
-            $newUserSkill = new userHasSkills();
+            $newUserSkill = new UserHasSkills();
             $newUserSkill->user_id = $user_id;
             $newUserSkill->skills = $json;
             $newUserSkill->save();
@@ -229,16 +213,6 @@ class ProfileController extends Controller
         }
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-
-    }
     public function storeUserAvatar(Request $request){
         $request->validate([
             'user_avatar' => 'required|mimes:jpg,jpeg,png|max:2048',
@@ -433,51 +407,5 @@ class ProfileController extends Controller
 
         return redirect()->route('profile.index')->with('success', $message);
     }
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\backend\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Profile $profile)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\backend\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Profile $profile)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\backend\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Profile $profile)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\backend\Profile  $profile
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Profile $profile)
-    {
-
-    }
-
-
 
 }

@@ -135,9 +135,16 @@ return new class extends Migration
             });
         }
 
-        app('cache')
-            ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
-            ->forget(config('permission.cache.key'));
+        // Clearing the permission cache must never abort the migration: with the
+        // "database" cache store the cache table may not exist yet (or the
+        // configured store may not be reachable).
+        try {
+            app('cache')
+                ->store(config('permission.cache.store') != 'default' ? config('permission.cache.store') : null)
+                ->forget(config('permission.cache.key'));
+        } catch (\Throwable) {
+            // Ignore: the cache is flushed again by RoleSeeder / permission:cache-reset.
+        }
     }
 
     /**

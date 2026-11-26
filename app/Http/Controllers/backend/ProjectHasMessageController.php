@@ -8,7 +8,6 @@ use App\Models\backend\ProjectHasResponse;
 use App\Models\backend\Projects;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use SebastianBergmann\CodeCoverage\Report\Xml\Project;
 
 class ProjectHasMessageController extends Controller
 {
@@ -20,6 +19,8 @@ class ProjectHasMessageController extends Controller
     public function index()
     {
         $user_id = Auth::id();
+        $projects = collect();
+
         if (Auth::user()->hasRole('participant')){
             $response = ProjectHasResponse::where('user_id', '=', $user_id)->whereIn('status', ['hired', 'paid'])->get();
             $projectIds = $response->pluck('project_id')->toArray();
@@ -35,16 +36,6 @@ class ProjectHasMessageController extends Controller
         }
 
         return  view('backend.pages.project-messages', compact('projects'));
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -174,37 +165,4 @@ class ProjectHasMessageController extends Controller
         }
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\backend\ProjectHasMessage  $projectHasMessage
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ProjectHasMessage $projectHasMessage)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\backend\ProjectHasMessage  $projectHasMessage
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, ProjectHasMessage $projectHasMessage)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\backend\ProjectHasMessage  $projectHasMessage
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(ProjectHasMessage $projectHasMessage)
-    {
-        //
-    }
 }
